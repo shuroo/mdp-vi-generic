@@ -11,10 +11,11 @@ public class State implements StateI {
     private Boolean isInitial = false;
     private Double previousUtility;
 
-    public State(String stateId, Boolean isInitial, Boolean isFinal) {
+    public State(String stateId, Boolean isInitial, Boolean isFinal,Double initialUtility) {
         this.stateId = stateId;
         this.isInitial = isInitial;
         this.isFinal = isFinal;
+        this.minimalUtility = initialUtility;
     }
 
     public Boolean getIsFinal() {
