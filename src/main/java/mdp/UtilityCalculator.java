@@ -1,7 +1,6 @@
 package mdp;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,14 +24,14 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        List<Action> allActions = currentMDP.getActions().values().stream().collect(Collectors.toList());
+        //List<Action> allActions = currentMDP.getActions().values().stream().collect(Collectors.toList());
         List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
 
         while (maxLambda >= stopCondition) {
 
             iterationCounter++;
 
-            setUtilitiesForStatesIteration(allActions, allStates);
+            setUtilitiesForStatesIteration(allStates);
 
 
             // Check diff to stop...
@@ -72,37 +71,25 @@ public class UtilityCalculator {
      * @return updated utilities on actions with sorted list.
      * action_utility <-- 0 if final_state, else Sigma(p(s|s')*U'(s'))
      */
-    private HashMap<String,Action> setActionsUtilityPerState(List<Action> allActions) {
+    private HashMap<Transition,Double> calcUtilityPerTransition() {
 
-        // Init & Build Map<ActionId_State,Action>
+        // Init & Build Map<Transition,Utility>
+
+        HashMap<Transition,Double> actionsPerSourceStt = new HashMap<Transition,Double>();
+
         for (Transition transition : currentMDP.getTransitions().values()) {
-            sourceStates.get(transition.getAction()).add(transition.getSourceState());
-        }
-        HashMap<Action, List<State>> actionSourcesStMap = getSourceStatesByAction();
-        HashMap<Action, List<State>> actionDestinationsMap = getDestStatesByAction();
-
-        HashMap<String,Action> actionsPerSourceStt = new HashMap<String,Action>();
-        for (Action action : allActions) {
-
-            // Stage 1: create map<StateId_ActionId,Action> to  find all states belonging to an action.
-
-            List<State> actionSourceStates = actionSourcesStMap.get(action);
-            List<State> actionDestStates = actionDestinationsMap.get(action);
-            Double actionLocalUtility = 0.0;
-            // Business Logic:
-            for (State sourceState : actionSourceStates) {
-                for (State destState : actionDestStates) {
-                    actionLocalUtility = calcStatesUtility(sourceState, destState, action);
-                }
-                action.setUtility(actionLocalUtility);
-                actionsPerSourceStt.put(action.getActionId()+"_"+sourceState.getId(),action);
+            String currentKey = transition.getSourceState().getId()+"_"+transition.getAction();
+            if(!actionsPerSourceStt.containsKey(currentKey)){
+                actionsPerSourceStt.put(transition,0.0);
             }
-
+            Double actionLocalUtility = calcStatesUtility(transition.getSourceState(), transition.getDestState(), transition.getAction());
+            actionsPerSourceStt.put(transition,actionLocalUtility);
         }
 
-        allActions.sort(Action::compareTo);
+//
+//        allActions.sort(Action::compareTo);
 
-        return allActions;
+        return actionsPerSourceStt;
     }
 
     // U(s) <- R(s) + Sigma[ P(s|s')*U(s') ]
@@ -136,20 +123,20 @@ public class UtilityCalculator {
      * @param bestActions
      * @return
      */
-    private List<State> setUtilitiesForStatesIteration(List<Action> bestActions, List<State> allStates) {
-        HashMap<String,Action> updatedActionsUtility = setActionsUtilityPerState(bestActions);
+    private List<State> setUtilitiesForStatesIteration(List<State> allStates) {
+        HashMap<Transition,Double> updatedTransitionsUtility = calcUtilityPerTransition();
 
         for (State state : allStates) {
-            setUtilitySingleState(state, updatedActionsUtility);
+            setUtilitySingleState(state, updatedTransitionsUtility);
         }
 
         return allStates;
     }
 
-    private void setUtilitySingleState(State state, List<Action> actionsWithUtility) {
+    private void setUtilitySingleState(State state, HashMap<Transition,Double> updatedTransitionsUtility) {
 
         //  Get all actions belonging to this state:
-        List<Action> stateActionsWithUtility = getStateActions(state, actionsWithUtility);
+        List<Action> stateActionsWithUtility = getStateActions(state, updatedTransitionsUtility);
 
         //  allActions.stream().filter(action -> action.getId().equals(state.getAgentLocation().getId())).collect(Collectors.toSet());
         Action minimalUtilityAction = null;
