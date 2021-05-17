@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class UtilityCalculator {
 
     Double epsilon = 0.1;
-    Double discountFactor = 0.1;
+    Double discountFactor = 0.98;
 
     private MDP currentMDP;
 
@@ -25,8 +25,8 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        List<Action> allActions = (List<Action>) currentMDP.getActions().values();
-        List<State> allStates = (List<State>) currentMDP.getStates().values();
+        List<Action> allActions = currentMDP.getActions().values().stream().collect(Collectors.toList());
+        List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
 
         while (maxLambda >= stopCondition) {
 
@@ -40,7 +40,7 @@ public class UtilityCalculator {
 
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
-                //    System.out.println("Utility found for state:"+state.getStateId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
+                // System.out.println("Utility found for state:"+state.getStateId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
                 if (maxLambda > diffUtility) {
@@ -49,16 +49,16 @@ public class UtilityCalculator {
 
                 if (maxLambda < stopCondition) {
 
-                    System.out.println("Stopping at lambda:" + maxLambda);
+                    System.out.println("Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter);
                     break;
                 }
 
 
             }
 
-//            currentMDP.getStates().values().stream().forEach(state -> {
-//                System.out.println("**** Final Set for state:" + state.toString());
-//            });
+            currentMDP.getStates().values().stream().forEach(state -> {
+                System.out.println("**** Final Set for state:" + state.toString());
+            });
 
         }
 
@@ -72,15 +72,19 @@ public class UtilityCalculator {
      * @return updated utilities on actions with sorted list.
      * action_utility <-- 0 if final_state, else Sigma(p(s|s')*U'(s'))
      */
-    private List<Action> setActionsUtility(List<Action> allActions) {
+    private HashMap<String,Action> setActionsUtilityPerState(List<Action> allActions) {
 
-        // Init & Build Map<ActionId,State>
+        // Init & Build Map<ActionId_State,Action>
+        for (Transition transition : currentMDP.getTransitions().values()) {
+            sourceStates.get(transition.getAction()).add(transition.getSourceState());
+        }
         HashMap<Action, List<State>> actionSourcesStMap = getSourceStatesByAction();
         HashMap<Action, List<State>> actionDestinationsMap = getDestStatesByAction();
 
+        HashMap<String,Action> actionsPerSourceStt = new HashMap<String,Action>();
         for (Action action : allActions) {
 
-            // Stage 1: create map<Action,List<State>> to  find all states belonging to an action.
+            // Stage 1: create map<StateId_ActionId,Action> to  find all states belonging to an action.
 
             List<State> actionSourceStates = actionSourcesStMap.get(action);
             List<State> actionDestStates = actionDestinationsMap.get(action);
@@ -88,10 +92,12 @@ public class UtilityCalculator {
             // Business Logic:
             for (State sourceState : actionSourceStates) {
                 for (State destState : actionDestStates) {
-                    actionLocalUtility += calcStatesUtility(sourceState, destState, action);
+                    actionLocalUtility = calcStatesUtility(sourceState, destState, action);
                 }
+                action.setUtility(actionLocalUtility);
+                actionsPerSourceStt.put(action.getActionId()+"_"+sourceState.getId(),action);
             }
-            action.setUtility(actionLocalUtility);
+
         }
 
         allActions.sort(Action::compareTo);
@@ -111,12 +117,15 @@ public class UtilityCalculator {
                     , source, dest));
 
             // The probability for transition between the above states
-            Double joinedProb = transition.getProbability();
+            Double joinedProb = transition != null ? transition.getProbability() : 0.00;
 
             // Utility for the two states to add to the action.
             // U(action) <-- Sigma[ P(s|s')*U(s') ]
             Double actionSubUtility = joinedProb * (dest.getUtility());
             // we DON'T set the source utility at this point YET! choosing minimum.
+
+            System.out.println("----^^:" + joinedProb + "actionSubUtility:" + actionSubUtility
+            );
             return actionSubUtility;
         }
     }
@@ -128,7 +137,7 @@ public class UtilityCalculator {
      * @return
      */
     private List<State> setUtilitiesForStatesIteration(List<Action> bestActions, List<State> allStates) {
-        List<Action> updatedActionsUtility = setActionsUtility(bestActions);
+        HashMap<String,Action> updatedActionsUtility = setActionsUtilityPerState(bestActions);
 
         for (State state : allStates) {
             setUtilitySingleState(state, updatedActionsUtility);
@@ -147,9 +156,8 @@ public class UtilityCalculator {
         Double minimalUtility = 0.0;
 
         if (!stateActionsWithUtility.isEmpty()) {
-            Integer actionIndex = stateActionsWithUtility.size() - 1;
-            minimalUtilityAction = findMinimalAction(state, actionIndex,
-                    stateActionsWithUtility);
+            minimalUtilityAction = currentMDP.isMinimizationProblem() ? findMinimalAction(state,
+                    stateActionsWithUtility) : findMaximalAction(state, stateActionsWithUtility);
 
             // U(s) <- R(s,a,(s'??)) + Utility(a)
 
@@ -163,12 +171,17 @@ public class UtilityCalculator {
         //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
         state.setUtility(minimalUtility);
         state.setBestAction(minimalUtilityAction);
+
+        if(minimalUtilityAction != null){
+            System.out.println("--setting action:" + minimalUtilityAction.getActionId() + " with utility:" + minimalUtilityAction.getUtility() + " for state:" + state.getId());
+        }
     }
 
 
     //todo: do we need to add functionality to check if the action is unblocked \ possible ???
 
-    private Action findMinimalAction(State state, Integer actionIndex, List<Action> stateActionsFiltered) {
+    private Action findMinimalAction(State state, List<Action> stateActionsFiltered) {
+        Integer actionIndex = stateActionsFiltered.size() - 1;
         Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
         while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
             actionIndex--;
@@ -183,11 +196,28 @@ public class UtilityCalculator {
     }
 
 
+    // for solving maximization MDP based problems..
+    private Action findMaximalAction(State state,  List<Action> stateActionsFiltered) {
+        Integer actionIndex = 0;
+        Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+        while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
+            actionIndex++;
+            currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+        }
+        // IF found no possible valid action due to action blockings...
+        if (actionIndex == -1) {
+            System.out.println("Found no valid action due to action blockings - returning null! For state:" + state.getId());
+            return null;
+        }
+        return currentAction;
+    }
+
     // TBD: override this and implement by constraints in the future (Blocked edge etc..)
     private Boolean actionIsImpossible(State st, Action action) {
         return false;
     }
 
+    /**
     private HashMap<Action, List<State>> getSourceStatesByAction() {
         HashMap<Action, List<State>> sourceStates = new HashMap<Action, List<State>>();
 
@@ -207,14 +237,15 @@ public class UtilityCalculator {
             destStates.put(action, new LinkedList<State>());
         }
         for (Transition transition : currentMDP.getTransitions().values()) {
-            destStates.get(transition.getAction()).add(transition.getSourceState());
+            destStates.get(transition.getAction()).add(transition.getDestState());
         }
         return destStates;
     }
+     **/
 
     private List<Action> getStateActions(final State state, List<Action> actionsWithUtility) {
         Set<Transition> stateTransitions =
-                (Set<Transition>) currentMDP.getTransitions().values().stream().filter(tran -> tran.getSourceState() == state).collect(Collectors.toSet());
+         currentMDP.getTransitions().values().stream().filter(tran -> tran.getSourceState() == state).collect(Collectors.toSet());
 
         Set<Action> stateAllActions = stateTransitions.stream().map(transition -> transition.getAction()).collect(Collectors.toSet());
 
@@ -539,5 +570,8 @@ public class UtilityCalculator {
         }
 
 
+        MDP mdp = new MDP(transitions, actions, states, rewards, false);
+        UtilityCalculator uc = new UtilityCalculator(mdp);
+        uc.setOptimalPolicy();
     }
 }

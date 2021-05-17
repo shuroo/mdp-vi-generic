@@ -6,6 +6,13 @@ import java.util.HashMap;
 
 public class MDP implements MDPI{
 
+    public Boolean isMinimizationProblem() {
+        return isMinimizationProblem;
+    }
+
+    // Check whether to solve a minimization or maximization problem.
+    private Boolean isMinimizationProblem;
+
     // HashMap < StateID_ActionID, Transition > == P(s,a,s')
     private HashMap<String,Transition> transitions;
 
@@ -26,12 +33,15 @@ public class MDP implements MDPI{
             // HashMap <String StateId,State>  == State(state_id)
             HashMap<String,State> states,
             // HashMap < StateID_ActionID, Double >  == R(s,a,s')
-            HashMap<String,Reward> rewards
+            HashMap<String,Reward> rewards,
+
+            Boolean isMinimizationProblem
     ){
             this.actions = actions;
             this.transitions = transitions;
             this.rewards = rewards;
             this.states = states;
+            this.isMinimizationProblem = isMinimizationProblem;
     }
 
 
