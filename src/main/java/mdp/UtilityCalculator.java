@@ -2,13 +2,12 @@ package mdp;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UtilityCalculator {
 
     Double epsilon = 0.1;
-    Double discountFactor = 0.98;
+    Double discountFactor = 1.0;
 
     private MDP currentMDP;
 
@@ -24,12 +23,12 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        //List<Action> allActions = currentMDP.getActions().values().stream().collect(Collectors.toList());
         List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
 
-        while (maxLambda >= stopCondition) {
+        while (maxLambda > stopCondition) {
 
             iterationCounter++;
+            System.out.println("Starting iteration number:"+iterationCounter);
 
             setUtilitiesForStatesIteration(allStates);
 
@@ -40,25 +39,27 @@ public class UtilityCalculator {
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
                 // System.out.println("Utility found for state:"+state.getStateId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
+                if (prevUtility == null) {
+                    continue;
+                }
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
                 if (maxLambda > diffUtility) {
                     maxLambda = diffUtility;
                 }
 
-                if (maxLambda < stopCondition) {
+                if (maxLambda <= stopCondition) {
 
-                    System.out.println("Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter);
+                    System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                     break;
                 }
-
-
             }
 
             currentMDP.getStates().values().stream().forEach(state -> {
-                System.out.println("**** Final Set for state:" + state.toString());
+                System.out.println("**** Final Utility state:" + state.getId() + " is:" + state.getUtility() + " chosen action is: " + state.getBestAction());
             });
 
+           // currentMDP.setStates(allStates);
         }
 
         return currentMDP;
@@ -70,24 +71,30 @@ public class UtilityCalculator {
      * @param - states to calc utility from
      * @return updated utilities on actions with sorted list.
      * action_utility <-- 0 if final_state, else Sigma(p(s|s')*U'(s'))
+     * .
+     * EXAMPLE CALC: stt2_3->stt_3_3 = 0.8*left_action_utility + 0.1 * right_action_utility + 0.1 * stay =  0.8 * 0.76 + 0.2 * -0.04
      */
-    private HashMap<Transition,Double> calcUtilityPerTransition() {
+    private HashMap<Transition, Double> calcActionUtilityPerIterationAndStt() {
 
         // Init & Build Map<Transition,Utility>
 
-        HashMap<Transition,Double> actionsPerSourceStt = new HashMap<Transition,Double>();
+        HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
 
         for (Transition transition : currentMDP.getTransitions().values()) {
-            String currentKey = transition.getSourceState().getId()+"_"+transition.getAction();
-            if(!actionsPerSourceStt.containsKey(currentKey)){
-                actionsPerSourceStt.put(transition,0.0);
+            String currentKey = transition.getSourceState().getId() + "_" + transition.getAction();
+            if (!actionsPerSourceStt.containsKey(currentKey)) {
+                actionsPerSourceStt.put(transition, 0.0);
             }
             Double actionLocalUtility = calcStatesUtility(transition.getSourceState(), transition.getDestState(), transition.getAction());
-            actionsPerSourceStt.put(transition,actionLocalUtility);
+            if(!actionsPerSourceStt.containsKey(transition)){
+                actionsPerSourceStt.put(transition, actionLocalUtility);
+            }
+            else{
+                Double prevUtil = actionsPerSourceStt.get(transition);
+                actionsPerSourceStt.put(transition,prevUtil + actionLocalUtility);
+            }
+         //   actionsPerSourceStt.put(transition, actionLocalUtility);
         }
-
-//
-//        allActions.sort(Action::compareTo);
 
         return actionsPerSourceStt;
     }
@@ -96,7 +103,7 @@ public class UtilityCalculator {
     private Double calcStatesUtility(State source, State dest, Action action) {
 
         if (source.getIsFinal()) {
-            return 0.0;
+            return source.getUtility() == null ? 0.0 : source.getUtility();
         } else {
 
             // get P(s,s',a)
@@ -111,8 +118,8 @@ public class UtilityCalculator {
             Double actionSubUtility = joinedProb * (dest.getUtility());
             // we DON'T set the source utility at this point YET! choosing minimum.
 
-            System.out.println("----^^:" + joinedProb + "actionSubUtility:" + actionSubUtility
-            );
+            // System.out.println("----^^:" + joinedProb + "actionSubUtility:" + actionSubUtility
+            //);
             return actionSubUtility;
         }
     }
@@ -120,11 +127,11 @@ public class UtilityCalculator {
     /**
      * Method to set utility per iteration for all states.
      *
-     * @param bestActions
+     * @param allStates - all possible states
      * @return
      */
     private List<State> setUtilitiesForStatesIteration(List<State> allStates) {
-        HashMap<Transition,Double> updatedTransitionsUtility = calcUtilityPerTransition();
+        HashMap<Transition, Double> updatedTransitionsUtility = calcActionUtilityPerIterationAndStt();
 
         for (State state : allStates) {
             setUtilitySingleState(state, updatedTransitionsUtility);
@@ -133,18 +140,18 @@ public class UtilityCalculator {
         return allStates;
     }
 
-    private void setUtilitySingleState(State state, HashMap<Transition,Double> updatedTransitionsUtility) {
+    private void setUtilitySingleState(State state, HashMap<Transition, Double> updatedTransitionsUtility) {
 
         //  Get all actions belonging to this state:
-        List<Action> stateActionsWithUtility = getStateActions(state, updatedTransitionsUtility);
+        HashMap<Transition, Double> transitionsWithUtility = getStateActions(state, updatedTransitionsUtility);
 
         //  allActions.stream().filter(action -> action.getId().equals(state.getAgentLocation().getId())).collect(Collectors.toSet());
         Action minimalUtilityAction = null;
         Double minimalUtility = 0.0;
 
-        if (!stateActionsWithUtility.isEmpty()) {
-            minimalUtilityAction = currentMDP.isMinimizationProblem() ? findMinimalAction(state,
-                    stateActionsWithUtility) : findMaximalAction(state, stateActionsWithUtility);
+        if (!transitionsWithUtility.isEmpty()) {
+            minimalUtilityAction = currentMDP.isMinimizationProblem() ? findMinimalAction(
+                    transitionsWithUtility) : findMaximalAction(transitionsWithUtility);
 
             // U(s) <- R(s,a,(s'??)) + Utility(a)
 
@@ -152,52 +159,94 @@ public class UtilityCalculator {
 
             Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
             minimalUtility = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
+
+            state.setPreviousUtility(state.getUtility());
+            //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
+
+
+            System.out.println("--### Setting minimal utility: " + minimalUtility + " for state: " + state.getId() + "###--");
+            state.setUtility(minimalUtility);
+            state.setBestAction(minimalUtilityAction);
+
+            if (minimalUtilityAction != null) {
+                System.out.println("--setting action:" + minimalUtilityAction.getActionId() + " with utility:" + minimalUtilityAction.getUtility() + " for state:" + state.getId());
+            }
         }
 
-        state.setPreviousUtility(state.getUtility());
-        //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
-        state.setUtility(minimalUtility);
-        state.setBestAction(minimalUtilityAction);
 
-        if(minimalUtilityAction != null){
-            System.out.println("--setting action:" + minimalUtilityAction.getActionId() + " with utility:" + minimalUtilityAction.getUtility() + " for state:" + state.getId());
-        }
     }
 
 
     //todo: do we need to add functionality to check if the action is unblocked \ possible ???
 
-    private Action findMinimalAction(State state, List<Action> stateActionsFiltered) {
-        Integer actionIndex = stateActionsFiltered.size() - 1;
-        Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
-        while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
-            actionIndex--;
-            currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+
+    private Action findMinimalAction(HashMap<Transition, Double> sttTransitionsWithutility) {
+
+        Double finalUtility = 10000.0;
+        Action result = null;
+        for (Transition currentKey : sttTransitionsWithutility.keySet()) {
+            Double currentUtility = sttTransitionsWithutility.get(currentKey);
+            if (currentUtility <= finalUtility) {
+                result = currentKey.getAction();
+                finalUtility = currentUtility;
+            }
         }
-        // IF found no possible valid action due to action blockings...
-        if (actionIndex == -1) {
-            System.out.println("Found no valid action due to action blockings - returning null! For state:" + state.getId());
-            return null;
+        if (result != null) {
+            result.setUtility(finalUtility);
         }
-        return currentAction;
+
+        return result;
     }
 
+    private Action findMaximalAction(HashMap<Transition, Double> sttTransitionsWithUtility) {
 
-    // for solving maximization MDP based problems..
-    private Action findMaximalAction(State state,  List<Action> stateActionsFiltered) {
-        Integer actionIndex = 0;
-        Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
-        while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
-            actionIndex++;
-            currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+        Double finalUtility = -10000.0;
+        Action result = null;
+        for (Transition currentKey : sttTransitionsWithUtility.keySet()) {
+            Double currentUtility = sttTransitionsWithUtility.get(currentKey);
+            if (currentUtility > finalUtility) {
+                result = currentKey.getAction();
+                finalUtility = currentUtility;
+            }
         }
-        // IF found no possible valid action due to action blockings...
-        if (actionIndex == -1) {
-            System.out.println("Found no valid action due to action blockings - returning null! For state:" + state.getId());
-            return null;
+        if (result != null) {
+            result.setUtility(finalUtility);
         }
-        return currentAction;
+
+        return result;
     }
+
+//    private Action findMinimalActionPerState(State state, List<Action> stateActionsFiltered) {
+//        Integer actionIndex = stateActionsFiltered.size() - 1;
+//        Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+//        while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
+//            actionIndex--;
+//            currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+//        }
+//        // IF found no possible valid action due to action blockings...
+//        if (actionIndex == -1) {
+//            System.out.println("Found no valid action due to action blockings - returning null! For state:" + state.getId());
+//            return null;
+//        }
+//        return currentAction;
+//    }
+//
+//
+//    // for solving maximization MDP based problems..
+//    private Action findMaximalActionPerState(State state, List<Action> stateActionsFiltered) {
+//        Integer actionIndex = 0;
+//        Action currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+//        while (actionIndex > -1 && actionIsImpossible(state, currentAction)) {
+//            actionIndex++;
+//            currentAction = (Action) stateActionsFiltered.toArray()[actionIndex];
+//        }
+//        // IF found no possible valid action due to action blockings...
+//        if (actionIndex == -1) {
+//            System.out.println("Found no valid action due to action blockings - returning null! For state:" + state.getId());
+//            return null;
+//        }
+//        return currentAction;
+//    }
 
     // TBD: override this and implement by constraints in the future (Blocked edge etc..)
     private Boolean actionIsImpossible(State st, Action action) {
@@ -205,46 +254,47 @@ public class UtilityCalculator {
     }
 
     /**
-    private HashMap<Action, List<State>> getSourceStatesByAction() {
-        HashMap<Action, List<State>> sourceStates = new HashMap<Action, List<State>>();
-
-        for (Action action : currentMDP.getActions().values()) {
-            sourceStates.put(action, new LinkedList<State>());
-        }
-        for (Transition transition : currentMDP.getTransitions().values()) {
-            sourceStates.get(transition.getAction()).add(transition.getSourceState());
-        }
-        return sourceStates;
-    }
-
-    private HashMap<Action, List<State>> getDestStatesByAction() {
-        HashMap<Action, List<State>> destStates = new HashMap<Action, List<State>>();
-
-        for (Action action : currentMDP.getActions().values()) {
-            destStates.put(action, new LinkedList<State>());
-        }
-        for (Transition transition : currentMDP.getTransitions().values()) {
-            destStates.get(transition.getAction()).add(transition.getDestState());
-        }
-        return destStates;
-    }
+     * private HashMap<Action, List<State>> getSourceStatesByAction() {
+     * HashMap<Action, List<State>> sourceStates = new HashMap<Action, List<State>>();
+     * <p>
+     * for (Action action : currentMDP.getActions().values()) {
+     * sourceStates.put(action, new LinkedList<State>());
+     * }
+     * for (Transition transition : currentMDP.getTransitions().values()) {
+     * sourceStates.get(transition.getAction()).add(transition.getSourceState());
+     * }
+     * return sourceStates;
+     * }
+     * <p>
+     * private HashMap<Action, List<State>> getDestStatesByAction() {
+     * HashMap<Action, List<State>> destStates = new HashMap<Action, List<State>>();
+     * <p>
+     * for (Action action : currentMDP.getActions().values()) {
+     * destStates.put(action, new LinkedList<State>());
+     * }
+     * for (Transition transition : currentMDP.getTransitions().values()) {
+     * destStates.get(transition.getAction()).add(transition.getDestState());
+     * }
+     * return destStates;
+     * }
      **/
 
-    private List<Action> getStateActions(final State state, List<Action> actionsWithUtility) {
-        Set<Transition> stateTransitions =
-         currentMDP.getTransitions().values().stream().filter(tran -> tran.getSourceState() == state).collect(Collectors.toSet());
+    private HashMap<Transition, Double> getStateActions(final State state, HashMap<Transition, Double> transitionsWithUtility) {
 
-        Set<Action> stateAllActions = stateTransitions.stream().map(transition -> transition.getAction()).collect(Collectors.toSet());
+        //todo: one can add filter for unneeded transitions de to constraints in the future.
+        HashMap<Transition, Double> stateTransitions = new HashMap<Transition, Double>();
+        transitionsWithUtility.entrySet().stream().filter(tran -> tran.getKey().getSourceState() == state).forEach(entry ->
+                stateTransitions.put(entry.getKey(), entry.getValue()));
 
-        List<Action> stateActionsWithUtility = actionsWithUtility.stream().filter(action -> stateAllActions.contains(action)).collect(Collectors.toList());
-
-        stateActionsWithUtility.sort(Action::compareTo);
-        return stateActionsWithUtility;
+        // todo: add sort --- IF NEEDED! (currently it isn't , just use min or max)
+        //stateTransitions.values();
+        return stateTransitions;
     }
 
-    public static void main(String[] args) {
+    //sort elements by values
 
-        System.out.println("--");
+
+    public static void main(String[] args) {
 
         // Stimulating MDP example from page 207
 
@@ -271,9 +321,9 @@ public class UtilityCalculator {
         states.put(s31.getId(), s31);
         State s32 = new State("pos_3_2", false, false, 0.0);
         states.put(s32.getId(), s32);
-        State s33 = new State("pos_3_3", false, true, 0.0);
+        State s33 = new State("pos_3_3", false, false, 0.0);
         states.put(s33.getId(), s33);
-        State s34 = new State("pos_3_4", false, false, 1.0);
+        State s34 = new State("pos_3_4", false, true, 1.0);
         states.put(s34.getId(), s34);
 
 
@@ -410,31 +460,31 @@ public class UtilityCalculator {
         transitions.put(t59.getTransitionId(), t59);
         Transition t60 = new Transition(s23, s24, down, 0.1);
         transitions.put(t60.getTransitionId(), t60);
-
-        // s24 transitions:
-        Transition t61 = new Transition(s24, s24, right, 0.8);
-        transitions.put(t61.getTransitionId(), t61);
-        Transition t62 = new Transition(s24, s34, right, 0.1);
-        transitions.put(t62.getTransitionId(), t62);
-        // todo; does it go DOWN instead of right? - make sure!!
-        Transition t63 = new Transition(s24, s14, right, 0.1);
-        transitions.put(t63.getTransitionId(), t63);
-        Transition t64 = new Transition(s24, s34, up, 0.8);
-        transitions.put(t64.getTransitionId(), t64);
-        Transition t65 = new Transition(s24, s24, up, 0.2);
-        transitions.put(t65.getTransitionId(), t65);
-        Transition t67 = new Transition(s24, s23, left, 0.8);
-        transitions.put(t67.getTransitionId(), t67);
-        Transition t68 = new Transition(s24, s14, left, 0.1);
-        transitions.put(t68.getTransitionId(), t68);
-        Transition t69 = new Transition(s24, s34, left, 0.1);
-        transitions.put(t69.getTransitionId(), t69);
-        Transition t70 = new Transition(s24, s14, down, 0.8);
-        transitions.put(t70.getTransitionId(), t70);
-        Transition t71 = new Transition(s24, s23, down, 0.1);
-        transitions.put(t71.getTransitionId(), t71);
-        Transition t72 = new Transition(s24, s24, down, 0.1);
-        transitions.put(t72.getTransitionId(), t72);
+//
+//        // s24 transitions:
+//        Transition t61 = new Transition(s24, s24, right, 0.8);
+//        transitions.put(t61.getTransitionId(), t61);
+//        Transition t62 = new Transition(s24, s34, right, 0.1);
+//        transitions.put(t62.getTransitionId(), t62);
+//        // todo; does it go DOWN instead of right? - make sure!!
+//        Transition t63 = new Transition(s24, s14, right, 0.1);
+//        transitions.put(t63.getTransitionId(), t63);
+//        Transition t64 = new Transition(s24, s34, up, 0.8);
+//        transitions.put(t64.getTransitionId(), t64);
+//        Transition t65 = new Transition(s24, s24, up, 0.2);
+//        transitions.put(t65.getTransitionId(), t65);
+//        Transition t67 = new Transition(s24, s23, left, 0.8);
+//        transitions.put(t67.getTransitionId(), t67);
+//        Transition t68 = new Transition(s24, s14, left, 0.1);
+//        transitions.put(t68.getTransitionId(), t68);
+//        Transition t69 = new Transition(s24, s34, left, 0.1);
+//        transitions.put(t69.getTransitionId(), t69);
+//        Transition t70 = new Transition(s24, s14, down, 0.8);
+//        transitions.put(t70.getTransitionId(), t70);
+//        Transition t71 = new Transition(s24, s23, down, 0.1);
+//        transitions.put(t71.getTransitionId(), t71);
+//        Transition t72 = new Transition(s24, s24, down, 0.1);
+//        transitions.put(t72.getTransitionId(), t72);
 
         ////// ------   LAST LINE:  --------
 
@@ -512,29 +562,29 @@ public class UtilityCalculator {
         transitions.put(t94.getTransitionId(), t94);
 
         // s34 transitions:
-        // todo: can remove s24 transitions, s34 transitions as they dont change!!!
-        Transition t95 = new Transition(s34, s34, right, 0.9);
-        transitions.put(t95.getTransitionId(), t95);
-        Transition t96 = new Transition(s34, s24, right, 0.1);
-        transitions.put(t96.getTransitionId(), t96);
-        // todo; does it go DOWN instead of right? - make sure!!
-        Transition t98 = new Transition(s34, s34, up, 0.9);
-        transitions.put(t98.getTransitionId(), t98);
-        Transition t99 = new Transition(s34, s33, up, 0.1);
-        transitions.put(t99.getTransitionId(), t99);
-
-        Transition t100 = new Transition(s34, s33, left, 0.8);
-        transitions.put(t100.getTransitionId(), t100);
-        Transition t101 = new Transition(s34, s34, left, 0.1);
-        transitions.put(t101.getTransitionId(), t101);
-        Transition t102 = new Transition(s34, s24, left, 0.1);
-        transitions.put(t102.getTransitionId(), t102);
-        Transition t103 = new Transition(s34, s24, down, 0.8);
-        transitions.put(t103.getTransitionId(), t103);
-        Transition t104 = new Transition(s34, s33, down, 0.1);
-        transitions.put(t104.getTransitionId(), t104);
-        Transition t105 = new Transition(s34, s34, down, 0.1);
-        transitions.put(t105.getTransitionId(), t105);
+//        // todo: can remove s24 transitions, s34 transitions as they dont change!!!
+//        Transition t95 = new Transition(s34, s34, right, 0.9);
+//        transitions.put(t95.getTransitionId(), t95);
+//        Transition t96 = new Transition(s34, s24, right, 0.1);
+//        transitions.put(t96.getTransitionId(), t96);
+//        // todo; does it go DOWN instead of right? - make sure!!
+//        Transition t98 = new Transition(s34, s34, up, 0.9);
+//        transitions.put(t98.getTransitionId(), t98);
+//        Transition t99 = new Transition(s34, s33, up, 0.1);
+//        transitions.put(t99.getTransitionId(), t99);
+//
+//        Transition t100 = new Transition(s34, s33, left, 0.8);
+//        transitions.put(t100.getTransitionId(), t100);
+//        Transition t101 = new Transition(s34, s34, left, 0.1);
+//        transitions.put(t101.getTransitionId(), t101);
+//        Transition t102 = new Transition(s34, s24, left, 0.1);
+//        transitions.put(t102.getTransitionId(), t102);
+//        Transition t103 = new Transition(s34, s24, down, 0.8);
+//        transitions.put(t103.getTransitionId(), t103);
+//        Transition t104 = new Transition(s34, s33, down, 0.1);
+//        transitions.put(t104.getTransitionId(), t104);
+//        Transition t105 = new Transition(s34, s34, down, 0.1);
+//        transitions.put(t105.getTransitionId(), t105);
 
         HashMap<String, Action> actions = new HashMap<String, Action>();
 

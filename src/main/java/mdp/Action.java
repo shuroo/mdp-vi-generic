@@ -29,7 +29,12 @@ public class Action implements Comparable<Action>{
     }
 
 
-    /**
+    @Override
+    public String toString(){
+        return actionId;
+    }
+
+   /*//**
      * Sort by utility DESC.
      *
      * @param action

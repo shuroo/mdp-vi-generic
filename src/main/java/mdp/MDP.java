@@ -3,6 +3,7 @@ package mdp;
 import mdp.interfaces.MDPI;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class MDP implements MDPI{
 
@@ -18,6 +19,11 @@ public class MDP implements MDPI{
 
     // HashMap <String ActionId,Action>
     private HashMap<String,Action> actions;
+
+    public void setStates(List<State> states) {
+        this.states = new HashMap<String,State>();
+        states.stream().forEach(stt-> this.states.put(stt.getId(),stt));
+    }
 
     // HashMap <String StateId,State>  == State(state_id)
     private HashMap<String,State> states;

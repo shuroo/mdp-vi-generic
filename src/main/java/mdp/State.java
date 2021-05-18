@@ -5,6 +5,7 @@ import mdp.interfaces.StateI;
 public class State implements StateI {
 
     private String stateId;
+    // Default value
     private Double minimalUtility;
     private Action bestAction;
     private Boolean isFinal = false;
