@@ -48,7 +48,7 @@ public class Transition {
     }
 
     public static String buildId(Action action, State sourceState, State destState) {
-        return action.getActionId() + "_" + sourceState.getId() + "_" + destState.getId();
+        return action.getActionId() + "_dest:" + destState.getId() + "_src:" + sourceState.getId();
     }
 
 }
