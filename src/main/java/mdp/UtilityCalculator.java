@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class UtilityCalculator {
 
     Double epsilon = 0.1;
-    Double discountFactor = 1.0;
+    Double discountFactor = 0.98;
 
     private MDP currentMDP;
 
@@ -38,7 +38,7 @@ public class UtilityCalculator {
 
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
-                System.out.println("Utility found for state:"+state.getId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
+                //System.out.println("Utility found for state:"+state.getId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
                 if (prevUtility == null) {
                     continue;
                 }
@@ -48,11 +48,11 @@ public class UtilityCalculator {
                     maxLambda = diffUtility;
                 }
 
-             //   if (maxLambda <= stopCondition) {
+                if (maxLambda <= stopCondition) {
 
                     System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                     return currentMDP;
-               //, }
+                }
             }
 
             currentMDP.getStates().values().stream().forEach(state -> {
@@ -85,16 +85,14 @@ public class UtilityCalculator {
             String sourceActionKey = tran.getAction().toString()+"_"+transitionId.substring(transitionId.indexOf("_src:"),
                     transitionId.length());
             Double utility = transtionsWithUtility.get(tran);
-//            if(tran.getTransitionId().startsWith("left_pos_3_3")){
-//                System.out.println("state_33_util:"+utility);
-//            }
 
-            Action action = tran.getAction();
+            Action action = new Action(tran.getAction().getActionId());
 
             if(!actionsWithUtility.containsKey(sourceActionKey)) {
                 actionsWithUtility.put(sourceActionKey, new LinkedList<Action>());
             }
 
+            //System.out.println("Setting utility:"+utility+" for action:"+action.getActionId()+" on key:"+sourceActionKey);
             action.setUtility(utility);
             actionsWithUtility.get(sourceActionKey).add(action);
 
@@ -176,7 +174,7 @@ public class UtilityCalculator {
             Double actionSubUtility = joinedProb * (dest.getUtility());
             // we DON'T set the source utility at this point YET! choosing minimum.
 
-            System.out.println("transition:"+transition.getTransitionId()+"----^^:" + joinedProb + " actionSubUtility:" + actionSubUtility);
+            //System.out.println("transition:"+transition.getTransitionId()+"----^^:" + joinedProb + " actionSubUtility:" + actionSubUtility);
             return actionSubUtility;
         }
     }
@@ -222,7 +220,7 @@ public class UtilityCalculator {
             state.setPreviousUtility(state.getUtility());
             //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
 
-            System.out.println("--### Setting utility: " + minimalUtility + " for state: " + state.getId() + "###--");
+            //System.out.println("--### Setting utility: " + minimalUtility + " for state: " + state.getId() + "###--");
             state.setUtility(minimalUtility);
             state.setBestAction(minimalUtilityAction);
 
@@ -281,15 +279,15 @@ public class UtilityCalculator {
     private HashMap<String, Action> filterStateActions(final State state, HashMap<String, Action> stateActionsWithUtility) {
 
         //todo: one can add filter for unneeded transitions de to constraints in the future.
-        HashMap<String, Action> stateTransitions = new HashMap<String, Action>();
+        HashMap<String, Action> stateActions = new HashMap<String, Action>();
 
         // check whether 'key' = action.getId()_state.getId(), and filter accordingly.
         stateActionsWithUtility.entrySet().stream().filter(tran -> tran.getKey().endsWith("_src:" +state.getId())).forEach(entry ->
-                stateTransitions.put(entry.getKey(), entry.getValue()));
+                stateActions.put(entry.getKey(), entry.getValue()));
 
         // todo: add sort --- IF NEEDED! (currently it isn't , just use min or max)
         //stateTransitions.values();
-        return stateTransitions;
+        return stateActions;
     }
 
     //sort elements by values
@@ -549,7 +547,7 @@ public class UtilityCalculator {
         transitions.put(t87.getTransitionId(), t87);
         Transition t88 = new Transition(s33, s32, up, 0.1);
         transitions.put(t88.getTransitionId(), t88);
-        Transition t89 = new Transition(s33, s34, left, 0.8);
+        Transition t89 = new Transition(s33, s32, left, 0.8);
         transitions.put(t89.getTransitionId(), t89);
         Transition t90 = new Transition(s33, s23, left, 0.1);
         transitions.put(t90.getTransitionId(), t90);
