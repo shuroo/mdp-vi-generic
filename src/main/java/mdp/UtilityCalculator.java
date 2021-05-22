@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class UtilityCalculator {
 
     Double epsilon = 0.1;
-    Double discountFactor = 0.98;
+    Double discountFactor = 0.96;
 
     private MDP currentMDP;
 
@@ -348,12 +348,10 @@ public class UtilityCalculator {
         transitions.put(t5.getTransitionId(), t5);
         Transition t6 = new Transition(s11, s11, up, 0.1);
         transitions.put(t6.getTransitionId(), t6);
-        Transition t7 = new Transition(s11, s11, left, 0.8);
+        Transition t7 = new Transition(s11, s11, left, 0.9);
         transitions.put(t7.getTransitionId(), t7);
         Transition t8 = new Transition(s11, s21, left, 0.1);
         transitions.put(t8.getTransitionId(), t8);
-        Transition t9 = new Transition(s11, s11, left, 0.1);
-        transitions.put(t9.getTransitionId(), t9);
 
         // s12 transitions:
         Transition t10 = new Transition(s12, s13, right, 0.8);
@@ -429,10 +427,8 @@ public class UtilityCalculator {
 
         Transition t46 = new Transition(s21, s11, down, 0.8);
         transitions.put(t46.getTransitionId(), t46);
-        Transition t47 = new Transition(s21, s21, down, 0.1);
+        Transition t47 = new Transition(s21, s21, down, 0.2);
         transitions.put(t47.getTransitionId(), t47);
-        Transition t48 = new Transition(s21, s21, down, 0.1);
-        transitions.put(t48.getTransitionId(), t48);
 
         // s23 transitions:
         Transition t49 = new Transition(s23, s24, right, 0.8);
@@ -511,9 +507,9 @@ public class UtilityCalculator {
 
         // s32 transitions:
         Transition t106 = new Transition(s32, s33, right, 0.8);
-        transitions.put(t10.getTransitionId(), t10);
+        transitions.put(t106.getTransitionId(), t106);
         Transition t107 = new Transition(s32, s32, right, 0.2);
-        transitions.put(t12.getTransitionId(), t12);
+        transitions.put(t107.getTransitionId(), t107);
 
         // todo: "up" and "down" can be removed.
         Transition t108 = new Transition(s32, s32, up, 0.8);
