@@ -7,16 +7,19 @@ import java.util.stream.Collectors;
 
 public class UtilityCalculator {
 
-    Double epsilon = 0.1;
-    Double discountFactor = 0.96;
+    private Double epsilon;
+    private Double discountFactor;
 
     private MDP currentMDP;
 
     // --- Parameter for setting during calculation. for private usage: ---
     private Double maxLambda = 100000.0;
 
-    public UtilityCalculator(MDP currentMDP) {
+    public UtilityCalculator(MDP currentMDP, Double epsilon, Double discountFactor) {
+
         this.currentMDP = currentMDP;
+        this.discountFactor = discountFactor;
+        this.epsilon = epsilon;
     }
 
     public MDP setOptimalPolicy() {
@@ -26,7 +29,7 @@ public class UtilityCalculator {
 
         List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
 
-        while (maxLambda > stopCondition) {
+        while (maxLambda > stopCondition ) {
 
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter);
@@ -44,11 +47,11 @@ public class UtilityCalculator {
                 }
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
-                if (maxLambda > diffUtility) {
+                if (maxLambda > diffUtility && diffUtility != 0.0) {
                     maxLambda = diffUtility;
                 }
 
-                if (maxLambda <= stopCondition) {
+                if (maxLambda <= stopCondition && maxLambda != 0.0) {
 
                     System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                     return currentMDP;
@@ -216,6 +219,8 @@ public class UtilityCalculator {
 
             Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
             minimalUtility = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
+
+            minimalUtility = minimalUtility * this.discountFactor;
 
             state.setPreviousUtility(state.getUtility());
             //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
