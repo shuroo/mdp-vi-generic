@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/StrategyRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/StrategyRunner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/StrategyRunner.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mdp/StrategyRunner.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/UtilityCalculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mdp/UtilityCalculator.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -64,8 +67,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="26" column="37" lean-forward="true" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
+            <state relative-caret-position="57">
+              <caret line="51" column="17" lean-forward="true" selection-start-line="51" selection-start-column="17" selection-end-line="51" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -76,8 +79,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/StrategyRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31">
-              <caret line="241" column="30" selection-start-line="241" selection-start-column="30" selection-end-line="241" selection-end-column="30" />
+            <state relative-caret-position="142">
+              <caret line="803" column="8" lean-forward="true" selection-start-line="803" selection-start-column="8" selection-end-line="803" selection-end-column="8" />
               <folding>
                 <element signature="e#167#182#0" expanded="true" />
                 <element signature="e#1665#1685#0" expanded="true" />
@@ -86,6 +89,9 @@
                 <element signature="e#12567#12587#0" expanded="true" />
                 <element signature="e#22720#22736#0" expanded="true" />
                 <element signature="e#22981#22997#0" expanded="true" />
+                <element signature="e#25486#25506#0" expanded="true" />
+                <element signature="e#35639#35655#0" expanded="true" />
+                <element signature="e#35900#35916#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -103,11 +109,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Sys</find>
-      <find>action</find>
-      <find>getAction().getActionId()</find>
-      <find>groupBy</find>
-      <find>joined</find>
       <find>actionSubUtility</find>
       <find>3_3</find>
       <find>actionSub</find>
@@ -131,8 +132,13 @@
       <find>s31 tr</find>
       <find>s31</find>
       <find>lamb</find>
-      <find>down</find>
       <find>maxL</find>
+      <find>down</find>
+      <find>s21</find>
+      <find>s12</find>
+      <find>epsilon</find>
+      <find>rewa</find>
+      <find>epsilo</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -218,7 +224,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1621803122503" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1621870417440" />
     <property name="last_opened_file_path" value="$USER_HOME$/Dev/Backend/informer" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -394,13 +400,13 @@
       <window_info id="Job Explorer" order="9" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.7019544" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.68566775" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.41042346" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32736155" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32736155" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32899022" />
       <window_info anchor="bottom" id="Console" order="10" />
       <window_info anchor="bottom" id="Version Control" order="11" />
@@ -606,8 +612,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="26" column="37" lean-forward="true" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
+        <state relative-caret-position="57">
+          <caret line="51" column="17" lean-forward="true" selection-start-line="51" selection-start-column="17" selection-end-line="51" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -616,8 +622,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/StrategyRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="241" column="30" selection-start-line="241" selection-start-column="30" selection-end-line="241" selection-end-column="30" />
+        <state relative-caret-position="142">
+          <caret line="803" column="8" lean-forward="true" selection-start-line="803" selection-start-column="8" selection-end-line="803" selection-end-column="8" />
           <folding>
             <element signature="e#167#182#0" expanded="true" />
             <element signature="e#1665#1685#0" expanded="true" />
@@ -626,6 +632,9 @@
             <element signature="e#12567#12587#0" expanded="true" />
             <element signature="e#22720#22736#0" expanded="true" />
             <element signature="e#22981#22997#0" expanded="true" />
+            <element signature="e#25486#25506#0" expanded="true" />
+            <element signature="e#35639#35655#0" expanded="true" />
+            <element signature="e#35900#35916#0" expanded="true" />
           </folding>
         </state>
       </provider>

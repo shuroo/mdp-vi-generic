@@ -47,7 +47,7 @@ public class UtilityCalculator {
                 }
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
-                if (maxLambda > diffUtility && diffUtility != 0.0) {
+                if (maxLambda > diffUtility && maxLambda != 0.0) {
                     maxLambda = diffUtility;
                 }
 
