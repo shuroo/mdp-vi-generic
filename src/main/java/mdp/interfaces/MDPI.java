@@ -1,9 +1,9 @@
 package mdp.interfaces;
 
-import mdp.Action;
-import mdp.Reward;
-import mdp.State;
-import mdp.Transition;
+import mdp.generic.Action;
+import mdp.generic.Reward;
+import mdp.generic.State;
+import mdp.generic.Transition;
 
 import java.util.HashMap;
 

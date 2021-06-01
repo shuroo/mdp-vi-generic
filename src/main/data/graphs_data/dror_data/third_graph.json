@@ -1,0 +1,143 @@
+{
+    "vertices": [{
+        "identifier": "s",
+        "isFinal": false,
+        "isInitial": true
+    },{
+
+        "identifier": "t",
+        "isFinal": true,
+        "isInitial": false
+    },
+        {
+
+        "identifier": "v1",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v2",
+        "isFinal": false,
+        "isInitial": false
+    },
+        {
+
+            "identifier": "v3",
+            "isFinal": false,
+            "isInitial": false
+        },{
+
+            "identifier": "v4",
+            "isFinal": false,
+            "isInitial": false
+        },
+        {
+
+            "identifier": "v5",
+            "isFinal": false,
+            "isInitial": false
+        },{
+
+            "identifier": "v6",
+            "isFinal": false,
+            "isInitial": false
+        },
+        {
+            "identifier": "v7",
+            "isFinal": false,
+            "isInitial": false
+        },{
+
+            "identifier": "v8",
+            "isFinal": false,
+            "isInitial": false
+        },
+        {
+
+            "identifier": "v9",
+            "isFinal": false,
+            "isInitial": false
+        }
+    ],
+    "edges": [
+        {
+            "source": "s",
+            "target": "v1",
+            "blockingProbability": 0.0,
+            "reward": 0.5
+        },
+        {
+            "source": "v1",
+            "target": "v2",
+            "blockingProbability": 0.3,
+            "reward": 5
+        },
+        {
+            "source": "v2",
+            "target": "v3",
+            "blockingProbability": 0.4,
+            "reward": 5
+        },
+        {
+            "source": "v3",
+            "target": "t",
+            "blockingProbability": 0.2,
+            "reward": 2
+        },
+        {
+            "source": "s",
+            "target": "v4",
+            "blockingProbability": 0.0,
+            "reward": 1
+        },
+        {
+            "source":       "v4",
+            "target":       "v5",
+            "blockingProbability": 0.4,
+            "reward":       2
+        },
+        {
+            "source": "v5",
+            "target": "v6",
+            "blockingProbability": 0.7,
+            "reward": 6
+        },
+        {
+            "source":       "v6",
+            "target":       "t",
+            "blockingProbability": 0.95,
+            "reward":       2
+        },
+        {
+            "source": "s",
+            "target": "v7",
+            "blockingProbability": 0.0,
+            "reward": 5
+        },
+        {
+            "source":       "v7",
+            "target":       "v8",
+            "blockingProbability": 0.1,
+            "reward":       4
+        },
+        {
+            "source": "v8",
+            "target": "v9",
+            "blockingProbability": 0.2,
+            "reward": 5
+        },
+        {
+            "source":       "v9",
+            "target":       "t",
+            "blockingProbability": 0.4,
+            "reward":       4
+        },
+        {
+            "source":       "s",
+            "target":       "t",
+            "blockingProbability": 0.0,
+            "reward":       100
+        }
+
+    ]
+}

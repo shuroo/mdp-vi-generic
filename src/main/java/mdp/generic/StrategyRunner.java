@@ -1,4 +1,6 @@
-package mdp;
+package mdp.generic;
+
+import mdp.UtilityCalculator;
 
 import java.util.HashMap;
 
@@ -247,6 +249,7 @@ public class StrategyRunner {
     }
 
     /**
+     * Implementation of example 17.2 in the book.
      * Implementation of example 17.2 in the book.
      * @return
      */

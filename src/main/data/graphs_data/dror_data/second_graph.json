@@ -1,0 +1,56 @@
+{
+    "vertices": [{
+        "identifier": "s",
+        "isFinal": false,
+        "isInitial": true
+    },{
+
+        "identifier": "v0",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v1",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "t",
+        "isFinal": true,
+        "isInitial": false
+    }
+    ],
+    "edges": [
+        {
+            "source": "s",
+            "target": "v0",
+            "blockingProbability": 0,
+            "reward": 1
+        },
+        {
+            "source": "v0",
+            "target": "t",
+            "blockingProbability": 0.95,
+            "reward": 0.5
+        },
+        {
+            "source": "s",
+            "target": "v1",
+            "blockingProbability": 0,
+            "reward": 1
+        },
+        {
+            "source": "v1",
+            "target": "t",
+            "blockingProbability": 0.05,
+            "reward": 1.5
+        },
+        {
+            "source": "s",
+            "target": "t",
+            "blockingProbability": 0.0,
+            "reward": 10000
+        }
+
+    ]
+}

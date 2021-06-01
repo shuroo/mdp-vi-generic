@@ -1,6 +1,6 @@
 package mdp.interfaces;
 
-import mdp.Action;
+import mdp.generic.Action;
 
 public interface StateI {
 

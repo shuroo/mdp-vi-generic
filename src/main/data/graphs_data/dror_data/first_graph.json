@@ -1,0 +1,88 @@
+{
+    "vertices": [{
+        "identifier": "s",
+        "isFinal": false,
+        "isInitial": true
+    },{
+        "identifier": "v1",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v2",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v3",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v4",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v5",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "t",
+        "isFinal": true,
+        "isInitial": false
+    }
+    ],
+    "edges": [
+        {
+            "source": "s",
+            "target": "v1",
+            "blockingProbability": 0,
+            "reward": 10
+        },
+        {
+            "source": "v1",
+            "target": "v3",
+            "blockingProbability": 0.0,
+            "reward": 20
+        },
+        {
+            "source": "v3",
+            "target": "t",
+            "blockingProbability": 0.0,
+            "reward": 0
+        },
+        {
+            "source": "v1",
+            "target": "v4",
+            "blockingProbability": 0.5,
+            "reward": 1
+        },
+        {
+            "source": "v4",
+            "target": "t",
+            "blockingProbability": 0.0,
+            "reward": 0
+        },
+        {
+            "source":       "s",
+            "target":       "v2",
+            "blockingProbability": 0.0,
+            "reward":       10
+        },
+        {
+            "source":       "v2",
+            "target":       "v5",
+            "blockingProbability": 0.5,
+            "reward":       100
+        },
+        {
+            "source":       "v5",
+            "target":       "t",
+            "blockingProbability": 0.0,
+            "reward":       0
+        }
+
+    ]
+}

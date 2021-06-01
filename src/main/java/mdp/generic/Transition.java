@@ -1,4 +1,4 @@
-package mdp;
+package mdp.generic;
 
 public class Transition {
 

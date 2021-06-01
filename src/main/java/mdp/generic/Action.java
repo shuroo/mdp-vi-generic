@@ -1,4 +1,4 @@
-package mdp;
+package mdp.generic;
 
 /**
  *
@@ -6,9 +6,9 @@ package mdp;
  *  Every state s has a probability P(s|s') to move to state s' with action a.
  */
 
-public class Action implements Comparable<Action>{
+public class Action {//implements Comparable<Action>{
 
-    private String actionId;
+    protected String actionId;
 
     public Double getUtility() {
         return utility;
@@ -34,17 +34,19 @@ public class Action implements Comparable<Action>{
         return actionId;
     }
 
+    public Action(){}
+
    /*//**
      * Sort by utility DESC.
      *
      * @param action
      * @return
      */
-    @Override
-    public int compareTo(Action action) {
+
+/*    public int compareTo(Action action) {
         if (getUtility() == null || action.getUtility() == null) {
             return 0;
         }
         return action.getUtility().compareTo(getUtility());
-    }
+    }*/
 }

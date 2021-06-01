@@ -1,16 +1,16 @@
-package mdp;
+package mdp.generic;
 
 import mdp.interfaces.StateI;
 
 public class State implements StateI {
 
-    private String stateId;
+    protected String stateId;
     // Default value
-    private Double minimalUtility;
-    private Action bestAction;
-    private Boolean isFinal = false;
-    private Boolean isInitial = false;
-    private Double previousUtility;
+    protected Double minimalUtility;
+    protected Action bestAction;
+    protected Boolean isFinal = false;
+    protected Boolean isInitial = false;
+    protected Double previousUtility;
 
     public State(String stateId, Boolean isInitial, Boolean isFinal,Double initialUtility) {
         this.stateId = stateId;
@@ -67,5 +67,15 @@ public class State implements StateI {
 
     public void setPreviousUtility(Double prevUtil) {
         this.previousUtility = prevUtil;
+    }
+
+    public State(){}
+
+
+    // print states properly
+    @Override
+    public String toString(){
+
+        return "<"+this.stateId+">";
     }
 }

@@ -1,4 +1,4 @@
-package mdp;
+package mdp.generic;
 
 import mdp.interfaces.MDPI;
 
@@ -7,29 +7,32 @@ import java.util.List;
 
 public class MDP implements MDPI{
 
+    // HashMap <String StateId,State>  == State(state_id)
+    protected HashMap<String,State> states;
+
+    // HashMap < StateID_ActionID, Double >  == R(s,a,s')
+    protected HashMap<String,Reward> rewards;
+
+
+    public MDP(){}
+
     public Boolean isMinimizationProblem() {
         return isMinimizationProblem;
     }
 
     // Check whether to solve a minimization or maximization problem.
-    private Boolean isMinimizationProblem;
+    protected Boolean isMinimizationProblem;
 
     // HashMap < StateID_ActionID, Transition > == P(s,a,s')
-    private HashMap<String,Transition> transitions;
+    protected HashMap<String,Transition> transitions;
 
     // HashMap <String ActionId,Action>
-    private HashMap<String,Action> actions;
+    protected HashMap<String,Action> actions;
 
-    public void setStates(List<State> states) {
+    protected void setStates(List<State> states) {
         this.states = new HashMap<String,State>();
         states.stream().forEach(stt-> this.states.put(stt.getId(),stt));
     }
-
-    // HashMap <String StateId,State>  == State(state_id)
-    private HashMap<String,State> states;
-
-    // HashMap < StateID_ActionID, Double >  == R(s,a,s')
-    private HashMap<String,Reward> rewards;
 
     public MDP (
 

@@ -1,0 +1,62 @@
+{
+    "vertices": [{
+        "identifier": "v1",
+        "isFinal": false,
+        "isInitial": true
+    },{
+
+        "identifier": "v2",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v3",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
+        "identifier": "v4",
+        "isFinal": true,
+        "isInitial": false
+    }
+    ],
+    "edges": [
+        {
+            "source": "v1",
+            "target": "v2",
+            "blockingProbability": 0.3,
+            "reward": 1.0
+        },
+        {
+            "source": "v2",
+            "target": "v4",
+            "blockingProbability": 0.2,
+            "reward": 10.0
+        },
+        {
+            "source": "v1",
+            "target": "v4",
+            "blockingProbability": 0.0,
+            "reward": 10000.0
+        },
+        {
+            "source": "v1",
+            "target": "v3",
+            "blockingProbability": 0.6,
+            "reward": 1.0
+        },
+        {
+            "source": "v2",
+            "target": "v3",
+            "blockingProbability": 0.0,
+            "reward": 1.0
+        },
+        {
+            "source":       "v3",
+            "target":       "v4",
+            "blockingProbability": 0.4,
+            "reward":       0.0
+        }
+
+    ]
+}

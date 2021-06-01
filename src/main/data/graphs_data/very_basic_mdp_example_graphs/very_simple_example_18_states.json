@@ -1,0 +1,27 @@
+{
+    "vertices": [{
+        "identifier": "s",
+        "isFinal": false,
+        "isInitial": true
+    },{
+
+        "identifier": "t",
+        "isFinal": true,
+        "isInitial": false
+    }
+    ],
+    "edges": [
+        {
+            "source": "s",
+            "target": "t",
+            "blockingProbability": 0.3,
+            "reward": 5.0
+        },
+        {
+            "source": "t",
+            "target": "s",
+            "blockingProbability": 0.5,
+            "reward": 3.0
+        }
+    ]
+}
