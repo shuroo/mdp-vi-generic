@@ -6,6 +6,8 @@ public class Transition extends mdp.generic.Transition {
 
         this.sourceState = source;
         this.destState = dest;
+        this.action = action;
+        this.probability = probability;
 
     }
 }

@@ -1,15 +1,20 @@
 package mdp.ctp;
+
 import mdp.generic.MDP;
+import mdp.generic.Reward;
 import org.jgrapht.graph.Graph;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
  *  Extended MDP, Based on CTP
  */
 public class MDPFromGraph extends MDP {
+
+    HashMap<String,Action> extededActions = new HashMap<String,Action>();
+    HashMap<String,State> extededStates = new HashMap<String,State>();
+    HashMap<String,Transition> extededTransitions = new HashMap<String,Transition>();
 
     /**
      *
@@ -39,13 +44,14 @@ public class MDPFromGraph extends MDP {
     public MDPFromGraph(Graph g){
         this.graph = g;
         MDPCreator creator = new MDPCreator(graph);
-        this.actions = creator.generateAllActions();
-        this.states =  (HashMap)creator.generateAllStates();//generateAllStates()
-        for(String stateId : this.states.keySet()){
-            System.out.println(stateId);
+        this.extededActions = creator.generateAllActions();
+        this.extededStates =  (HashMap)creator.generateAllStates();//generateAllStates()
+        this.rewards = creator.generateAllRewards(this.extededStates,this.extededActions);
+        for(String rewardId : this.rewards.keySet()){
+            System.out.println(rewardId);
         }
-        //this.transitions = creator.generateTransitions();
-        //this.rewards = creator.generateRewards();
+        //this.transitions = creator.generateTransitions(this.extededStates,this.extededActions);
+        //
 
     }
 }

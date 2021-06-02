@@ -16,7 +16,7 @@ public class CollectionUtils<T> {
 
     public static Map<String, State> stateToMap(Collection<State> states) {
         return states.stream()
-                .collect(Collectors.toMap(State::getStateId, state -> state));
+                .collect(Collectors.toMap(State::getId, state -> state));
     }
 
     public static Map<String, CTPEdge> edgeToMap(Collection<CTPEdge> edges) {

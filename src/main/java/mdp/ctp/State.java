@@ -19,12 +19,6 @@ public class State extends mdp.generic.State {
         setStateId();
     }
 
-        public String getStateId() {
-            return stateId;
-        }
-
-        private String stateId;
-
         public void setAgentLocation(Vertex agentLocation) {
             this.agentLocation = agentLocation;
             setStateId();
@@ -65,7 +59,7 @@ public class State extends mdp.generic.State {
         @Override
         public String toString(){
 
-            return "<"+this.getStateId()+">";
+            return "<"+this.getId()+">";
         }
 
     }

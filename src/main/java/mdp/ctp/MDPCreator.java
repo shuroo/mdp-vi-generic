@@ -3,6 +3,7 @@ package mdp.ctp;
 
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
+import mdp.generic.Reward;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
 import org.jgrapht.graph.Vertex;
@@ -19,14 +20,53 @@ public class MDPCreator {
         graph = g;
     }
 
+    public HashMap<String, Transition> generateTransitions(HashMap<String, State> allStates, HashMap<String, Action> allActions){
+        HashMap<String,Transition> allTransitions = new HashMap<String,Transition>();
+        allStates.values().forEach(stt ->
+                allStates.values().forEach(stt2 ->
+                {
+                    Vertex source = stt.agentLocation;
+                    Vertex dest = stt2.agentLocation;
+                    if (allActions.containsKey(Action.generateId(source, dest))) {
 
-    public HashMap<String, mdp.generic.Action> generateAllActions() {
+                        Action statesAction = allActions.get(Action.generateId(source, dest));
+                        Double bolcProb = statesAction.getSourceEdge().getBlockingProbability();
+                        Transition tran = new Transition(stt, stt2, statesAction,0.0 );// 0.0 is a placeholder
+                        allTransitions.put(tran.getTransitionId(),tran);
 
-        HashMap<String, mdp.generic.Action> allActionsMap = new HashMap<String, mdp.generic.Action>();
+                    }
+                }));
+
+        return allTransitions;
+    }
+
+    public HashMap<String, Reward> generateAllRewards(HashMap<String, State> allStates, HashMap<String, Action> allActions) {
+        HashMap<String,Reward> rewards = new HashMap<String,Reward>();
+        allStates.values().forEach(stt ->
+                allStates.values().forEach(stt2 ->
+                {
+                    Vertex source = stt.agentLocation;
+                    Vertex dest = stt2.agentLocation;
+                    if (allActions.containsKey(Action.generateId(source, dest))) {
+
+                        Action statesAction = allActions.get(Action.generateId(source, dest));
+                        Double reward = statesAction.getSourceEdge().getReward();
+                        Reward rewardObj = new Reward(stt, stt2, statesAction, reward);
+                        rewards.put(rewardObj.getId(),rewardObj);
+
+                    }
+                }));
+
+        return rewards;
+    }
+
+    public HashMap<String, Action> generateAllActions() {
+
+        HashMap<String, Action> allActionsMap = new HashMap<String, Action>();
         graph.getEdges().values().stream().forEach(
                 edge -> {
                     Action action = new Action((Edge) edge);
-                    allActionsMap.put(action.getActionId(), (mdp.generic.Action)action);
+                    allActionsMap.put(action.getActionId(), action);
                 });
 
         return allActionsMap;
@@ -37,7 +77,8 @@ public class MDPCreator {
 
     /**
      * Given a Graph, generate all possible states and return it as a map of <StateId,State>
-     * @return-  Map<String, State> - All possible states.
+     *
+     * @return- Map<String, State> - All possible states.
      */
     public Map<String, State> generateAllStates() {
 
@@ -56,6 +97,7 @@ public class MDPCreator {
 
     /**
      * Generate a single state based on list of ctp-statused-edges, and all possible vertex combinations.
+     *
      * @param statusList - List of List<CTPEdge> where the inner list represents all possible statuses of a SINGLE ctp edge.
      * @return
      */
@@ -64,7 +106,7 @@ public class MDPCreator {
         Set<State> resultingStates = (Set<State>) graph.getVertices().values().stream().map(vert -> {
             Vector<CTPEdge> statusVector = new Vector<CTPEdge>();
             statusVector.addAll(statusList);
-            return new State((Vertex)vert, statusVector);
+            return new State((Vertex) vert, statusVector);
         }).collect(Collectors.toSet());
         return resultingStates;
     }
@@ -119,6 +161,7 @@ public class MDPCreator {
 
     /**
      * Generate all 3 possible statuses for a given edge.
+     *
      * @param edge
      * @return -  HashMap<String, State>
      */
@@ -129,7 +172,7 @@ public class MDPCreator {
 
         // (e1,c)p=...,(e1,o),(e1,u)
 
-        List< Vector<CTPEdge>> results = new LinkedList< Vector<CTPEdge>>();
+        List<Vector<CTPEdge>> results = new LinkedList<Vector<CTPEdge>>();
         Vector<CTPEdge> st1_v = new Vector<CTPEdge>();
         st1_v.add(es);
         results.add(st1_v);
