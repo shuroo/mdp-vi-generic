@@ -3,15 +3,15 @@ package mdp.generic;
 public class Transition {
 
 
-    private State destState;
+    protected State destState;
     // Value:  0.0 =< prob <= 1.0
-    private Double probability;
+    protected Double probability;
 
-    private State sourceState;
+    protected State sourceState;
 
-    private Action action;
+    protected Action action;
 
-    private String transitionId;
+    protected String transitionId;
 
 
     public State getSourceState() {
@@ -50,5 +50,7 @@ public class Transition {
     public static String buildId(Action action, State sourceState, State destState) {
         return action.getActionId() + "_dest:" + destState.getId() + "_src:" + sourceState.getId();
     }
+
+    protected Transition(){}
 
 }

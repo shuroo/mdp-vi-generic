@@ -1,6 +1,7 @@
 
 package mdp.ctp;
 
+import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
@@ -19,21 +20,29 @@ public class MDPCreator {
     }
 
 
-    public HashMap<String, Action> generateAllActions() {
+    public HashMap<String, mdp.generic.Action> generateAllActions() {
 
-        HashMap<String, Action> allActionsMap = new HashMap<String, Action>();
-        //List<Edge> edges = (List<Edge>) graph.getEdges().values().stream().collect(Collectors.toList());
-        List<Action> allActions = graph.getEdges().values().stream().map(
-                edge ->{
-            //Edge mdpe = Edge.mdpeFromEdge(edge);
-            Action action = new Action((Edge)edge);
-                   // allActions.put(action.getActionId(), action);
-            return action;
-        }).collect(Collectors.toList());
+        HashMap<String, mdp.generic.Action> allActionsMap = new HashMap<String, mdp.generic.Action>();
+        graph.getEdges().values().stream().forEach(
+                edge -> {
+                    Action action = new Action((Edge) edge);
+                    allActionsMap.put(action.getActionId(), (mdp.generic.Action)action);
+                });
+
+        return allActionsMap;
+
+    }
 
     //////////////////////
 
-    public Map<String, State> generateStatesMapFromStatuses(List<LinkedList<CTPEdge>> statusCombinations) {
+    /**
+     * Given a Graph, generate all possible states and return it as a map of <StateId,State>
+     * @return-  Map<String, State> - All possible states.
+     */
+    public Map<String, State> generateAllStates() {
+
+        List<LinkedList<CTPEdge>> statusCombinations = generateStatusedEdges();
+
         List<Set<State>> allStatesByLocations =
                 statusCombinations.stream().map(statusList -> generateStatesFromStatus(statusList)).collect(Collectors.toList());
         // Flatten list:
@@ -45,21 +54,26 @@ public class MDPCreator {
         return allStatesMap;
     }
 
+    /**
+     * Generate a single state based on list of ctp-statused-edges, and all possible vertex combinations.
+     * @param statusList - List of List<CTPEdge> where the inner list represents all possible statuses of a SINGLE ctp edge.
+     * @return
+     */
     private Set<State> generateStatesFromStatus(List<CTPEdge> statusList) {
 
-        Double blockingProb = calcStateBlockingProbability(statusList);
         Set<State> resultingStates = (Set<State>) graph.getVertices().values().stream().map(vert -> {
-            Vertex mdpVert = new Vertex((Vertex) vert);
             Vector<CTPEdge> statusVector = new Vector<CTPEdge>();
             statusVector.addAll(statusList);
-            return new State(mdpVert, statusVector, blockingProb);
+            return new State((Vertex)vert, statusVector);
         }).collect(Collectors.toSet());
         return resultingStates;
     }
 
 
-    protected List<LinkedList<CTPEdge>> generateStatusesByEdges(List<Edge> edges) {
+    protected List<LinkedList<CTPEdge>> generateStatusedEdges() {
 
+
+        Collection<Edge> edges = graph.getEdges().values(); //
         List<LinkedList<CTPEdge>> edgeStatusesToCombine = new LinkedList<LinkedList<CTPEdge>>();
         for (Edge edge : edges) {
             //Edge edge = edges.remove(i);
@@ -67,12 +81,12 @@ public class MDPCreator {
 
             if (edgeStatusesToCombine.isEmpty()) {
 
-                HashMap<String, State> edgeStatuses = generateAllStatusesFromEdge(edge);
+                List<Vector<CTPEdge>> edgeStatuses = generateAllStatusesFromEdge(edge);
 
                 // create a list of single status element (*3)
-                for (State singleStatus : edgeStatuses.values()) {
+                for (List<CTPEdge> status : edgeStatuses) {
                     LinkedList<CTPEdge> edgeSingleStatusList = new LinkedList<CTPEdge>();
-                    List<CTPEdge> status = singleStatus.getEdgeStatuses(); // edge+O OR
+                    // edge+O OR
                     // edge+C
                     // OR edge+U
                     edgeSingleStatusList.addAll(status);// make sure this adds only one!! status elemen
@@ -84,12 +98,12 @@ public class MDPCreator {
             } else {
                 List<LinkedList<CTPEdge>> statusestoCreate = new LinkedList<LinkedList<CTPEdge>>();
                 for (LinkedList<CTPEdge> oldStatus : edgeStatusesToCombine) {
-                    HashMap<String, State> edgeStatuses = generateAllStatusesFromEdge(edge);
+                    List<Vector<CTPEdge>> edgeStatuses = generateAllStatusesFromEdge(edge);
 
-                    for (State singleStatus : edgeStatuses.values()) {
+                    for (Vector<CTPEdge> status : edgeStatuses) {
                         LinkedList<CTPEdge> edgeSingleStatusList = new LinkedList<CTPEdge>();
                         edgeSingleStatusList.addAll(oldStatus);
-                        Vector<CTPEdge> status = singleStatus.getEdgeStatuses(); // edge+O OR edge+C OR
+                        // edge+O OR edge+C OR
                         // edge+U
                         edgeSingleStatusList.addAll(status);// make sure this adds only one!! status elemen
                         statusestoCreate.add(edgeSingleStatusList);
@@ -102,34 +116,35 @@ public class MDPCreator {
         return edgeStatusesToCombine;
     }
 
-    protected static HashMap<String, State> generateAllStatusesFromEdge(Edge edge) {
 
-        MDPEdge mdpedge = MDPEdge.mdpeFromEdge(edge);
-        CTPEdge es = new CTPEdge(mdpedge, BlockingStatus.Closed);
+    /**
+     * Generate all 3 possible statuses for a given edge.
+     * @param edge
+     * @return -  HashMap<String, State>
+     */
+
+    protected static List<Vector<CTPEdge>> generateAllStatusesFromEdge(Edge edge) {
+
+        CTPEdge es = new CTPEdge(edge, BlockingStatus.Closed);
 
         // (e1,c)p=...,(e1,o),(e1,u)
 
+        List< Vector<CTPEdge>> results = new LinkedList< Vector<CTPEdge>>();
         Vector<CTPEdge> st1_v = new Vector<CTPEdge>();
         st1_v.add(es);
-        State st1 = new State(null, st1_v, edge.getBlockingProbability());
+        results.add(st1_v);
 
         Vector<CTPEdge> st2_v = new Vector<CTPEdge>();
-        CTPEdge es2 = new CTPEdge(mdpedge, BlockingStatus.Opened);
+        CTPEdge es2 = new CTPEdge(edge, BlockingStatus.Opened);
         st2_v.add(es2);
-        State st2 = new State(null, st2_v, (1 - edge.getBlockingProbability()));
+        results.add(st2_v);
 
         Vector<CTPEdge> st3_v = new Vector<CTPEdge>();
-        CTPEdge es3 = new CTPEdge(mdpedge, BlockingStatus.Unknown);
+        CTPEdge es3 = new CTPEdge(edge, BlockingStatus.Unknown);
         st3_v.add(es3);
-        State st3 = new State(null, st3_v, 1.0);
+        results.add(st3_v);
 
-
-        HashMap<String, State> newStatesToConcat = new HashMap<String, State>();
-        newStatesToConcat.put(st1.getStateId(), st1);
-        newStatesToConcat.put(st2.getStateId(), st2);
-        newStatesToConcat.put(st3.getStateId(), st3);
-
-        return newStatesToConcat;
+        return results;
     }
 
 }

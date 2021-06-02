@@ -1,6 +1,9 @@
 package mdp.ctp;
 import mdp.generic.MDP;
-import org.jgrapht.Graph;
+import org.jgrapht.graph.Graph;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -36,13 +39,13 @@ public class MDPFromGraph extends MDP {
     public MDPFromGraph(Graph g){
         this.graph = g;
         MDPCreator creator = new MDPCreator(graph);
-    //}
-
-    //public MDPFromGraph(Graph g){
-
-
-        this.actions = creator.generateAllActions(graph);
-        generateAllStates()
+        this.actions = creator.generateAllActions();
+        this.states =  (HashMap)creator.generateAllStates();//generateAllStates()
+        for(String stateId : this.states.keySet()){
+            System.out.println(stateId);
+        }
+        //this.transitions = creator.generateTransitions();
+        //this.rewards = creator.generateRewards();
 
     }
 }

@@ -1,5 +1,6 @@
 package utils;
 
+import mdp.ctp.MDPFromGraph;
 import org.jgrapht.graph.Graph;
 
 public class GraphReader {
@@ -80,6 +81,7 @@ public class GraphReader {
         Graph gr = new Graph("/home/shiris/IdeaProjects/mdpvigeneric/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
         System.out.println(gr.toString());
+        MDPFromGraph mdp = new MDPFromGraph(gr);
         //Graph gr = new Graph("graphs_data/very_basic_mdp_example_graphs/very_simple_example_18_states.json");
 
         //Graph gr = new Graph("graphs_data/dror_data/first_graph.json");

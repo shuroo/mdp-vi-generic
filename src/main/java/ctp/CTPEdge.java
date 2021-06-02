@@ -12,13 +12,14 @@ public class CTPEdge {
     private Edge edge;
     private BlockingStatus status;
 
+    public static String generateId(CTPEdge ctpe){  return ctpe.edge.edgeName()+"_"+ctpe.status.toString(); }
 
     public Edge getEdge() {
         return edge;
     }
 
     public String getId() {
-        return edge.edgeName();
+        return generateId(this);
    }
 
     public BlockingStatus getStatus() {

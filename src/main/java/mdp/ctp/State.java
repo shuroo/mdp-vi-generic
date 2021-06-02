@@ -2,18 +2,21 @@ package mdp.ctp;
 
 import ctp.CTPEdge;
 import org.jgrapht.graph.Vertex;
+import utils.CollectionUtils;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 public class State extends mdp.generic.State {
 
     Vertex agentLocation;
-    Vector<CTPEdge> statuses;
+    Map<String,CTPEdge> statuses;
 
     public State(Vertex agentLocation, Vector<CTPEdge> statuses){
         this.agentLocation = agentLocation;
-        this.statuses = statuses;
+        this.statuses = CollectionUtils.edgeToMap(statuses);
+        setStateId();
     }
 
         public String getStateId() {
@@ -39,17 +42,12 @@ public class State extends mdp.generic.State {
         // The probability to occur - based on which edges are currently opened or closed in the current state and thier probsbilities.
         Double stateProbability;
 
-        public Vector<CTPEdge> getEdgeStatuses() {
-            return edgeStatuses;
-        }
-
         // Vector of edgeStatuses
-        Vector<CTPEdge> edgeStatuses;
 
         private void setStateId() {
             StringBuilder uniqueStateStr = new StringBuilder();
             uniqueStateStr.append("Ag_Location::"+this.agentLocation+",");
-            Iterator<CTPEdge> statusIterator  = edgeStatuses.iterator();
+            Iterator<CTPEdge> statusIterator  = this.statuses.values().iterator();
             while(statusIterator.hasNext()) {
                 uniqueStateStr.append(statusIterator.next().toString());
                 if(statusIterator.hasNext()){
@@ -61,14 +59,6 @@ public class State extends mdp.generic.State {
 
         public void setBestAction(Action bestAction) {
             this.bestAction = bestAction;
-        }
-
-
-        public State(Vertex agentLocation, Vector<CTPEdge> edgeStatusVector, Double stateProbability) {
-            this.agentLocation = agentLocation;
-            this.edgeStatuses = edgeStatusVector;
-            this.stateProbability = stateProbability;
-            setStateId();
         }
 
         // print states properly
