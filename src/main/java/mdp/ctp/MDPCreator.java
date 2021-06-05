@@ -4,6 +4,7 @@ package mdp.ctp;
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.generic.Reward;
+import mdp.generic.Transition;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
 import org.jgrapht.graph.Vertex;
@@ -20,18 +21,17 @@ public class MDPCreator {
         graph = g;
     }
 
-    public HashMap<String, Transition> generateTransitions(HashMap<String, State> allStates, HashMap<String, Action> allActions){
-        HashMap<String,Transition> allTransitions = new HashMap<String,Transition>();
+    public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates, HashMap<String, Action> allActions){
+        HashMap<String,mdp.ctp.Transition> allTransitions = new HashMap<String,mdp.ctp.Transition>();
         allStates.values().forEach(stt ->
                 allStates.values().forEach(stt2 ->
                 {
-                    Vertex source = stt.agentLocation;
-                    Vertex dest = stt2.agentLocation;
+                    Vertex source = stt.getAgentLocation();
+                    Vertex dest = stt2.getAgentLocation();
                     if (allActions.containsKey(Action.generateId(source, dest))) {
 
                         Action statesAction = allActions.get(Action.generateId(source, dest));
-                        Double bolcProb = statesAction.getSourceEdge().getBlockingProbability();
-                        Transition tran = new Transition(stt, stt2, statesAction,0.0 );// 0.0 is a placeholder
+                        mdp.ctp.Transition tran = new mdp.ctp.Transition(stt, stt2,statesAction );
                         allTransitions.put(tran.getTransitionId(),tran);
 
                     }
@@ -45,8 +45,8 @@ public class MDPCreator {
         allStates.values().forEach(stt ->
                 allStates.values().forEach(stt2 ->
                 {
-                    Vertex source = stt.agentLocation;
-                    Vertex dest = stt2.agentLocation;
+                    Vertex source = stt.getAgentLocation();
+                    Vertex dest = stt2.getAgentLocation();
                     if (allActions.containsKey(Action.generateId(source, dest))) {
 
                         Action statesAction = allActions.get(Action.generateId(source, dest));
@@ -54,6 +54,12 @@ public class MDPCreator {
                         Reward rewardObj = new Reward(stt, stt2, statesAction, reward);
                         rewards.put(rewardObj.getId(),rewardObj);
 
+                    }
+                    else{
+                        Action statesVirtualAction = new Action(source,dest);
+                        Double reward = 0.0;
+                        Reward rewardObj = new Reward(stt, stt2, statesVirtualAction, reward);
+                        rewards.put(rewardObj.getId(),rewardObj);
                     }
                 }));
 

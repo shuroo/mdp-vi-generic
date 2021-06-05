@@ -1,5 +1,8 @@
 package mdp.generic;
 
+import utils.Constants;
+import utils.HashUuidCreator;
+
 public class Reward {
 
     private State sourceState;
@@ -64,6 +67,7 @@ public class Reward {
     }
 
     public static String buildId(State source, State dest, Action action){
-        return action.getActionId() + "_" + source.getId() + "_" + dest.getId();
+        String baseId = action.toString() + "_" + source.toString() + "_" + dest.toString();
+        return Constants.rewardsPrefix+HashUuidCreator.getSha1Uuid(baseId);
     }
 }

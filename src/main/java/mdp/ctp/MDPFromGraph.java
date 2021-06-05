@@ -1,7 +1,6 @@
 package mdp.ctp;
 
 import mdp.generic.MDP;
-import mdp.generic.Reward;
 import org.jgrapht.graph.Graph;
 
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class MDPFromGraph extends MDP {
 
     HashMap<String,Action> extededActions = new HashMap<String,Action>();
     HashMap<String,State> extededStates = new HashMap<String,State>();
-    HashMap<String,Transition> extededTransitions = new HashMap<String,Transition>();
+    HashMap<String,mdp.ctp.Transition> extededTransitions = new HashMap<String, Transition>();
 
     /**
      *
@@ -50,8 +49,9 @@ public class MDPFromGraph extends MDP {
         for(String rewardId : this.rewards.keySet()){
             System.out.println(rewardId);
         }
-        //this.transitions = creator.generateTransitions(this.extededStates,this.extededActions);
-        //
+        this.extededTransitions = creator.generateTransitions(this.extededStates,this.extededActions);
+
+         //new MDP(extededTransitions,extededActions,extededStates,rewards,true);
 
     }
 }

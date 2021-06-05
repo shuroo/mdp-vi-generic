@@ -26,12 +26,12 @@ public class Action extends mdp.generic.Action {
         return source.toString()+"_"+dest.toString();
     }
 
-/*    public Action(Vertex source, Vertex dest){
+    public Action(Vertex source, Vertex dest){
 
         this.source = source;
         this.dest = dest;
         this.actionId = generateId(this.source,this.dest);
-    }*/
+    }
 
     public Action(Edge edge){
 
@@ -39,5 +39,9 @@ public class Action extends mdp.generic.Action {
         this.dest = edge.getDest();
         this.sourceEdge = edge;
         this.actionId = generateId(this.source,this.dest);
+    }
+
+    public Boolean isVirtualAction(){
+        return sourceEdge == null;
     }
 }
