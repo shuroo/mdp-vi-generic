@@ -11,6 +11,9 @@ public class StrategyRunner {
      * Implementation of example from:
      *
      * https://people.eecs.berkeley.edu/~pabbeel/cs287-fa12/slides/mdps-exact-methods.pdf
+     *
+     * STATUS: TESTED, WORKING!!!
+     *
      * @return
      */
     public static UtilityCalculator buildMDPAndExactSolutionMethodsExample(){
@@ -249,7 +252,6 @@ public class StrategyRunner {
     }
 
     /**
-     * Implementation of example 17.2 in the book.
      * Implementation of example 17.2 in the book.
      * @return
      */
@@ -515,7 +517,7 @@ public class StrategyRunner {
 
         MDP mdp = new MDP(transitions, actions, states, rewards, false);
 
-        Double epsilon = 0.11;
+        Double epsilon = 0.2;
         Double discountFactor = 0.98;
         UtilityCalculator uc = new UtilityCalculator(mdp,epsilon,discountFactor);
 
@@ -525,7 +527,7 @@ public class StrategyRunner {
 
     /**
      * Implementing example from :
-     *
+     * STATUS: NOT TESTED!!!
      * https://wormtooth.com/20180207-markov-decision-process/
      *
      */
@@ -802,9 +804,11 @@ public class StrategyRunner {
 
     public static void main(String[] args) {
 
-         //UtilityCalculator uc = buildBookExample();
+        //UtilityCalculator uc = buildBookExample();
 
         UtilityCalculator uc = buildMDPAndExactSolutionMethodsExample();
+
+        //UtilityCalculator uc = buildAnotherExample();
 
         uc.setOptimalPolicy();
     }

@@ -4,6 +4,7 @@ import ctp.CTPEdge;
 import org.jgrapht.graph.Vertex;
 import utils.CollectionUtils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -16,7 +17,7 @@ public class State extends mdp.generic.State {
         setStateId();
     }
 
-    public Map<String, CTPEdge> getStatuses() {
+    public HashMap<String, CTPEdge> getStatuses() {
         return statuses;
     }
 

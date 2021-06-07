@@ -31,7 +31,7 @@ public class UtilityCalculator {
 
         List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
 
-        while (maxLambda > stopCondition ) {
+        while (maxLambda > stopCondition) {
 
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter);
@@ -49,7 +49,7 @@ public class UtilityCalculator {
                 }
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
-                if (maxLambda > diffUtility && maxLambda != 0.0) {
+                if (maxLambda > diffUtility && diffUtility > 0.0) {
                     maxLambda = diffUtility;
                 }
 
@@ -148,6 +148,26 @@ public class UtilityCalculator {
 
         for (Transition transition : currentMDP.getTransitions().values()) {
             Double actionLocalUtility = calcStatesUtility(transition.getSourceState(), transition.getDestState(), transition.getAction());
+            if (!actionsPerSourceStt.containsKey(transition)) {
+                actionsPerSourceStt.put(transition, actionLocalUtility);
+            } else {
+                Double prevUtil = actionsPerSourceStt.get(transition);
+                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
+            }
+            //   actionsPerSourceStt.put(transition, actionLocalUtility);
+        }
+
+        return actionsPerSourceStt;
+    }
+
+    private HashMap<Transition, Double> calcTransitionsUtilityOld() {
+
+        // Init & Build Map<Transition,Utility>
+
+        HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
+
+        for (Transition transition : currentMDP.getTransitions().values()) {
+            Double actionLocalUtility = calcStatesUtility(transition.getSourceState(),transition.getDestState(),transition.getAction());
             if (!actionsPerSourceStt.containsKey(transition)) {
                 actionsPerSourceStt.put(transition, actionLocalUtility);
             } else {

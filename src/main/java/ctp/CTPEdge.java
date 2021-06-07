@@ -1,6 +1,5 @@
 package ctp;
 
-import ctp.BlockingStatus;
 import org.jgrapht.graph.Edge;
 
 /**
@@ -12,7 +11,7 @@ public class CTPEdge {
     private Edge edge;
     private BlockingStatus status;
 
-    public static String generateId(CTPEdge ctpe){  return ctpe.edge.edgeName()+"_"+ctpe.status.toString(); }
+    public static String generateId(CTPEdge ctpe){  return ctpe.edge.getId()+"_"+ctpe.status.toString(); }
 
     public Edge getEdge() {
         return edge;

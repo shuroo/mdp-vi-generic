@@ -12,7 +12,7 @@ public class Transition extends mdp.generic.Transition {
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
-            CTPEdge destStatus = this.extendedDestState.getStatuses().get(sourceStatus.getId());
+            CTPEdge destStatus = this.extendedDestState.getStatuses().get(sourceStatus.getEdge().getId());
             if (sourceStatus.getStatus() != destStatus.getStatus()) {
                 if (destStatus.getStatus() == BlockingStatus.Closed) {
                     probability = probability * destStatus.getEdge().getBlockingProbability();

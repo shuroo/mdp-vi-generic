@@ -2,7 +2,9 @@ package mdp.ctp;
 
 import mdp.generic.MDP;
 import org.jgrapht.graph.Graph;
+import utils.CollectionUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 
@@ -46,11 +48,15 @@ public class MDPFromGraph extends MDP {
         this.extededActions = creator.generateAllActions();
         this.extededStates =  (HashMap)creator.generateAllStates();//generateAllStates()
         this.rewards = creator.generateAllRewards(this.extededStates,this.extededActions);
-        for(String rewardId : this.rewards.keySet()){
-            System.out.println(rewardId);
-        }
         this.extededTransitions = creator.generateTransitions(this.extededStates,this.extededActions);
+        CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
+        this.states = cu.objToHMap((Collection<State>) extededStates.values() );
+        this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values() );
+        this.actions = cu.objToHMap((Collection<Action>) extededActions.values() );
+        this.isMinimizationProblem = true;
 
+             //   extededStates.values().stream().map(st->{st.getId(),(mdp.generic.State)st });
+        //this.transitions =
          //new MDP(extededTransitions,extededActions,extededStates,rewards,true);
 
     }

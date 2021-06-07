@@ -4,13 +4,14 @@ import ctp.CTPEdge;
 import mdp.interfaces.StateI;
 import org.jgrapht.graph.Vertex;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class State implements StateI {
 
     protected String stateId;
     // Default value
-    protected Double minimalUtility;
+    protected Double minimalUtility = 0.0;
     protected Action bestAction;
     protected Boolean isFinal = false;
     protected Boolean isInitial = false;
@@ -19,7 +20,7 @@ public class State implements StateI {
     // Extended properties for graphs only (not generic states)!
 
     protected Vertex agentLocation;
-    protected Map<String, CTPEdge> statuses;
+    protected HashMap<String, CTPEdge> statuses;
 
     public State(String stateId, Boolean isInitial, Boolean isFinal,Double initialUtility) {
         this.stateId = stateId;

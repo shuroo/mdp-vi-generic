@@ -83,7 +83,7 @@ public class Graph<V, E> {
             Vertex destV = vertices.get(ei.target.toString());
             Edge e = graph.addEdge(sourceV, destV);
             e.setBlockingAndReward(ei.getBlockingProbability(), ei.getReward());
-            edges.put(e.edgeName(), e);
+            edges.put(e.getId(), e);
             this.addEdge(e);
             return true;
         } catch (Exception e) {

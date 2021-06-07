@@ -19,9 +19,18 @@ public class CollectionUtils<T> {
                 .collect(Collectors.toMap(State::getId, state -> state));
     }
 
-    public static Map<String, CTPEdge> edgeToMap(Collection<CTPEdge> edges) {
-        return edges.stream()
-                .collect(Collectors.toMap(CTPEdge::getId, state -> state));
+    public static HashMap<String, CTPEdge> edgeToMap(Collection<CTPEdge> edges) {
+        HashMap<String,CTPEdge> statuses = new HashMap<String,CTPEdge>();
+        //        edges.stream().map({edg-> statuses.put(edg)});
+        //              //
+        edges.stream().forEach(st->{statuses.put(st.getEdge().getId(), st);});
+        return statuses;
+    }
+
+    public  HashMap<String, T> objToHMap(Collection<T> objs ) {
+        HashMap<String,T> results = new HashMap<String,T>();
+        objs.stream().forEach(st->{results.put(st.toString(), st);});
+        return results;
     }
 
 }

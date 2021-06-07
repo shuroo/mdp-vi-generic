@@ -14,7 +14,7 @@ public class Edge extends DefaultEdge {
         return (Vertex)source;
     }
 
-    public String edgeName(){ return this.source+"_"+this.target; }
+    public String getId(){ return this.source+"_"+this.target; }
 /*    public Vertex setDest() {
         return this.getDest();
     }

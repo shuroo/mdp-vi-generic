@@ -1,6 +1,8 @@
 package utils;
 
+import mdp.UtilityCalculator;
 import mdp.ctp.MDPFromGraph;
+import mdp.generic.MDP;
 import org.jgrapht.graph.Graph;
 
 public class GraphReader {
@@ -82,6 +84,13 @@ public class GraphReader {
 
         System.out.println(gr.toString());
         MDPFromGraph mdp = new MDPFromGraph(gr);
+
+        Double epsilon = 0.006;
+        Double discountFactor = 0.9;
+
+        UtilityCalculator uc = new UtilityCalculator((MDP)mdp,epsilon,discountFactor);
+
+        uc.setOptimalPolicy();
         //Graph gr = new Graph("graphs_data/very_basic_mdp_example_graphs/very_simple_example_18_states.json");
 
         //Graph gr = new Graph("graphs_data/dror_data/first_graph.json");
