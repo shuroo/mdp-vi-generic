@@ -11,8 +11,8 @@
     },{
 
         "identifier": "v3",
-        "isFinal": false,
-        "isInitial": true
+        "isFinal": true,
+        "isInitial": false
     }
     ],
     "edges": [

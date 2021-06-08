@@ -26,6 +26,12 @@ public class Transition {
         return transitionId;
     }
 
+    // Aid for method CollectionUtils.objToHMap  ...
+    @Override
+    public String toString(){
+        return transitionId;
+    }
+
     public Action getAction() {
         return action;
     }
@@ -48,7 +54,7 @@ public class Transition {
     }
 
     public static String buildId(Action action, State sourceState, State destState) {
-        String baseId = action.toString() + "_" + destState.toString() + "_" + sourceState.toString();
+        //String baseId = action.toString() + "_" + destState.toString() + "_" + sourceState.toString();
         //return Constants.transitionsPrefix+ HashUuidCreator.getSha1Uuid(baseId))
         return action.getActionId() + "_dest:" + destState.getId() + "_src:" + sourceState.getId();
     }

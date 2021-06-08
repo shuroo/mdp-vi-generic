@@ -71,15 +71,6 @@ public class GraphReader {
 
     public static void main(String[] args) {
 
-        /// My Default Graph Example
-        // SnapshotRunner sr = new SnapshotRunner("default_graph_input.json");
-
-        /// First Graph Example
-        // SnapshotRunner sr = new SnapshotRunner("graphs_data/default_graph_input.json");
-
-        /// Dror's first Graph Example
-        //  Graph gr = new Graph("graphs_data/default_graph_input.json");
-
         Graph gr = new Graph("/home/shiris/IdeaProjects/mdpvigeneric/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
         System.out.println(gr.toString());

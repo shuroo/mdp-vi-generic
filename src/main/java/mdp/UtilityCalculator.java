@@ -43,7 +43,7 @@ public class UtilityCalculator {
 
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
-                //System.out.println("Utility found for state:"+state.getId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
+                System.out.println("Utility found for state:"+state.getId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
                 if (prevUtility == null) {
                     continue;
                 }
@@ -61,12 +61,13 @@ public class UtilityCalculator {
             }
 
             currentMDP.getStates().values().stream().forEach(state -> {
-                System.out.println("**** Final Utility state:" + state.getId() + " is:" + state.getUtility() + " chosen action is: " + state.getBestAction());
+                System.out.println("**** Final Utility state:" +  state.getUtility() + " chosen action is: " + state.getBestAction());
             });
 
 
             // HACK!!! please remove.
             if(iterationCounter == 200){
+                System.out.println("Manually Stopping at iteration "+iterationCounter+" with maxLambda:"+maxLambda);
                 return currentMDP;
             }
 
@@ -169,7 +170,7 @@ public class UtilityCalculator {
 
     // OR
 
-    // U(s) <- R(s,s',a) + Sigma[ P(s|s')*U(s') ]
+    // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
     private Double calcStatesUtility(Transition tran) {
 
         State source = tran.getSourceState();
@@ -185,7 +186,9 @@ public class UtilityCalculator {
                     , source, dest));
 
             // The probability for transition between the above states
-            Double joinedProb = transition != null ? transition.getProbability() : 0.0;
+            Double joinedProb =  transition.getProbability();
+
+            //Double joinedProb =transition != null ? transition.getProbability() : 0.0;
 
             // Utility for the two states to add to the action.
             // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
