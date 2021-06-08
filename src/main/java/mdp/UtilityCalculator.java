@@ -64,6 +64,12 @@ public class UtilityCalculator {
                 System.out.println("**** Final Utility state:" + state.getId() + " is:" + state.getUtility() + " chosen action is: " + state.getBestAction());
             });
 
+
+            // HACK!!! please remove.
+            if(iterationCounter == 200){
+                return currentMDP;
+            }
+
             // currentMDP.setStates(allStates);
         }
 
@@ -147,41 +153,28 @@ public class UtilityCalculator {
         HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
 
         for (Transition transition : currentMDP.getTransitions().values()) {
-            Double actionLocalUtility = calcStatesUtility(transition.getSourceState(), transition.getDestState(), transition.getAction());
+            Double actionLocalUtility = calcStatesUtility(transition);
             if (!actionsPerSourceStt.containsKey(transition)) {
                 actionsPerSourceStt.put(transition, actionLocalUtility);
             } else {
                 Double prevUtil = actionsPerSourceStt.get(transition);
                 actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
             }
-            //   actionsPerSourceStt.put(transition, actionLocalUtility);
-        }
-
-        return actionsPerSourceStt;
-    }
-
-    private HashMap<Transition, Double> calcTransitionsUtilityOld() {
-
-        // Init & Build Map<Transition,Utility>
-
-        HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
-
-        for (Transition transition : currentMDP.getTransitions().values()) {
-            Double actionLocalUtility = calcStatesUtility(transition.getSourceState(),transition.getDestState(),transition.getAction());
-            if (!actionsPerSourceStt.containsKey(transition)) {
-                actionsPerSourceStt.put(transition, actionLocalUtility);
-            } else {
-                Double prevUtil = actionsPerSourceStt.get(transition);
-                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
-            }
-            //   actionsPerSourceStt.put(transition, actionLocalUtility);
         }
 
         return actionsPerSourceStt;
     }
 
     // U(s) <- R(s) + Sigma[ P(s|s')*U(s') ]
-    private Double calcStatesUtility(State source, State dest, Action action) {
+
+    // OR
+
+    // U(s) <- R(s,s',a) + Sigma[ P(s|s')*U(s') ]
+    private Double calcStatesUtility(Transition tran) {
+
+        State source = tran.getSourceState();
+        State dest = tran.getDestState();
+        Action action = tran.getAction();
 
         if (source.getIsFinal()) {
             return source.getUtility() == null ? 0.0 : source.getUtility();
@@ -195,11 +188,14 @@ public class UtilityCalculator {
             Double joinedProb = transition != null ? transition.getProbability() : 0.0;
 
             // Utility for the two states to add to the action.
-            // U(action) <-- Sigma[ P(s|s')*U(s') ]
-            Double actionSubUtility = joinedProb * (dest.getUtility());
+            // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
+
+            Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
+            Double reward =   rewardObj != null ? rewardObj.getReward() : null;
+            Double actionSubUtility =  joinedProb * (reward + dest.getUtility());
+
             // we DON'T set the source utility at this point YET! choosing minimum.
 
-            //System.out.println("transition:"+transition.getTransitionId()+"----^^:" + joinedProb + " actionSubUtility:" + actionSubUtility);
             return actionSubUtility;
         }
     }
@@ -239,8 +235,14 @@ public class UtilityCalculator {
 
             // todo: avoid using the same state twice like in example 17.2
 
-            Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
-            minimalUtility = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
+            /*Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
+
+            // Value to compare before putting reward inside the equasion
+            Double minimalUtilityOld = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
+*/
+
+            // Value to compare before putting reward inside the equasion
+            minimalUtility = minimalUtilityAction != null ?  minimalUtilityAction.getUtility() : 0.0;
 
             minimalUtility = minimalUtility * this.discountFactor;
 

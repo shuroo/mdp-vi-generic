@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -45,7 +46,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
+            <state relative-caret-position="79">
               <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -69,8 +70,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3750">
-              <caret line="252" selection-start-line="252" selection-end-line="252" />
+            <state relative-caret-position="401">
+              <caret line="806" column="10" selection-start-line="806" selection-start-column="10" selection-end-line="806" selection-end-column="10" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="296">
+              <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -81,44 +94,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1365">
-              <caret line="94" selection-start-line="94" selection-end-line="94" />
+            <state relative-caret-position="125">
+              <caret line="90" column="43" lean-forward="true" selection-start-line="90" selection-start-column="43" selection-end-line="90" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/HashUuidCreator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1380">
-              <caret line="103" column="29" selection-start-line="103" selection-start-column="29" selection-end-line="103" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="224" column="17" selection-start-line="224" selection-start-column="17" selection-end-line="224" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -135,7 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>state</find>
       <find>DefaultEdge</find>
       <find>getId</find>
       <find>MDPCreator</find>
@@ -155,7 +134,6 @@
       <find>genera</find>
       <find>getStat</find>
       <find>new UtilityCalculator</find>
-      <find>calcStatesUtility</find>
       <find>main</find>
       <find>https:</find>
       <find>buildAn</find>
@@ -165,6 +143,8 @@
       <find>Old</find>
       <find>buildMDPAndExactSolutionMethodsExample</find>
       <find>setOp</find>
+      <find>calcStatesUtility</find>
+      <find>rewa</find>
     </findStrings>
     <replaceStrings>
       <replace>CTPEdge</replace>
@@ -216,16 +196,16 @@
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/Action.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/generic/Transition.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPCreator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/jgrapht/graph/Edge.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/CollectionUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" />
       </list>
     </option>
   </component>
@@ -341,7 +321,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1623144403125" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1623157403914" />
     <property name="last_opened_file_path" value="$USER_HOME$/Dev/Backend/informer" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -558,7 +538,7 @@
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2801277" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.037509978" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -576,7 +556,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32410422" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32247558" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32899022" />
       <window_info anchor="bottom" id="Console" order="10" />
       <window_info anchor="bottom" id="Version Control" order="11" />
@@ -628,12 +608,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
-          <line>156</line>
-          <properties />
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
           <line>16</line>
           <properties />
@@ -641,15 +615,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
-          <line>154</line>
+          <line>160</line>
           <properties />
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
-          <line>241</line>
+          <line>52</line>
           <properties />
-          <option name="timeStamp" value="132" />
+          <option name="timeStamp" value="140" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
+          <line>51</line>
+          <properties />
+          <option name="timeStamp" value="141" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -662,6 +642,10 @@
         <watch expression="actionsWithUtility" language="JAVA" />
         <watch expression="state" language="JAVA" />
         <watch expression="state" language="JAVA" />
+        <watch expression="actionSubUtility" language="JAVA" />
+        <watch expression="utilityPerActionState" language="JAVA" />
+        <watch expression="maxLambda" language="JAVA" />
+        <watch expression="diffUtility" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
@@ -671,6 +655,26 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>diffUtility</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>maxLambda</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>utilityPerActionState</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>actionSubUtility</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>state</expression-string>
         <language-id>JAVA</language-id>
@@ -698,21 +702,6 @@
       </expression>
       <expression>
         <expression-string>minimalUtilityAction</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>reward</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>stopCondition</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>maxLambda</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -922,16 +911,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/State.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="960">
@@ -942,20 +921,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3750">
-          <caret line="252" selection-start-line="252" selection-end-line="252" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="60">
+          <caret line="4" column="6" lean-forward="true" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1365">
-          <caret line="94" selection-start-line="94" selection-end-line="94" />
+        <state relative-caret-position="79">
+          <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -964,8 +940,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/HashUuidCreator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1380">
+        <state relative-caret-position="349">
           <caret line="103" column="29" selection-start-line="103" selection-start-column="29" selection-end-line="103" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="90" column="43" lean-forward="true" selection-start-line="90" selection-start-column="43" selection-end-line="90" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="806" column="10" selection-start-line="806" selection-start-column="10" selection-end-line="806" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -974,18 +970,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="224" column="17" selection-start-line="224" selection-start-column="17" selection-end-line="224" selection-end-column="17" />
+        <state relative-caret-position="296">
+          <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
         </state>
       </provider>
     </entry>

@@ -517,7 +517,7 @@ public class StrategyRunner {
 
         MDP mdp = new MDP(transitions, actions, states, rewards, false);
 
-        Double epsilon = 0.2;
+        Double epsilon = 0.1;
         Double discountFactor = 0.98;
         UtilityCalculator uc = new UtilityCalculator(mdp,epsilon,discountFactor);
 

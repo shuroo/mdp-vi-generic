@@ -85,7 +85,7 @@ public class GraphReader {
         System.out.println(gr.toString());
         MDPFromGraph mdp = new MDPFromGraph(gr);
 
-        Double epsilon = 0.006;
+        Double epsilon = 0.6;
         Double discountFactor = 0.9;
 
         UtilityCalculator uc = new UtilityCalculator((MDP)mdp,epsilon,discountFactor);
