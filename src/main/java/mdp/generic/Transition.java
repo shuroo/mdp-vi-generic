@@ -2,7 +2,6 @@ package mdp.generic;
 
 public class Transition {
 
-
     protected State destState;
     // Value:  0.0 =< prob <= 1.0
     protected Double probability;
@@ -24,6 +23,10 @@ public class Transition {
 
     public String getTransitionId() {
         return transitionId;
+    }
+
+    public Boolean isValid(){
+        return true;
     }
 
     // Aid for method CollectionUtils.objToHMap  ...

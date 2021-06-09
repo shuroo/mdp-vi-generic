@@ -4,7 +4,6 @@ package mdp.ctp;
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.generic.Reward;
-import mdp.generic.Transition;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
 import org.jgrapht.graph.Vertex;

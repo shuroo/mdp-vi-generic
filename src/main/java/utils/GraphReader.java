@@ -3,70 +3,11 @@ package utils;
 import mdp.UtilityCalculator;
 import mdp.ctp.MDPFromGraph;
 import mdp.generic.MDP;
+import mdp.generic.Transition;
 import org.jgrapht.graph.Graph;
 
 public class GraphReader {
 
-
-   /* public static MDP GraphToMDP(Graph g) {
-
-        MDPCreator mdpc = new MDPCreator(g);
-
-        HashMap<String, Action> actions = mdpc.edgesToActions();
-        List<LinkedList<CTPEdge>> statusCombinations =
-                mdpc.generateStatusesByEdges((List<Edge>) g.getEdges().values().stream().collect(Collectors.toList()));
-
-        Map<String,State>  allStates = mdpc.generateStatesMapFromStatuses(statusCombinations);
-
-        System.out.println("Graph is translated to an MDP of "+actions.size()+" actions, "+allStates.size()+" states");
-        // System.out.println("States before setting location::" + statusCombinations.size() + ":: And after:" + allStates.size());
-        // todo: convert list to hashmap
-        return new MDP(actions, (HashMap<String,State>)allStates);
-    }
-*/
-
-
-
-    // todo: write with states and probs instead of statuses only...
-/*    private static HashMap<String,State> generateStatusesByEdges(List<Edge> edges, HashMap<String,State> statesUnderConstruction) {
-        if (edges.isEmpty()) {
-            return statesUnderConstruction;
-        } else {
-
-
-            Edge edge = edges.remove(0);
-            HashMap<String,State> edgeStates =  generateAllStatusesFromEdge(edge);
-            //for(Edge edge : edges){
-
-            if(statesUnderConstruction.isEmpty()){
-                return generateStatusesByEdges(edges, edgeStates);
-            }
-
-                // Find all combinations!
-                // ()()
-
-            Vector<CTPEdge> updatedStatusSingleState = new Vector<CTPEdge>();
-            HashMap<String,State> resultingStates = new HashMap<String, State>();
-            for(State edgeState : edgeStates.values()){
-
-                    statesUnderConstruction.values().forEach(prevState -> {
-
-                            updatedStatusSingleState.addAll(prevState.getEdgeStatuses());
-                            updatedStatusSingleState.addAll(edgeState.getEdgeStatuses());
-                            State mixedState = new State(null, updatedStatusSingleState, edgeState.getStateProbability() * prevState.getStateProbability());
-                            resultingStates.put(mixedState.getStateId(),mixedState);
-                        });
-
-
-                }
-
-
-                return generateStatusesByEdges(edges, resultingStates);
-
-            }
-
-
-    }*/
 
 
     public static void main(String[] args) {
@@ -80,7 +21,6 @@ public class GraphReader {
         Double discountFactor = 0.9;
 
         UtilityCalculator uc = new UtilityCalculator((MDP)mdp,epsilon,discountFactor);
-
         uc.setOptimalPolicy();
         //Graph gr = new Graph("graphs_data/very_basic_mdp_example_graphs/very_simple_example_18_states.json");
 

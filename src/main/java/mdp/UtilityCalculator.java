@@ -66,10 +66,10 @@ public class UtilityCalculator {
 
 
             // HACK!!! please remove.
-            if(iterationCounter == 200){
+/*            if(iterationCounter == 2){
                 System.out.println("Manually Stopping at iteration "+iterationCounter+" with maxLambda:"+maxLambda);
                 return currentMDP;
-            }
+            }*/
 
             // currentMDP.setStates(allStates);
         }
@@ -149,11 +149,14 @@ public class UtilityCalculator {
      */
     private HashMap<Transition, Double> calcTransitionsUtility() {
 
+
         // Init & Build Map<Transition,Utility>
 
         HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
 
         for (Transition transition : currentMDP.getTransitions().values()) {
+
+
             Double actionLocalUtility = calcStatesUtility(transition);
             if (!actionsPerSourceStt.containsKey(transition)) {
                 actionsPerSourceStt.put(transition, actionLocalUtility);
@@ -173,6 +176,9 @@ public class UtilityCalculator {
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
     private Double calcStatesUtility(Transition tran) {
 
+        if(!tran.isValid()){
+            return 0.0;
+        }
         State source = tran.getSourceState();
         State dest = tran.getDestState();
         Action action = tran.getAction();
