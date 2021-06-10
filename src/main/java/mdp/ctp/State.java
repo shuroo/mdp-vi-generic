@@ -58,11 +58,6 @@ public class State extends mdp.generic.State {
     }
 
     // print states properly
-    @Override
-    public String toString() {
-
-        return "<" + this.getId() + ">";
-    }
 
 }
 

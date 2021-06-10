@@ -29,23 +29,26 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        List<State> allStates = currentMDP.getStates().values().stream().collect(Collectors.toList());
+        HashMap<String,State> allStates = currentMDP.getStates();
 
         while (maxLambda > stopCondition) {
 
             iterationCounter++;
-            System.out.println("Starting iteration number:" + iterationCounter);
+            System.out.println("Starting iteration number:" + iterationCounter + " with lambda:"+maxLambda);
 
             setUtilitiesForStatesIteration(allStates);
 
             // Check diff to stop...
-            for (State state : allStates) {
+            for (State state : allStates.values()) {
 
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
-                System.out.println("Utility found for state:"+state.getId()+" and bestAction:"+state.getBestAction()+" is: "+state.getUtility());
+                if(state.getUtility() > 0.0){
+                    System.out.println("Utility found for state:"+state.getId()+"is: "+state.getUtility());
+                }
                 if (prevUtility == null) {
-                    continue;
+                   // continue;
+                    prevUtility = 0.0;
                 }
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
@@ -60,16 +63,12 @@ public class UtilityCalculator {
                 }
             }
 
-            currentMDP.getStates().values().stream().forEach(state -> {
-                System.out.println("**** Final Utility state:" +  state.getUtility() + " chosen action is: " + state.getBestAction());
-            });
-
 
             // HACK!!! please remove.
-/*            if(iterationCounter == 2){
+            if(iterationCounter == 2){
                 System.out.println("Manually Stopping at iteration "+iterationCounter+" with maxLambda:"+maxLambda);
                 return currentMDP;
-            }*/
+            }
 
             // currentMDP.setStates(allStates);
         }
@@ -147,7 +146,7 @@ public class UtilityCalculator {
      * <p>
      * etc...
      */
-    private HashMap<Transition, Double> calcTransitionsUtility() {
+    private HashMap<Transition, Double> calcTransitionsUtility(HashMap<String,State> allStates) {
 
 
         // Init & Build Map<Transition,Utility>
@@ -157,7 +156,7 @@ public class UtilityCalculator {
         for (Transition transition : currentMDP.getTransitions().values()) {
 
 
-            Double actionLocalUtility = calcStatesUtility(transition);
+            Double actionLocalUtility = calcStatesUtility(transition, allStates);
             if (!actionsPerSourceStt.containsKey(transition)) {
                 actionsPerSourceStt.put(transition, actionLocalUtility);
             } else {
@@ -174,22 +173,24 @@ public class UtilityCalculator {
     // OR
 
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
-    private Double calcStatesUtility(Transition tran) {
+    private Double calcStatesUtility(Transition transition, HashMap<String,State> allStates) {
 
-        if(!tran.isValid()){
+        if(!transition.isValid()){
             return 0.0;
         }
-        State source = tran.getSourceState();
-        State dest = tran.getDestState();
-        Action action = tran.getAction();
+        State source = transition.getSourceState();
+        // To fetch updated utility, use the stat from the updated hashmap...
+        State dest = transition.getDestState();///allStates.get(transition.getDestState().toString());
+
+        Action action = transition.getAction();
 
         if (source.getIsFinal()) {
             return source.getUtility() == null ? 0.0 : source.getUtility();
         } else {
 
             // get P(s,s',a)
-            Transition transition = currentMDP.getTransitions().get(Transition.buildId(action
-                    , source, dest));
+            /*Transition transition = currentMDP.getTransitions().get(Transition.buildId(action
+                    , source, dest));*/
 
             // The probability for transition between the above states
             Double joinedProb =  transition.getProbability();
@@ -203,6 +204,7 @@ public class UtilityCalculator {
             Double reward =   rewardObj != null ? rewardObj.getReward() : null;
             Double actionSubUtility =  joinedProb * (reward + dest.getUtility());
 
+            //System.out.println("*******Current dest utility for dest-state sw: "+dest.getId()+" is: "+dest.getUtility()+" *******");
             // we DON'T set the source utility at this point YET! choosing minimum.
 
             return actionSubUtility;
@@ -215,12 +217,22 @@ public class UtilityCalculator {
      * @param allStates - all possible states
      * @return
      */
-    private List<State> setUtilitiesForStatesIteration(List<State> allStates) {
-        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
+    private HashMap<String,State>  setUtilitiesForStatesIteration(HashMap<String,State> allStates) {
+        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility(allStates);
 
+        for(Transition tran : updatedTransitionsUtility.keySet()){
+            if(tran.isValid()){
+
+                Double tranUtility = updatedTransitionsUtility.get(tran);
+                System.out.println("**** Final Utility for Transition:" +  tranUtility + " transition is: " +tran.toString() );
+            }
+        }
         HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
 
-        for (State state : allStates) {
+        for(Action action : utilityPerActionState.values()){
+                System.out.println("**** Final Utility for ACTION:" +  action.getUtility() + " ACTION is: " +action.getActionId() );
+        }
+        for (State state : allStates.values()) {
             setUtilitySingleState(state, utilityPerActionState);
         }
 

@@ -51,8 +51,12 @@ public class Transition extends mdp.generic.Transition {
         mdp.ctp.State source = this.extendedSourceState;
         mdp.ctp.State dest = this.extendedDestState;
 
+        // case 0 - Final state is already in the transition source
+        if(source.getIsFinal()){
+            return false;
+        }
         // case 1 - The action doesn't fit
-        if( source.getAgentLocation() != act.getSourceEdge().getSource() ||
+        else if( source.getAgentLocation() != act.getSourceEdge().getSource() ||
                 dest.getAgentLocation() != act.getSourceEdge().getDest()
         ){
             return false;

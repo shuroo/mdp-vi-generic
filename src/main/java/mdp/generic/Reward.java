@@ -67,7 +67,15 @@ public class Reward {
     }
 
     public static String buildId(State source, State dest, Action action){
-        String baseId = action.toString() + "_" + source.toString() + "_" + dest.toString();
+
+        String baseId = "";
+        try{
+            baseId = action.toString() + "_" + source.toString() + "_" + dest.toString();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         return Constants.rewardsPrefix+HashUuidCreator.getSha1Uuid(baseId);
     }
 }
