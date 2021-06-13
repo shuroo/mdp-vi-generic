@@ -15,7 +15,7 @@ public class State implements StateI {
     protected Action bestAction;
     protected Boolean isFinal = false;
     protected Boolean isInitial = false;
-    protected Double previousUtility;
+    protected Double previousUtility = 0.0;
 
     // Extended properties for graphs only (not generic states)!
 

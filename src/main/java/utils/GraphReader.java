@@ -3,7 +3,7 @@ package utils;
 import mdp.UtilityCalculator;
 import mdp.ctp.MDPFromGraph;
 import mdp.generic.MDP;
-import mdp.generic.Transition;
+import mdp.generic.State;
 import org.jgrapht.graph.Graph;
 
 public class GraphReader {
@@ -21,7 +21,10 @@ public class GraphReader {
         Double discountFactor = 0.9;
 
         UtilityCalculator uc = new UtilityCalculator((MDP)mdp,epsilon,discountFactor);
-        uc.setOptimalPolicy();
+        MDP mdpNew = uc.setOptimalPolicy();
+        for(State s : mdpNew.getStates().values()){
+            System.out.println(s.getId()+",,,"+s.getBestAction());
+        }
         //Graph gr = new Graph("graphs_data/very_basic_mdp_example_graphs/very_simple_example_18_states.json");
 
         //Graph gr = new Graph("graphs_data/dror_data/first_graph.json");
