@@ -40,11 +40,82 @@ public class Transition extends mdp.generic.Transition {
         // set super constructor prob
         this.probability = diffStatesToCalcProbability();
 
-
     }
 
-    // todo: in diffStatesToCalcProb
     @Override
+    public Boolean isValid(){
+        mdp.ctp.Action act = this.extendedAction;
+        mdp.ctp.State source = this.extendedSourceState;
+        mdp.ctp.State dest = this.extendedDestState;
+
+        // case 0 - Final state is already in the transition source
+        if( source.getIsFinal() ){
+            return false;
+        }
+        // case 1 - The action doesn't fit
+        else if( source.getAgentLocation() != act.getSourceEdge().getSource() ||
+                dest.getAgentLocation() != act.getSourceEdge().getDest()
+        ){
+            return false;
+        }
+        else  if( source.getAgentLocation() == act.getSourceEdge().getSource()){
+
+            // case 2: th action's edge is blocked
+
+            Edge currentEdg  = act.getSourceEdge();
+            for(CTPEdge statusEdge : source.getStatuses().values()){
+                if(statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() != BlockingStatus.Opened){
+                    return false;
+                }
+            }
+
+            // case 3 - a source state is not in status 'unknown'
+
+            for( CTPEdge status : source.getStatuses().values()){
+                if(status.getId() == currentEdg.getId() && status.getStatus() == BlockingStatus.Unknown){
+                    return false;
+                }
+            }
+
+            // case 5 - a dest state is not in status 'unknown'
+
+            for( CTPEdge status : dest.getStatuses().values()){
+                if(status.getId() == currentEdg.getId() && status.getStatus() == BlockingStatus.Unknown){
+                    return false;
+                }
+            }
+
+            // todo: proceed from here!!!
+            // case 6 - Each related edge in s having status ‘Opened’ or ‘Closed’ should have the same corresponding status in s’:
+
+            for( CTPEdge sourceStatus : source.getStatuses().values()){
+
+                CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+                if(destStatus == null || (sourceStatus.getStatus() != BlockingStatus.Unknown &&
+                        sourceStatus.getStatus() != destStatus.getStatus()
+                        )){
+                    return false;
+                }
+            }
+            // case 7 - if an edge in s list of statuses has a status ‘Unknown’ and its source is not v, it should remain with status ‘Unknown’ in s’:
+            
+            for( CTPEdge sourceStatus : source.getStatuses().values()){
+
+                CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+                if(destStatus == null || (sourceStatus.getStatus() == BlockingStatus.Unknown  &&
+                        sourceStatus.getEdge().getDest() != act.getDest() &&
+                        destStatus.getStatus() !=  BlockingStatus.Unknown  )){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    // todo: in diffStatesToCalcProb
+    /*@Override
     public Boolean isValid(){
 
         mdp.ctp.Action act = this.extendedAction;
@@ -61,8 +132,6 @@ public class Transition extends mdp.generic.Transition {
         ){
             return false;
         }
-
-
 
         else  if( source.getAgentLocation() == act.getSourceEdge().getSource()){
 
@@ -96,5 +165,5 @@ public class Transition extends mdp.generic.Transition {
 
 
         return true;
-    }
+    }*/
 }
