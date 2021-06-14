@@ -1,12 +1,17 @@
 package mdp.generic;
 
+import ctp.BlockingStatus;
+import ctp.CTPEdge;
+
+import java.util.HashMap;
+
 /**
  *
     The actions are related t the states in a 1:* relation.
  *  Every state s has a probability P(s|s') to move to state s' with action a.
  */
 
-public class Action {//implements Comparable<Action>{
+public class Action {
 
     protected String actionId;
 
@@ -36,17 +41,14 @@ public class Action {//implements Comparable<Action>{
 
     public Action(){}
 
-   /*//**
-     * Sort by utility DESC.
-     *
-     * @param action
-     * @return
-     */
+    // TBD: override this and implement by constraints in the future (Blocked edge etc..)
+    public Boolean actionIsAllowed(final State st) {
 
-/*    public int compareTo(Action action) {
-        if (getUtility() == null || action.getUtility() == null) {
-            return 0;
+        if (!(st instanceof mdp.ctp.State)) {
+            return true;
         }
-        return action.getUtility().compareTo(getUtility());
-    }*/
+        HashMap<String, CTPEdge> stateStatuses = ((mdp.ctp.State) st).getStatuses();
+        return ((CTPEdge) stateStatuses.get(this.getActionId())).getStatus() == BlockingStatus.Opened;
+    }
+
 }

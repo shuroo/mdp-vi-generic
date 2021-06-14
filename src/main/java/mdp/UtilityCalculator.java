@@ -1,5 +1,7 @@
 package mdp;
 
+import ctp.BlockingStatus;
+import ctp.CTPEdge;
 import mdp.generic.*;
 
 import java.util.HashMap;
@@ -231,7 +233,6 @@ public class UtilityCalculator {
         //  Get all actions belonging to this state:
         HashMap<String, Action> actionsWithUtility = filterStateActions(state, updatedStateActionsUtility);
 
-        // System.out.println("State: "+state.getId()+" has actions with utility of size:"+actionsWithUtility.size());
         Action minimalUtilityAction = null;
         Double minimalUtility = 0.0;
 
@@ -300,12 +301,6 @@ public class UtilityCalculator {
 
         return result;
     }
-
-    // TBD: override this and implement by constraints in the future (Blocked edge etc..)
-    private Boolean actionIsImpossible(State st, Action action) {
-        return false;
-    }
-
     /**
      * Given a state, filter all given actions related to it with updated calculated utility..
      *
@@ -319,12 +314,23 @@ public class UtilityCalculator {
         HashMap<String, Action> stateActions = new HashMap<String, Action>();
 
         // check whether 'key' = action.getId()_state.getId(), and filter accordingly.
-        stateActionsWithUtility.entrySet().stream().filter(tran -> tran.getKey().endsWith("_src:" + state.getId())).forEach(entry ->
+        stateActionsWithUtility.entrySet().stream().filter(act ->
+                act.getKey().endsWith("_src:" + state.getId())
+                && act.getValue().actionIsAllowed(state)
+        ).forEach(entry ->
                 stateActions.put(entry.getKey(), entry.getValue()));
 
         // todo: add sort --- IF NEEDED! (currently it isn't , just use min or max)
         //stateTransitions.values();
         return stateActions;
     }
+
+
+
+
+
+    /**
+     * isValidActionForState(State s)
+     */
 
 }
