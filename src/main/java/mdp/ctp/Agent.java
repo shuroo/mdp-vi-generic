@@ -7,6 +7,7 @@ import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 public class Agent implements Runnable {
@@ -15,6 +16,19 @@ public class Agent implements Runnable {
     MDPFromGraph mdp;
     Set<CTPEdge> graphConfiguration;
 
+    /**
+     *  Find state to start with:
+     *  - make sure it has an initial agent location
+     *  - make sure its configuration is valid.
+     *  - make sure it has a bestAction configured (else return null and abort)
+     * @return
+     */
+
+
+    private State findInitialStt(){
+        HashMap<String,State> states = mdp.extededStates;
+
+    }
     public Agent(MDPFromGraph mdp, Set<CTPEdge> graphConfiguration) {
 
         this.graphConfiguration = graphConfiguration;
@@ -23,8 +37,11 @@ public class Agent implements Runnable {
 
     }
 
+    /**
+     * find initial state, run, return a valid path when reached a final state.
+     */
     public void run() {
-        State initial = gs.statesList.getInitialState();
+        State initial = mdp..getInitialState();
 
         /// todo: put the state list as a path property?
         ArrayList<StateList> agentPath = travelGraph( initial,0, model.getGraphPaths(),0,new ArrayList<StateList>(),
