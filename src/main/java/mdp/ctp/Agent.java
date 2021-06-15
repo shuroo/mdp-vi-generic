@@ -2,6 +2,7 @@ package mdp.ctp;
 
 package org.ctp.CTPAgent;
 
+import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
@@ -9,12 +10,13 @@ import org.jgrapht.graph.Vertex;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Vector;
 
 public class Agent implements Runnable {
 
     private Double agentPathCost;
     MDPFromGraph mdp;
-    Set<CTPEdge> graphConfiguration;
+    HashMap<String,CTPEdge> graphConfiguration;
 
     /**
      *  Find state to start with:
@@ -27,9 +29,20 @@ public class Agent implements Runnable {
 
     private State findInitialStt(){
         HashMap<String,State> states = mdp.extededStates;
+        State result = null;
+
+        for(State stt: states.values()){
+            if(stt.getBestAction() != null && stt.getAgentLocation().isInitial() && stt.getEdgeStatus() == BlockingStatus.Opened &&
+                    graphConfiguration.get(stt.getBestAction().getActionId()).getStatus()  == BlockingStatus.Opened
+            ){
+                result = new State(stt.getAgentLocation(),new Vector(graphConfiguration.values()));
+                break;
+            }
+        }
+        return result;
 
     }
-    public Agent(MDPFromGraph mdp, Set<CTPEdge> graphConfiguration) {
+    public Agent(MDPFromGraph mdp,  HashMap<String,CTPEdge>  graphConfiguration) {
 
         this.graphConfiguration = graphConfiguration;
         this.mdp = mdp;
@@ -41,7 +54,7 @@ public class Agent implements Runnable {
      * find initial state, run, return a valid path when reached a final state.
      */
     public void run() {
-        State initial = mdp..getInitialState();
+        State initial = findInitialStt();
 
         /// todo: put the state list as a path property?
         ArrayList<StateList> agentPath = travelGraph( initial,0, model.getGraphPaths(),0,new ArrayList<StateList>(),
@@ -53,57 +66,29 @@ public class Agent implements Runnable {
 
     // Travel one step in the graph each time. try best cost. if fail, return.
     //todo: reorder params.
-    public ArrayList<StateList> travelGraph( State current, Integer edgeIndex, ArrayList<Path> bestPaths,
-                                             int pathIndex ,ArrayList<StateList> statelstsHistory, StateList currentSL) {
+    public ArrayList<State> travelGraph( mdp.ctp.State current) {
 
+        // For the current state:
+            // - Take best action
 
-        if(pathIndex >= bestPaths.size()){
-            statelstsHistory.add(currentSL);
-            return statelstsHistory;
-        }
-        Vertex currentPosition = current.getAgentPos();
-        Path bestPath = bestPaths.get(pathIndex);
+            mdp.ctp.Action action = mdp.extededActions.get(current.getBestAction());
+            Vertex nextV = action.getDest();
+            String newSttId = State.buildId(nextV, current.getStatuses());
+            State newStt = mdp.extededStates.get(newSttId);
 
-        if (currentPosition.isFinal()) {
+            // - Update agent position +
+            // Fix Unknown statuses +
+        // - Construct next state
+        // Update known statuses
 
-            //ArrayList<StateList> currentState = new ArrayList<StateList>();
-            statelstsHistory.add(currentSL);
-            return statelstsHistory;
-            // If not blocked - proceed path ...
-        }
-
-        ArrayList<Edge> bstPath = bestPath.getPath();
-        Edge edge = bstPath.get(edgeIndex);
-
-        if ( current.getAgentPos() == edge.getSource() && !edge.isBlocked()) {
-            currentPosition = edge.getDest();
-            // Travel best path..
-            State updatedState = gs.statesList.addStateByPosition( currentPosition,
-                    gs.getGraph().getEdges());
-
-            //todo: move to init state?
-            updatedState.setStateHistory(current);
-            currentSL.addState(updatedState);
-            return travelGraph(updatedState,edgeIndex+1, bestPaths,
-                    pathIndex,statelstsHistory,currentSL);
-        } else if (current.getAgentPos() == edge.getSource()) {
-            //  find an alternative path as the current is blocked..
-            // currentPosition = prev.getAgentPos();
-            // todo:  find an alternative path
-
-            String label = "\nReconstructing path for agent after edge:"+edge+" was found blocked.\n";
-            statelstsHistory.add(currentSL);
-            travelGraph(this.gs.statesList.getInitialState(),0, bestPaths,
-                    pathIndex+1,statelstsHistory,new StateList(label,gs.getGraph()));
-
-
-            // todo: - print stateList
-            // - Handle regression
-
-
-        }
-
-        return statelstsHistory;
+        // todo: newStt.setStatuses(current);
+        
+        // - Add current state to the list of states
+        // - continue... Until reached the end.
+        // - If path is blocked: recalc strategy for subgraph ( - find new best path);
+        // -- run from there.
+        // - until done.
+        // - When done, run Dror's graphs.
     }
 
 
