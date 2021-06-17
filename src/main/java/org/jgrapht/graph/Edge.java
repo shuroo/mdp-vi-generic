@@ -11,40 +11,37 @@ public class Edge extends DefaultEdge {
     private Boolean isBlocked = false;
 
     public Vertex getSource() {
-        return (Vertex)source;
+        return (Vertex) source;
     }
 
-    public String getId(){ return this.source+"_"+this.target; }
-/*    public Vertex setDest() {
-        return this.getDest();
+    public static String buildId(Object src, Object dst) {
+        return src + "_" + dst;
     }
 
-    public void setSource(Vertex s) {
-        this.source = s;
+    public String getId() {
+        return Edge.buildId(this.source, this.target);
     }
 
-    public void setDest(Vertex s) {
-        this.target = s;
-    }*/
     public Vertex getDest() {
-        return (Vertex)target;
+        return (Vertex) target;
     }
 
     @Override
-    public Object getTarget(){
+    public Object getTarget() {
         return target;
     }
 
-    public Edge(){}
+    public Edge() {
+    }
 
-    public Edge(Vertex source, Vertex dest, Double prob, Double reward){
+    public Edge(Vertex source, Vertex dest, Double prob, Double reward) {
         this.source = source;
         this.target = dest;
         this.blockingProbability = prob;
         this.reward = reward;
     }
 
-    public Edge(Edge e){
+    public Edge(Edge e) {
         this.source = e.source;
         this.target = e.target;
     }
@@ -64,9 +61,11 @@ public class Edge extends DefaultEdge {
         this.blockingProbability = blockingProbability;
     }
 
-    public void setReward(Double reward){this.reward = reward;}
+    public void setReward(Double reward) {
+        this.reward = reward;
+    }
 
-    public void setBlockingAndReward(Double blockingProbability , Double reward){
+    public void setBlockingAndReward(Double blockingProbability, Double reward) {
         setBlockingProbability(blockingProbability);
         setReward(reward);
     }

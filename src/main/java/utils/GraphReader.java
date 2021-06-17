@@ -8,8 +8,6 @@ import org.jgrapht.graph.Graph;
 
 public class GraphReader {
 
-
-
     public static void main(String[] args) {
 
         Graph gr = new Graph("/home/shiris/IdeaProjects/mdpvigeneric/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");

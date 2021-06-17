@@ -11,14 +11,36 @@ import java.util.Vector;
 
 public class State extends mdp.generic.State {
 
+    private State parentState;
+
+    // Visited - and not let to a splution - hence the state is invalid.
+    private Boolean isAgentVisited = false;
+
+    public HashMap<String, CTPEdge> getStatuses() {
+        return statuses;
+    }
+
+
+    public State getParentState() {
+        return parentState;
+    }
+
+    public void setParentState(State parentState) {
+        this.parentState = parentState;
+    }
+
+    public Boolean getAgentVisited() {
+        return isAgentVisited;
+    }
+
+    public void setAgentVisited() {
+        isAgentVisited = true;
+    }
+
     public State(Vertex agentLocation, Vector<CTPEdge> statuses) {
         this.agentLocation = agentLocation;
         this.statuses = CollectionUtils.edgeToMap(statuses);
         setStateId();
-    }
-
-    public HashMap<String, CTPEdge> getStatuses() {
-        return statuses;
     }
 
     public void setAgentLocation(Vertex agentLocation) {
@@ -40,13 +62,6 @@ public class State extends mdp.generic.State {
     public Vertex getAgentLocation() {
         return agentLocation;
     }
-
-    public Double getStateProbability() {
-        return stateProbability;
-    }
-
-    // The probability to occur - based on which edges are currently opened or closed in the current state and thier probsbilities.
-    Double stateProbability;
 
     // Vector of edgeStatuses
 
