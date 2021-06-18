@@ -14,9 +14,18 @@ import java.util.HashMap;
  */
 public class MDPFromGraph extends MDP {
 
-    HashMap<String,Action> extededActions = new HashMap<String,Action>();
-    HashMap<String,State> extededStates = new HashMap<String,State>();
-    HashMap<String,mdp.ctp.Transition> extededTransitions = new HashMap<String, Transition>();
+    public HashMap<String, Action> getExtededActions() {
+        return extededActions;
+    }
+
+    private HashMap<String,Action> extededActions = new HashMap<String,Action>();
+
+    public HashMap<String, State> getExtededStates() {
+        return extededStates;
+    }
+
+    private HashMap<String,State> extededStates = new HashMap<String,State>();
+    private HashMap<String,mdp.ctp.Transition> extededTransitions = new HashMap<String, Transition>();
 
     /**
      *

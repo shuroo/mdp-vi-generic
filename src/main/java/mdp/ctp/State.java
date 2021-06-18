@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class State extends mdp.generic.State {
+public class State extends mdp.generic.State implements Comparable<State> {
 
     private State parentState;
 
-    // Visited - and not let to a splution - hence the state is invalid.
+    // Visited - and not let to a solution - hence the state is invalid.
     private Boolean isAgentVisited = false;
 
     public HashMap<String, CTPEdge> getStatuses() {
@@ -31,10 +31,6 @@ public class State extends mdp.generic.State {
 
     public Boolean getAgentVisited() {
         return isAgentVisited;
-    }
-
-    public void setAgentVisited() {
-        isAgentVisited = true;
     }
 
     public State(Vertex agentLocation, Vector<CTPEdge> statuses) {
@@ -90,5 +86,13 @@ public class State extends mdp.generic.State {
 
     // print states properly
 
+    @Override
+    public int compareTo(State state) {
+        return  this.getUtility() > state.getUtility()?1:-1;
+    }
+
+    public void setIsVisited(){
+        this.isAgentVisited = true;
+    }
 }
 
