@@ -10,6 +10,11 @@ import java.util.LinkedList;
 public class AgentPath {
 
     private Boolean isSucceeded = null;
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
     private String failureMessage;
     private Double pathCost;
     private LinkedList<State> path;
@@ -24,7 +29,7 @@ public class AgentPath {
     }
 
     public void addToPath(State state) {
-        this.pathCost = state.getBestAction().getUtility();
+        this.pathCost = state.getUtility();
         this.path.add(state);
     }
 

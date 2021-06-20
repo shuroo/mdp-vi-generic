@@ -37,18 +37,19 @@ public class Agent implements Runnable {
 
     private State findInitialStt() {
         HashMap<String, State> states = mdp.getExtededStates();
-        State result = null;
 
         for (State stt : states.values()) {
-            if (stt.getBestAction() != null && stt.getAgentLocation().isInitial() && stt.getEdgeStatus() == BlockingStatus.Opened &&
-                    graphConfiguration.get(stt.getBestAction().getActionId()).getStatus() == BlockingStatus.Opened
-            ) {
-                result = new State(stt.getAgentLocation(), new Vector(graphConfiguration.values()));
-                break;
+            if (stt.getBestAction() != null &&
+                    stt.getBestAction().actionIsAllowed(stt) && //todo: improve this condition and code
+            graphConfiguration.get(stt.getBestAction().getActionId()).getStatus() == BlockingStatus.Opened
+            && stt.getAgentLocation().isInitial()            ) {
+                // new State(stt.getAgentLocation(), new Vector(graphConfiguration.values()))
+                return stt;
             }
         }
-        return result;
 
+        System.out.println("Failed to find appropriate initial state!");
+        return null;
     }
 
     /**
@@ -91,11 +92,11 @@ public class Agent implements Runnable {
 
     }
 
-    public List<AgentPath> travelPath(State current, AgentPath currentPath, List<AgentPath> previousPaths) {
+    private List<AgentPath> travelPath(State current, AgentPath currentPath, List<AgentPath> previousPaths) {
 
         current.setIsVisited();
+        currentPath.addToPath(current);
         if (current.getAgentLocation().isFinal()) {
-            currentPath.addToPath(current);
             currentPath.setSucceeded(true);
             previousPaths.add(currentPath);
             return previousPaths;
@@ -105,7 +106,8 @@ public class Agent implements Runnable {
         // For the current state:
         // - Take best action
 
-        mdp.ctp.Action action = mdp.getExtededActions().get(current.getBestAction());
+        mdp.ctp.Action action = mdp.getExtededActions().get(current.getBestAction().toString());
+        //todo: replace this to appropriate ingeritance of action!
         // - Update agent position
         Vertex nextV = action.getDest();
         HashMap<String, CTPEdge> nextStatuses = openUnknownStatuses(nextV, current);
@@ -115,8 +117,7 @@ public class Agent implements Runnable {
         // todo: add here !!! Fix Unknown statuses +
         // todo: newStt.setStatuses(current);
         /// ******************* !!! **********************
-        if (stateIsValid(current, nextState)) {
-            currentPath.addToPath(nextState);
+        if (nextStateIsValid(current, nextState)) {
             return travelPath(nextState, currentPath, previousPaths);
         }
 
@@ -140,29 +141,8 @@ public class Agent implements Runnable {
         }
 
         return travelPath(nextStates.get(0), currentPath, previousPaths);
-
-        // - Construct next state
-        // Update known statuses
-
-
-        // - Add current state to the list of states
-        // - continue... Until reached the end.
-        // - If path is blocked: recalc strategy for subgraph ( - find new best path);
-        // -- run from there.
-        // - until done.
-        // - When done, run Dror's graphs.
-    }
-/*
-        /// todo: put the state list as a path property?
-        ArrayList<StateList> agentPath = travelGraph( initial,0, model.getGraphPaths(),0,new ArrayList<StateList>(),
-                new StateList("First Attempt for stateList",gs.getGraph()));
-        // todo: build function out of this:
-        System.out.println("|| The agent total path was:"+agentPath+" ||");
-        System.out.println("|| Possible paths and costs are:"+model.getGraphPaths() + " ||");
     }
 
-
-*/
 
 
     // Check if the next state is at all possible - is the edge blocked?
@@ -177,16 +157,16 @@ public class Agent implements Runnable {
      * @param current
      * @return
      */
-    private boolean stateIsValid(State prev, State current) {
+    private boolean nextStateIsValid(State prev, State current) {
 
-        if (current.getBestAction() == null || current.getAgentVisited()) {
+        if (( current.getBestAction() == null && !current.getAgentLocation().isFinal()) || current.getAgentVisited()) {
             return false;
         }
         Vertex source = prev.getAgentLocation();
         Vertex dest = current.getAgentLocation();
-        BlockingStatus edgeStatus = graphConfiguration.get(Edge.buildId(source, dest)).getStatus();
+        CTPEdge edgeStatus = graphConfiguration.get(Edge.buildId(source, dest));
 
-        if (edgeStatus != BlockingStatus.Opened) {
+        if (edgeStatus != null && edgeStatus.getStatus() != BlockingStatus.Opened) {
             return false;
         }
         return true;
@@ -210,7 +190,8 @@ public class Agent implements Runnable {
 
     private List<State> filterValidStatesByVertex(State current) {
         Vertex vert = current.getAgentLocation();
-        List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt -> stateIsValid(current, stt) &&
+        List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
+                nextStateIsValid(current, stt) &&
                 stt.getAgentLocation() == vert).collect(Collectors.toList());
 
         return sortStatesByUtility(filteredStates);

@@ -11,6 +11,9 @@ import java.util.Vector;
 
 public class State extends mdp.generic.State implements Comparable<State> {
 
+    // extends best action?
+    protected mdp.ctp.Action graphBestAction;
+
     private State parentState;
 
     // Visited - and not let to a solution - hence the state is invalid.
@@ -45,14 +48,25 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     }
 
+    @Override
+    public void setBestAction(mdp.generic.Action action){
+        this.bestAction = action;
+        if(action instanceof mdp.ctp.Action){
+            this.graphBestAction = (mdp.ctp.Action)action;
+        }
+    }
+
+    public mdp.ctp.Action getGraphBestAction(){
+        return graphBestAction;
+    }
+
     public BlockingStatus getEdgeStatus(){
 
         if(this.bestAction == null){
             return null;
         }
-        HashMap<String,BlockingStatus> statuses = new HashMap<String,BlockingStatus>();
         String edgeId = this.bestAction.toString();
-        return statuses.get(edgeId);
+        return this.getStatuses().get(edgeId).getStatus();
     }
 
     public Vertex getAgentLocation() {
@@ -78,10 +92,6 @@ public class State extends mdp.generic.State implements Comparable<State> {
         }
 
         return uniqueStateStr.toString();
-    }
-
-    public void setBestAction(Action bestAction) {
-        this.bestAction = bestAction;
     }
 
     // print states properly
