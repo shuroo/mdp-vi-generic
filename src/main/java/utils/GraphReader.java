@@ -27,7 +27,7 @@ public class GraphReader {
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discountFactor);
         MDP mdpNew = uc.setOptimalPolicy();
         for (State s : mdpNew.getStates().values()) {
-            System.out.println(s.getId() + ",,," + s.getBestAction());
+            System.out.println(s.getId() + ",,," + s.getBestAction()+","+s.getUtility());
         }
 
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();

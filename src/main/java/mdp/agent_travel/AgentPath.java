@@ -29,7 +29,7 @@ public class AgentPath {
     }
 
     public void addToPath(State state) {
-        this.pathCost = state.getUtility();
+        this.pathCost += state.getUtility();
         this.path.add(state);
     }
 
@@ -45,7 +45,8 @@ public class AgentPath {
     @Override
     public String toString(){
         StringBuilder res = new StringBuilder();
-        path.stream().forEach(stt-> { res.append(stt.getAgentLocation().toString()+","); });
+        path.stream().forEach(stt-> { res.append(stt.toString());
+        res.append(System.getProperty("line.separator")); });
         res.append("|"+isSucceeded+"|"+pathCost);
         return res.toString();
 

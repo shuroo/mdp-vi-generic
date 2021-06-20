@@ -86,6 +86,6 @@ public class State implements StateI {
     @Override
     public String toString(){
 
-        return "<"+this.stateId+">";
+        return "<"+this.stateId+">< utility:"+this.getUtility()+" >";
     }
 }
