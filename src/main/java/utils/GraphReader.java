@@ -34,6 +34,9 @@ public class GraphReader {
         gr.getEdges().values().stream().forEach(edge -> {
             graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
         });
+
+        //Edge edge = graphConfiguration.get("v2_v3").getEdge();
+        //graphConfiguration.put("v2_v3", new CTPEdge(edge, BlockingStatus.Closed));
         Agent ag = new Agent(mdp, graphConfiguration);
         ag.run();
         //Graph gr = new Graph("graphs_data/very_basic_mdp_example_graphs/very_simple_example_18_states.json");

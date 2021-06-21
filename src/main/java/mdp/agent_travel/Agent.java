@@ -35,16 +35,36 @@ public class Agent implements Runnable {
      */
 
 
-    private State findInitialStt() {
+/*    private State findInitialStt() {
         HashMap<String, State> states = mdp.getExtededStates();
 
         for (State stt : states.values()) {
             if (stt.getBestAction() != null &&
                     stt.getBestAction().actionIsAllowed(stt) && //todo: improve this condition and code
-            graphConfiguration.get(stt.getBestAction().getActionId()).getStatus() == BlockingStatus.Opened
-            && stt.getAgentLocation().isInitial()            ) {
+                    graphConfiguration.get(stt.getBestAction().getActionId()).getStatus() == BlockingStatus.Opened
+                    && stt.getAgentLocation().isInitial()) {
                 // new State(stt.getAgentLocation(), new Vector(graphConfiguration.values()))
                 return stt;
+            }
+        }
+
+        System.out.println("Failed to find appropriate initial state!");
+        return null;
+    }*/
+
+
+    private State buildInitialStt() {
+        HashMap<String, State> states = mdp.getExtededStates();
+
+        for (State stt : states.values()) {
+            if (stt.getBestAction() != null &&
+                    stt.getBestAction().actionIsAllowed(stt) && //todo: improve this condition and code
+                    graphConfiguration.get(stt.getBestAction().getActionId()).getStatus() == BlockingStatus.Opened
+                    && stt.getAgentLocation().isInitial()) {
+                State sttWithUpdatedStatuses = new State(stt.getAgentLocation(), new Vector(graphConfiguration.values()));
+                String stateId = sttWithUpdatedStatuses.getId();
+                // return the state configured, with data fetched from its mdp:
+                return mdp.getExtededStates().get(stateId);
             }
         }
 
@@ -56,10 +76,10 @@ public class Agent implements Runnable {
      * Change unknown statuses into 'opened':
      *
      * @param currentState - the state to set
-     * @param nextV - the vertex to use as source
+     * @param nextV        - the vertex to use as source
      * @return List of statuses
      */
-    private HashMap<String, CTPEdge> openUnknownStatuses(Vertex nextV,State currentState) {
+    private HashMap<String, CTPEdge> openUnknownStatuses(Vertex nextV, State currentState) {
         HashMap<String, CTPEdge> statuses = new HashMap<String, CTPEdge>();
         statuses.putAll(currentState.getStatuses());
         statuses.entrySet().stream().forEach(statusedEdge -> {
@@ -83,11 +103,11 @@ public class Agent implements Runnable {
      * find initial state, run, return a valid path when reached a final state.
      */
     public void run() {
-        State initial = findInitialStt();
-        List<AgentPath> allPaths = travelPath(initial, new AgentPath(),new LinkedList<AgentPath>());
+        State initial = buildInitialStt();
+        List<AgentPath> allPaths = travelPath(initial, new AgentPath(), new LinkedList<AgentPath>());
 
-        for(AgentPath path : allPaths){
-         System.out.println(path);
+        for (AgentPath path : allPaths) {
+            System.out.println(path);
         }
 
     }
@@ -107,7 +127,7 @@ public class Agent implements Runnable {
         // - Take best action
 
         mdp.ctp.Action action = mdp.getExtededActions().get(current.getBestAction().toString());
-        //todo: replace this to appropriate ingeritance of action!
+        //todo: replace this to appropriate inheritance of action!
         // - Update agent position
         Vertex nextV = action.getDest();
         HashMap<String, CTPEdge> nextStatuses = openUnknownStatuses(nextV, current);
@@ -144,7 +164,6 @@ public class Agent implements Runnable {
     }
 
 
-
     // Check if the next state is at all possible - is the edge blocked?
 
     /**
@@ -159,7 +178,7 @@ public class Agent implements Runnable {
      */
     private boolean nextStateIsValid(State prev, State current) {
 
-        if (( current.getBestAction() == null && !current.getAgentLocation().isFinal()) || current.getAgentVisited()) {
+        if ((current.getBestAction() == null && !current.getAgentLocation().isFinal()) || current.getAgentVisited()) {
             return false;
         }
         Vertex source = prev.getAgentLocation();
@@ -192,7 +211,7 @@ public class Agent implements Runnable {
         Vertex vert = current.getAgentLocation();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
                 nextStateIsValid(current, stt) &&
-                stt.getAgentLocation() == vert).collect(Collectors.toList());
+                        stt.getAgentLocation() == vert).collect(Collectors.toList());
 
         return sortStatesByUtility(filteredStates);
     }
