@@ -102,8 +102,8 @@ public class State extends mdp.generic.State implements Comparable<State> {
         return  this.getUtility() > state.getUtility()?1:-1;
     }
 
-    public void setIsVisited(){
-        this.isAgentVisited = true;
+    public void setIsVisited(boolean visited){
+        this.isAgentVisited = visited;
     }
 }
 

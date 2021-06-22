@@ -116,7 +116,7 @@ public class Agent implements Runnable {
 
     private List<AgentPath> travelPath(State current, AgentPath currentPath, List<AgentPath> previousPaths) {
 
-        current.setIsVisited();
+        current.setIsVisited(true);
         currentPath.addToPath(current);
         if (current.getAgentLocation().isFinal()) {
             currentPath.setSucceeded(true);
@@ -136,31 +136,37 @@ public class Agent implements Runnable {
         String newSttId = State.buildId(nextV, nextStatuses);
         State nextState = mdp.getExtededStates().get(newSttId);
 
-        // todo: add here !!! Fix Unknown statuses +
-        // todo: newStt.setStatuses(current);
-        /// ******************* !!! **********************
+        nextState.setParentState(current);
+
         if (nextStateIsValid(current, nextState)) {
             return travelPath(nextState, currentPath, previousPaths);
         }
 
-        List<State> nextStates = filterValidStatesWithDifActions(current);
+        List<State> siblingStates = filterValidStatesWithDifActions(current);
 
-        if (nextStates.isEmpty()) {
+        if (siblingStates.isEmpty()) {
 
             currentPath.setSucceeded(false);
-            previousPaths.add(currentPath);
             if (nextState.getParentState() == null) {
                 return previousPaths;
             } else {
-
-
-                // todo: goto parent and try again!
+                // try the parent again:
+                // reset visited flag to try the sibling with a new path.
+                // reset path history:
+                // todo: wrap in method:
+                State parentSt = nextState.getParentState();
+                parentSt.setIsVisited(false);
+                AgentPath pathHistory = currentPath;
+                pathHistory.getPath().remove(current);
+                pathHistory.getPath().remove(parentSt);
+                return travelPath(nextState.getParentState(), pathHistory, previousPaths);
             }
 
 
         }
 
-        return travelPath(nextStates.get(0), currentPath, previousPaths);
+        // If the siblings are not empty, try the first sibling. remove the current which failed -
+        return travelPath(siblingStates.get(0), currentPath, previousPaths);
     }
 
 
