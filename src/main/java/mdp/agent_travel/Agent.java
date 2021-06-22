@@ -4,6 +4,7 @@ import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.ctp.MDPFromGraph;
 import mdp.ctp.State;
+import mdp.generic.Action;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
 
@@ -106,6 +107,7 @@ public class Agent implements Runnable {
         State initial = buildInitialStt();
         List<AgentPath> allPaths = travelPath(initial, new AgentPath(), new LinkedList<AgentPath>());
 
+        System.out.println("**Found:"+allPaths.size()+" Paths.**");
         for (AgentPath path : allPaths) {
             System.out.println(path);
         }
@@ -141,15 +143,13 @@ public class Agent implements Runnable {
             return travelPath(nextState, currentPath, previousPaths);
         }
 
-        List<State> nextStates = filterValidStatesByVertex(current);
+        List<State> nextStates = filterValidStatesWithDifActions(current);
 
         if (nextStates.isEmpty()) {
 
             currentPath.setSucceeded(false);
             previousPaths.add(currentPath);
             if (nextState.getParentState() == null) {
-
-                // return travelPath(nextState, currentPath, previousPaths);
                 return previousPaths;
             } else {
 
@@ -207,11 +207,14 @@ public class Agent implements Runnable {
      * Filter states by vertex, validity, and sort by utility asc.
      */
 
-    private List<State> filterValidStatesByVertex(State current) {
+    private List<State> filterValidStatesWithDifActions(State current) {
         Vertex vert = current.getAgentLocation();
+        Action currentAction = current.getBestAction();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
                 nextStateIsValid(current, stt) &&
-                        stt.getAgentLocation() == vert).collect(Collectors.toList());
+                        stt.getAgentLocation() == vert &&
+                        currentAction != stt.getBestAction()
+                ).collect(Collectors.toList());
 
         return sortStatesByUtility(filteredStates);
     }
