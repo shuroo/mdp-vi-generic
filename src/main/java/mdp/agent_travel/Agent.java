@@ -9,6 +9,7 @@ import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Agent implements Runnable {
@@ -128,10 +129,10 @@ public class Agent implements Runnable {
         // For the current state:
         // - Take best action
 
-        mdp.ctp.Action action = mdp.getExtededActions().get(current.getBestAction().toString());
+        mdp.ctp.Action currentSttAction = mdp.getExtededActions().get(current.getBestAction().toString());
         //todo: replace this to appropriate inheritance of action!
         // - Update agent position
-        Vertex nextV = action.getDest();
+        Vertex nextV = currentSttAction.getDest();
         HashMap<String, CTPEdge> nextStatuses = openUnknownStatuses(nextV, current);
         String newSttId = State.buildId(nextV, nextStatuses);
         State nextState = mdp.getExtededStates().get(newSttId);
@@ -142,31 +143,37 @@ public class Agent implements Runnable {
             return travelPath(nextState, currentPath, previousPaths);
         }
 
-        List<State> siblingStates = filterValidStatesWithDifActions(current);
+        List<State> siblingStates = filterDifferentStateActions(current);
 
-        if (siblingStates.isEmpty()) {
+        if (!siblingStates.isEmpty()) {
+            // todo: fix: return minimal utility to use
+            // todo: make sure to fetch minimal utility
+            return travelPath(siblingStates.get(0), currentPath, previousPaths);
+        }
 
-            currentPath.setSucceeded(false);
-            if (nextState.getParentState() == null) {
+        // else: try the parent...
+        // todo: wrap in method:
+        State parentSt = current.getParentState();
+
+            if (parentSt  == null) {
+                System.out.println("Reached the root!");
+                currentPath.setSucceeded(false);
+                previousPaths.add(currentPath);
                 return previousPaths;
             } else {
                 // try the parent again:
                 // reset visited flag to try the sibling with a new path.
                 // reset path history:
-                // todo: wrap in method:
-                State parentSt = nextState.getParentState();
-                parentSt.setIsVisited(false);
-                AgentPath pathHistory = currentPath;
-                pathHistory.getPath().remove(current);
-                pathHistory.getPath().remove(parentSt);
-                return travelPath(nextState.getParentState(), pathHistory, previousPaths);
+
+                currentPath.updateCostUponRegression(currentSttAction);
+
+                return travelPath(parentSt, currentPath, previousPaths);
             }
 
 
-        }
-
         // If the siblings are not empty, try the first sibling. remove the current which failed -
-        return travelPath(siblingStates.get(0), currentPath, previousPaths);
+
+
     }
 
 
@@ -213,17 +220,41 @@ public class Agent implements Runnable {
      * Filter states by vertex, validity, and sort by utility asc.
      */
 
-    private List<State> filterValidStatesWithDifActions(State current) {
+    private List<State> filterDifferentStateActions(State current) {
         Vertex vert = current.getAgentLocation();
         Action currentAction = current.getBestAction();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
-                nextStateIsValid(current, stt) &&
-                        stt.getAgentLocation() == vert &&
-                        currentAction != stt.getBestAction()
+//                nextStateIsValid(current, stt) &&
+//                        stt.getAgentLocation() == vert &&
+//
+//                        currentAction.getActionId() != stt.getBestAction().getActionId()
+                        isSttExpectedStatuses(stt)
                 ).collect(Collectors.toList());
+
+        State sampleStt = mdp.getExtededStates().get("Ag_Location::v1,|(v1 : v2)::Opened|,|(v1 : v3)::Opened|,|(v2 : v3)::Closed|");
+        //todo: how can it choose v1_v2 action?! -- change logic and reset to v1_v3
+        System.out.println("sampleSttIsExpected?"+isSttExpectedStatuses(sampleStt));
 
         return sortStatesByUtility(filteredStates);
     }
+
+    /**
+     * Make sure the current state is entirely as expected by the graphConfiguration
+     * @param stt
+     * @return
+     */
+    private Boolean  isSttExpectedStatuses (State stt) {
+
+        Predicate<CTPEdge> edgeStatusesConfigured = edg -> graphConfiguration.get(edg.getEdge().getId()).getStatus() == edg.getStatus();
+
+
+        List<CTPEdge> validSttStatuses = stt.getStatuses().values().stream()
+                    .filter(edgeStatusesConfigured )
+                    .collect(Collectors.toList());
+
+        return validSttStatuses.size() == stt.getStatuses().size();
+    }
+
 
 
 }

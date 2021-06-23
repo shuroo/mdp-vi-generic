@@ -40,6 +40,10 @@ public class AgentPath {
         this.pathCost = 0.0;
     }
 
+    public void updateCostUponRegression(mdp.ctp.Action act){
+        this.pathCost += act.getUtility();
+    }
+
     public void setSucceeded(Boolean succeeded){
         this.isSucceeded = succeeded;
     }
