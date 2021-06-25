@@ -1,7 +1,5 @@
 package mdp;
 
-import ctp.BlockingStatus;
-import ctp.CTPEdge;
 import mdp.generic.*;
 
 import java.util.HashMap;
@@ -82,8 +80,7 @@ public class UtilityCalculator {
 
         for (Transition tran : transtionsWithUtility.keySet()) {
             String transitionId = tran.getTransitionId();
-            String sourceActionKey = tran.getAction().toString() + "_" + transitionId.substring(transitionId.indexOf("_src:"),
-                    transitionId.length());
+            String sourceActionKey = tran.getAction().toString() + "_" + transitionId.substring(transitionId.indexOf("_src:"));
             Double utility = transtionsWithUtility.get(tran);
 
             Action action = new Action(tran.getAction().getActionId());
@@ -92,7 +89,6 @@ public class UtilityCalculator {
                 actionsWithUtility.put(sourceActionKey, new LinkedList<Action>());
             }
 
-            //System.out.println("Setting utility:"+utility+" for action:"+action.getActionId()+" on key:"+sourceActionKey);
             action.setUtility(utility);
             actionsWithUtility.get(sourceActionKey).add(action);
 
@@ -135,7 +131,7 @@ public class UtilityCalculator {
      * <p>
      * etc...
      */
-    private HashMap<Transition, Double> calcTransitionsUtility(HashMap<String, State> allStates) {
+    private HashMap<Transition, Double> calcTransitionsUtility() {
 
 
         // Init & Build Map<Transition,Utility>
@@ -145,7 +141,7 @@ public class UtilityCalculator {
         for (Transition transition : currentMDP.getTransitions().values()) {
 
 
-            Double actionLocalUtility = calcStatesUtility(transition, allStates);
+            Double actionLocalUtility = calcStatesUtility(transition);
             if (!actionsPerSourceStt.containsKey(transition)) {
                 actionsPerSourceStt.put(transition, actionLocalUtility);
             } else {
@@ -162,7 +158,7 @@ public class UtilityCalculator {
     // OR
 
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
-    private Double calcStatesUtility(Transition transition, HashMap<String, State> allStates) {
+    private Double calcStatesUtility(Transition transition) {
 
         if (!transition.isValid()) {
             return 0.0;
@@ -199,7 +195,6 @@ public class UtilityCalculator {
             return actionSubUtility;
         }
     }
-
     /**
      * Method to set utility per iteration for all states.
      *
@@ -207,7 +202,7 @@ public class UtilityCalculator {
      * @return
      */
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
-        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility(allStates);
+        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
 
         for (Transition tran : updatedTransitionsUtility.keySet()) {
             if (tran.isValid()) {
@@ -218,9 +213,7 @@ public class UtilityCalculator {
         }
         HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
 
-       /* for (Action action : utilityPerActionState.values()) {
-            System.out.println("**** Final Utility for ACTION:" + action.getUtility() + " ACTION is: " + action.getActionId());
-        }*/
+
         for (State state : allStates.values()) {
             setUtilitySingleState(state, utilityPerActionState);
         }
@@ -324,13 +317,5 @@ public class UtilityCalculator {
         //stateTransitions.values();
         return stateActions;
     }
-
-
-
-
-
-    /**
-     * isValidActionForState(State s)
-     */
 
 }

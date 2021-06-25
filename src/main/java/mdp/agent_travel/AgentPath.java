@@ -3,7 +3,6 @@ package mdp.agent_travel;
 import mdp.ctp.State;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -11,6 +10,7 @@ import java.util.Set;
  */
 public class AgentPath {
 
+    private Agent agent;
     private Boolean isSucceeded = null;
 
     public String getFailureMessage() {
@@ -30,19 +30,34 @@ public class AgentPath {
         return path;
     }
 
-    public void addToPath(State state) {
-        this.pathCost += state.getUtility();
-        this.path.add(state);
+
+    public void addToPath(State current) {
+        this.path.add(current);
+
+        Double currentReward = current.getBestAction() == null? 0.0 :agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
+        this.pathCost += currentReward;
     }
 
-    public AgentPath(){
+//    public void addToPathRegression(State current, State parent){
+//
+//        this.path.add(parent);
+//
+//        Double currentReward = current.getBestAction() == null? 0.0 :agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
+//        this.pathCost += currentReward;
+//    }
+
+    /**
+     * Go back , update the path, and update the agent cost upon regression:
+     * @param agent
+     */
+
+    public AgentPath(Agent agent){
+
+        this.agent = agent;
         this.path = new HashSet<State>();
         this.pathCost = 0.0;
     }
 
-    public void updateCostUponRegression(mdp.ctp.Action act){
-        this.pathCost += act.getUtility();
-    }
 
     public void setSucceeded(Boolean succeeded){
         this.isSucceeded = succeeded;
@@ -52,7 +67,7 @@ public class AgentPath {
     public String toString(){
         StringBuilder res = new StringBuilder();
         res.append("|Path:");
-        path.stream().forEach(stt-> { res.append(stt.toString());
+        this.path.stream().forEach(stt-> { res.append(stt.toString());
         res.append(System.getProperty("line.separator")); });
         res.append("|"+isSucceeded+"|"+pathCost+"|");
         return res.toString();
