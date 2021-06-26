@@ -138,22 +138,11 @@ public class Agent implements Runnable {
         return (parentSt == null);
     }
 
-    private AgentPath travelSiblings(State current, List<State> siblingStates, AgentPath currentPath) {
+    private AgentPath travelSiblings( List<State> siblingStates, AgentPath currentPath) {
 
 
         State minimalUtilitySiblingStt = siblingStates.get(0);
         System.out.println("running with minimalUtilSib:" + minimalUtilitySiblingStt + " and utility:" + minimalUtilitySiblingStt.getUtility() + " and action:" + minimalUtilitySiblingStt.getBestAction());
-
-        // If we reached the root state,
-        if (isRootState(minimalUtilitySiblingStt)) {
-            // Update current path, add w(v2,v1),
-            currentPath.addToPath(current);
-
-            // Update as failed
-            currentPath.setSucceeded(false);
-            // Add to the list of paths and return
-            return travelPath2(minimalUtilitySiblingStt, new AgentPath(this));
-        }
         return travelPath2(minimalUtilitySiblingStt, currentPath);
 
     }
@@ -198,12 +187,12 @@ public class Agent implements Runnable {
 
         State nextState = buildNextStt(current);
 
+        currentPath.addToPath(nextState);
         if (nextStateIsValid(current, nextState)) {
             System.out.println("Going to te next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
             return travelPath2(nextState, currentPath);
         } else {
             List<State> filteredStates = findSiblings(current);
-
             List<State> siblingStates = sortStatesByUtility(filteredStates);
 
             for (State s : siblingStates) {
@@ -213,7 +202,7 @@ public class Agent implements Runnable {
             if (!siblingStates.isEmpty()) {
                 System.out.println("Travelling sibling for current :"+current);
 
-                return travelSiblings(current, siblingStates, currentPath);
+                return travelSiblings( siblingStates, currentPath );
             } else {
                 if(current.getParentState() == null){
 
@@ -230,6 +219,7 @@ public class Agent implements Runnable {
         }
     }
 
+    /*
 
     private List<AgentPath> travelPath(State current, AgentPath currentPath, List<AgentPath> previousPaths) {
 
@@ -305,7 +295,7 @@ public class Agent implements Runnable {
 
     }
 
-
+*/
     // Check if the next state is at all possible - is the edge blocked?
 
     /**
