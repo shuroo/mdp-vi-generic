@@ -38,14 +38,6 @@ public class AgentPath {
         this.pathCost += currentReward;
     }
 
-//    public void addToPathRegression(State current, State parent){
-//
-//        this.path.add(parent);
-//
-//        Double currentReward = current.getBestAction() == null? 0.0 :agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
-//        this.pathCost += currentReward;
-//    }
-
     /**
      * Go back , update the path, and update the agent cost upon regression:
      * @param agent
