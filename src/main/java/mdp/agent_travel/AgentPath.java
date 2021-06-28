@@ -18,7 +18,7 @@ public class AgentPath {
     }
 
     private String failureMessage;
-    private Double pathCost;
+    private Double pathCost = 0.0;
     private Set<State> path;
 
 
@@ -36,6 +36,7 @@ public class AgentPath {
 
         Double currentReward = current.getBestAction() == null? 0.0 :agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
         this.pathCost += currentReward;
+        System.out.println("Adding: "+this.pathCost+" to path with state:"+current);
     }
 
     /**

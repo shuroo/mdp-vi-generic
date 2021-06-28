@@ -205,11 +205,11 @@ public class UtilityCalculator {
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
 
         for (Transition tran : updatedTransitionsUtility.keySet()) {
-            if (tran.isValid()) {
+            /*if (tran.isValid()) {
 
                 Double tranUtility = updatedTransitionsUtility.get(tran);
-                System.out.println("**** Final Utility for Transition:" + tranUtility + " transition is: " + tran.toString());
-            }
+               // System.out.println("**** Final Utility for Transition:" + tranUtility + " transition is: " + tran.toString());
+            }*/
         }
         HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
 

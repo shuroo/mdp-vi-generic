@@ -162,7 +162,6 @@ public class Agent implements Runnable {
             // reset path history:
 
             //todo: update path cost:
-            currentPath.addToPath(parentSt);
             System.out.println("running with parent:" + parentSt);
 
             return travelPath2(parentSt, currentPath);
@@ -173,7 +172,6 @@ public class Agent implements Runnable {
     private AgentPath travelPath2(State current, AgentPath currentPath) {
 
         current.setIsVisited(true);
-        currentPath.addToPath(current);
 
         if (current.getAgentLocation().isFinal()) {
             currentPath.setSucceeded(true);
@@ -187,9 +185,9 @@ public class Agent implements Runnable {
 
         State nextState = buildNextStt(current);
 
-        currentPath.addToPath(nextState);
         if (nextStateIsValid(current, nextState)) {
             System.out.println("Going to te next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
+            currentPath.addToPath(current);
             return travelPath2(nextState, currentPath);
         } else {
             List<State> filteredStates = findSiblings(current);
@@ -206,7 +204,7 @@ public class Agent implements Runnable {
             } else {
                 if(current.getParentState() == null){
 
-                    System.out.println("Travelling Parent for root - aborting!");
+                    System.out.println("Travelling Parent for root - Aborting!");
                     currentPath.setSucceeded(false);
                     return currentPath;
                 }
@@ -296,6 +294,20 @@ public class Agent implements Runnable {
     }
 
 */
+
+
+    /**
+     * Check if
+     */
+
+    private Boolean isActionNotNullAndNotVisited(State current){
+        if ((current.getBestAction() == null && !current.getAgentLocation().isFinal()) ||
+                current.getAgentVisited()) {
+            return false;
+        }
+
+        return true;
+    }
     // Check if the next state is at all possible - is the edge blocked?
 
     /**
@@ -310,10 +322,10 @@ public class Agent implements Runnable {
      */
     private boolean nextStateIsValid(State prev, State current) {
 
-        if ((current.getBestAction() == null && !current.getAgentLocation().isFinal()) ||
-                current.getAgentVisited()) {
+        if(!isActionNotNullAndNotVisited(current)){
             return false;
         }
+
         Vertex source = prev.getAgentLocation();
         Vertex dest = current.getAgentLocation();
         CTPEdge edgeStatus = graphConfiguration.get(Edge.buildId(source, dest));
@@ -344,8 +356,11 @@ public class Agent implements Runnable {
         Vertex vert = current.getAgentLocation();
         Action currentAction = current.getBestAction();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
-                        nextStateIsValid(current, stt) &&
+
+                /// todo: improve this!!! 28/06/2021
+                        isActionNotNullAndNotVisited(stt) &&
                                 stt.getAgentLocation() == vert &&
+                                isSttExpectedStatuses(stt) &&
                                 currentAction.getActionId() != stt.getBestAction().getActionId()
         ).distinct().collect(Collectors.toList());
 

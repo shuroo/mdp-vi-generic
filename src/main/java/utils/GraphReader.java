@@ -18,7 +18,7 @@ public class GraphReader {
 
         Graph gr = new Graph("/home/shiris/IdeaProjects/mdpvigeneric/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
-        System.out.println(gr.toString());
+        //System.out.println(gr.toString());
         MDPFromGraph mdp = new MDPFromGraph(gr);
 
         Double epsilon = 0.6;
@@ -26,9 +26,9 @@ public class GraphReader {
 
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discountFactor);
         MDP mdpNew = uc.setOptimalPolicy();
-        for (State s : mdpNew.getStates().values()) {
-            System.out.println(s.getId() + ",,," + s.getBestAction()+","+s.getUtility());
-        }
+//        for (State s : mdpNew.getStates().values()) {
+//            System.out.println(s.getId() + ",,," + s.getBestAction()+","+s.getUtility());
+//        }
 
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
         gr.getEdges().values().stream().forEach(edge -> {
