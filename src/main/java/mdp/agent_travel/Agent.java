@@ -149,11 +149,14 @@ public class Agent implements Runnable {
 
 
     private AgentPath travelParent(State current, AgentPath currentPath) {
+
+        // Go Back - readd the current action with its cost:
+        currentPath.addToPath(current);
         // else: try the parent...
         State parentSt = current.getParentState();
 
         if (parentSt == null) {
-            System.out.println("Reached the root!");
+            System.out.println("The parent is null - try siblings again...");
             currentPath.setSucceeded(false);
             return currentPath;
         } else {
@@ -172,7 +175,7 @@ public class Agent implements Runnable {
     private AgentPath travelPath2(State current, AgentPath currentPath) {
 
         current.setIsVisited(true);
-
+        currentPath.addToPath(current);
         if (current.getAgentLocation().isFinal()) {
             currentPath.setSucceeded(true);
             System.out.println("we have reached the destination!!!");
@@ -186,15 +189,14 @@ public class Agent implements Runnable {
         State nextState = buildNextStt(current);
 
         if (nextStateIsValid(current, nextState)) {
-            System.out.println("Going to te next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
-            currentPath.addToPath(current);
+            System.out.println("Going to the next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
             return travelPath2(nextState, currentPath);
         } else {
             List<State> filteredStates = findSiblings(current);
             List<State> siblingStates = sortStatesByUtility(filteredStates);
 
             for (State s : siblingStates) {
-                System.out.println("returned sorted sibling with utility" + s.getUtility() + " and action:" + s.getBestAction());
+                System.out.println("returned sorted sibling:" + s);
             }
 
             if (!siblingStates.isEmpty()) {
@@ -202,14 +204,8 @@ public class Agent implements Runnable {
 
                 return travelSiblings( siblingStates, currentPath );
             } else {
-                if(current.getParentState() == null){
 
-                    System.out.println("Travelling Parent for root - Aborting!");
-                    currentPath.setSucceeded(false);
-                    return currentPath;
-                }
-
-                System.out.println("Travelling Parent for non-root - for current:"+current);
+                // if we already visited the state and its siblings, go to parent and try again..
                 return travelParent(current, currentPath);
             }
 
@@ -217,91 +213,13 @@ public class Agent implements Runnable {
         }
     }
 
-    /*
-
-    private List<AgentPath> travelPath(State current, AgentPath currentPath, List<AgentPath> previousPaths) {
-
-        current.setIsVisited(true);
-        currentPath.addToPath(current);
-
-        if (current.getAgentLocation().isFinal()) {
-            currentPath.setSucceeded(true);
-            previousPaths.add(currentPath);
-            return previousPaths;
-        }
-
-
-        // For the current state:
-        // - Take best action
-
-        State nextState = buildNextStt(current);
-
-        if (nextStateIsValid(current, nextState)) {
-            return travelPath(nextState, currentPath, previousPaths);
-        }
-
-        List<State> filteredStates = findSiblings(current);
-
-        List<State> siblingStates = sortStatesByUtility(filteredStates);
-
-        for (State s : siblingStates) {
-            System.out.println("returned sorted sibling with utility" + s.getUtility() + " and action:" + s.getBestAction());
-        }
-
-        if (!siblingStates.isEmpty()) {
-            State minimalUtilitySiblingStt = siblingStates.get(0);
-            System.out.println("running with minimalUtilSib:" + minimalUtilitySiblingStt + " and utility:" + minimalUtilitySiblingStt.getUtility() + " and action:" + minimalUtilitySiblingStt.getBestAction());
-
-            // If we reached the root state,
-            if (isRootState(minimalUtilitySiblingStt)) {
-                // Update current path, add w(v2,v1),
-                currentPath.addToPath(current);
-
-                // Update as failed
-                currentPath.setSucceeded(false);
-                // Add to the list of paths and return
-                previousPaths.add(currentPath);
-                return travelPath(minimalUtilitySiblingStt, new AgentPath(this), previousPaths);
-            }
-            return travelPath(minimalUtilitySiblingStt, currentPath, previousPaths);
-        }
-
-        // else: try the parent...
-        // todo: wrap in method:
-        State parentSt = current.getParentState();
-
-        if (parentSt == null) {
-            System.out.println("Reached the root!");
-            currentPath.setSucceeded(false);
-            previousPaths.add(currentPath);
-            return previousPaths;
-        } else {
-            // try the parent again:
-            // reset visited flag to try the sibling with a new path.
-            // reset path history:
-
-            //todo: update path cost:
-            //currentPath.updateCostUponRegression(currentSttAction);
-            System.out.println("running with parent:" + parentSt);
-
-            return travelPath(parentSt, currentPath, previousPaths);
-        }
-
-
-        // If the siblings are not empty, try the first sibling. remove the current which failed -
-
-
-    }
-
-*/
-
 
     /**
      * Check if
      */
 
     private Boolean isActionNotNullAndNotVisited(State current){
-        if ((current.getBestAction() == null && !current.getAgentLocation().isFinal()) ||
+        if (current.getBestAction() == null && !current.getAgentLocation().isFinal() ||
                 current.getAgentVisited()) {
             return false;
         }
@@ -354,27 +272,18 @@ public class Agent implements Runnable {
 
     private List<State> findSiblings(State current) {
         Vertex vert = current.getAgentLocation();
-        Action currentAction = current.getBestAction();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
 
                 /// todo: improve this!!! 28/06/2021
                         isActionNotNullAndNotVisited(stt) &&
                                 stt.getAgentLocation() == vert &&
-                                isSttExpectedStatuses(stt) &&
-                                currentAction.getActionId() != stt.getBestAction().getActionId()
+                                isSttExpectedStatuses(stt)
         ).distinct().collect(Collectors.toList());
 
-                //.map(stt-> { return fetchStateByVertexAndStatuses(stt.getAgentLocation());}).distinct().collect(Collectors.toList());
+        System.out.println("filteredStates? -from current:"+current+", and siblings:" + filteredStates.size());
 
-        System.out.println("filteredStates?" + filteredStates.size());
-        //    State sampleStt = mdp.getExtededStates().get("Ag_Location::v1,|(v1 : v2)::Opened|,|(v1 : v3)::Opened|,|(v2 : v3)::Closed|");
-        //    State sampleStt2 = mdp.getExtededStates().get("Ag_Location::v2,|(v1 : v2)::Opened|,|(v1 : v3)::Opened|,|(v2 : v3)::Closed|");
+        filteredStates.forEach(stt-> System.out.println("found sibling:"+stt));
 
-//        //todo: how can it choose v1_v2 action?! -- change logic and reset to v1_v3
-//        System.out.println("sampleSttIsExpected?"+isSttExpectedStatuses(sampleStt));
-//        System.out.println("sampleBestAction:"+sampleStt.getBestAction());
-//        System.out.println("sampleStt2:"+sampleStt2.getBestAction());
-//        System.out.println("sampleStt2:"+sampleStt2.getUtility());
 
         return filteredStates;
     }

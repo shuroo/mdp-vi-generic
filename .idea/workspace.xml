@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" afterDir="false" />
     </list>
@@ -22,10 +22,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="67">
-              <caret line="363" column="28" lean-forward="true" selection-start-line="363" selection-start-column="28" selection-end-line="363" selection-end-column="28" />
+            <state relative-caret-position="236">
+              <caret line="154" column="34" lean-forward="true" selection-start-line="154" selection-start-column="34" selection-end-line="154" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/State.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#629#630#0" expanded="true" />
+                <element signature="e#663#664#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -34,28 +48,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="39" column="5" lean-forward="true" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
+            <state relative-caret-position="349">
+              <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#303#304#0" expanded="true" />
                 <element signature="e#340#341#0" expanded="true" />
-                <element signature="e#495#496#0" expanded="true" />
-                <element signature="e#547#548#0" expanded="true" />
-                <element signature="e#582#583#0" expanded="true" />
-                <element signature="e#609#610#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/Reward.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="795">
-              <caret line="76" selection-start-line="76" selection-end-line="76" />
-              <folding>
-                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/State.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="13" column="38" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="38" />
+            <state relative-caret-position="204">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#877#878#0" expanded="true" />
@@ -94,7 +92,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
+            <state relative-caret-position="3000">
               <caret line="204" column="47" selection-start-line="204" selection-start-column="47" selection-end-line="204" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -106,8 +104,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="37" selection-start-line="37" selection-start-column="2" selection-end-line="40" selection-end-column="85" />
+            <state relative-caret-position="80">
+              <caret line="37" column="2" selection-start-line="37" selection-end-line="40" selection-end-column="85" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -155,13 +153,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>fil</find>
-      <find>extendedAc</find>
-      <find>Action</find>
-      <find>ctp.Action</find>
-      <find>addToPathUponRegression</find>
-      <find>extended</find>
-      <find>find</find>
       <find>trave</find>
       <find>vali</find>
       <find>mdp</find>
@@ -185,6 +176,13 @@
       <find>filtered</find>
       <find>Travelling</find>
       <find>pathCost</find>
+      <find>returned sorted sibling</find>
+      <find>Building next state for current</find>
+      <find>filteredStates?</find>
+      <find>|Path</find>
+      <find>Path:</find>
+      <find>Travelling Parent for root - Aborting!</find>
+      <find>bestAction</find>
     </findStrings>
     <replaceStrings>
       <replace>CTPEdge</replace>
@@ -242,13 +240,13 @@
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/Agent.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/agent_travel/StateComperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/Action.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/generic/Action.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" />
         <option value="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" />
       </list>
     </option>
@@ -599,7 +597,7 @@
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.059856344" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0622506" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -688,27 +686,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
-          <line>270</line>
-          <properties />
-          <option name="timeStamp" value="200" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
-          <line>111</line>
-          <properties />
-          <option name="timeStamp" value="206" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java</url>
-          <line>62</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="208" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
-          <line>202</line>
+          <line>204</line>
           <properties />
           <option name="timeStamp" value="209" />
         </line-breakpoint>
@@ -724,6 +702,7 @@
         <watch expression="action" language="JAVA" />
         <watch expression="current" language="JAVA" />
         <watch expression="current" language="JAVA" />
+        <watch expression="stt.getStatuses().size()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
@@ -733,6 +712,11 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>stt.getStatuses().size()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>current</expression-string>
         <language-id>JAVA</language-id>
@@ -980,16 +964,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/State.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1245">
-          <caret line="104" column="21" selection-start-line="104" selection-start-column="21" selection-end-line="104" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/jgrapht/graph/Edge.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -1057,18 +1031,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/State.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="13" column="38" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="38" />
+        <state relative-caret-position="236">
+          <caret line="154" column="34" lean-forward="true" selection-start-line="154" selection-start-column="34" selection-end-line="154" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#877#878#0" expanded="true" />
-            <element signature="e#907#908#0" expanded="true" />
-            <element signature="e#1614#1615#0" expanded="true" />
-            <element signature="e#1647#1648#0" expanded="true" />
-            <element signature="e#1695#1696#0" expanded="true" />
-            <element signature="e#1735#1736#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/State.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#629#630#0" expanded="true" />
+            <element signature="e#663#664#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1082,6 +1062,19 @@
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3000">
+          <caret line="204" column="47" selection-start-line="204" selection-start-column="47" selection-end-line="204" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.jpg">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1102,49 +1095,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="204" column="47" selection-start-line="204" selection-start-column="47" selection-end-line="204" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="363" column="28" lean-forward="true" selection-start-line="363" selection-start-column="28" selection-end-line="363" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="39" column="5" lean-forward="true" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
+        <state relative-caret-position="349">
+          <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#303#304#0" expanded="true" />
             <element signature="e#340#341#0" expanded="true" />
-            <element signature="e#495#496#0" expanded="true" />
-            <element signature="e#547#548#0" expanded="true" />
-            <element signature="e#582#583#0" expanded="true" />
-            <element signature="e#609#610#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/State.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#877#878#0" expanded="true" />
+            <element signature="e#907#908#0" expanded="true" />
+            <element signature="e#1614#1615#0" expanded="true" />
+            <element signature="e#1647#1648#0" expanded="true" />
+            <element signature="e#1695#1696#0" expanded="true" />
+            <element signature="e#1735#1736#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="37" selection-start-line="37" selection-start-column="2" selection-end-line="40" selection-end-column="85" />
+        <state relative-caret-position="80">
+          <caret line="37" column="2" selection-start-line="37" selection-end-line="40" selection-end-column="85" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

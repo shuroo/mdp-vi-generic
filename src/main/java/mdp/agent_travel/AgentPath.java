@@ -60,7 +60,7 @@ public class AgentPath {
     public String toString(){
         StringBuilder res = new StringBuilder();
         res.append("|Path:");
-        this.path.stream().forEach(stt-> { res.append(stt.toString());
+        this.path.stream().forEach(stt-> { res.append(stt.toString()+"|Action:"+stt.getBestAction());
         res.append(System.getProperty("line.separator")); });
         res.append("|"+isSucceeded+"|"+pathCost+"|");
         return res.toString();

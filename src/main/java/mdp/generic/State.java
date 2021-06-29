@@ -5,7 +5,6 @@ import mdp.interfaces.StateI;
 import org.jgrapht.graph.Vertex;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class State implements StateI {
 
