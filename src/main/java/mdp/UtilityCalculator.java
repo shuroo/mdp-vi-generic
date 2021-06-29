@@ -1,10 +1,11 @@
 package mdp;
 
+import mdp.action_sorters.ActionSortAsc;
+import mdp.action_sorters.ActionSortDesc;
 import mdp.generic.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UtilityCalculator {
 
@@ -204,13 +205,13 @@ public class UtilityCalculator {
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
 
-        for (Transition tran : updatedTransitionsUtility.keySet()) {
-            /*if (tran.isValid()) {
+       /* for (Transition tran : updatedTransitionsUtility.keySet()) {
+            if (tran.isValid()) {
 
                 Double tranUtility = updatedTransitionsUtility.get(tran);
                // System.out.println("**** Final Utility for Transition:" + tranUtility + " transition is: " + tran.toString());
-            }*/
-        }
+            }
+        }*/
         HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
 
 
@@ -226,22 +227,17 @@ public class UtilityCalculator {
         //  Get all actions belonging to this state:
         HashMap<String, Action> actionsWithUtility = filterStateActions(state, updatedStateActionsUtility);
 
+        List<Action> minimalUtilityActions = null;
         Action minimalUtilityAction = null;
         Double minimalUtility = 0.0;
 
         if (!actionsWithUtility.isEmpty()) {
-            minimalUtilityAction = currentMDP.isMinimizationProblem() ? findMinimalAction(
-                    actionsWithUtility) : findMaximalAction(actionsWithUtility);
+            minimalUtilityActions = currentMDP.isMinimizationProblem() ? sortMinimalActions(
+                    actionsWithUtility) : sortMaximalActions(actionsWithUtility);
 
             // U(s) <- R(s,a,(s'??)) + Utility(a)
 
-            // todo: avoid using the same state twice like in example 17.2
-
-            /*Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
-
-            // Value to compare before putting reward inside the equasion
-            Double minimalUtilityOld = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
-*/
+            minimalUtilityAction = minimalUtilityActions.isEmpty() ? null : minimalUtilityActions.get(0);
 
             // Value to compare before putting reward inside the equasion
             minimalUtility = minimalUtilityAction != null ? minimalUtilityAction.getUtility() : 0.0;
@@ -249,11 +245,9 @@ public class UtilityCalculator {
             minimalUtility = minimalUtility * this.discountFactor;
 
             state.setPreviousUtility(state.getUtility());
-            //minimalUtility = CollectionUtils.roundTwoDigits(minimalUtility);
-
-            //System.out.println("--### Setting utility: " + minimalUtility + " for state: " + state.getId() + "###--");
             state.setUtility(minimalUtility);
             state.setBestAction(minimalUtilityAction);
+            state.setBestActions(minimalUtilityActions);
 
         }
 
@@ -263,6 +257,28 @@ public class UtilityCalculator {
 
     //todo: do we need to add functionality to check if the action is unblocked \ possible ???
 
+
+    /**
+     * Sort actions by order - biggest at the top
+     * @param sttActionsWithutility
+     * @return
+     */
+    private List<Action> sortMaximalActions(HashMap<String, Action> sttActionsWithutility){
+        List<Action> sortedActionsDesc = sttActionsWithutility.values().stream().collect(Collectors.toList());
+        Collections.sort(sortedActionsDesc, new ActionSortDesc());
+        return sortedActionsDesc;
+    }
+
+    /**
+     * Sort actions by order - smaller ones at the top
+     * @param sttActionsWithutility
+     * @return
+     */
+    private List<Action> sortMinimalActions(HashMap<String, Action> sttActionsWithutility){
+        List<Action> sortedActionsAsc = sttActionsWithutility.values().stream().collect(Collectors.toList());
+        Collections.sort(sortedActionsAsc, new ActionSortAsc());
+        return sortedActionsAsc;
+    }
 
     private Action findMinimalAction(HashMap<String, Action> sttActionsWithutility) {
 

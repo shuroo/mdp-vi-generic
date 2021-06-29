@@ -5,6 +5,7 @@ import mdp.interfaces.StateI;
 import org.jgrapht.graph.Vertex;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class State implements StateI {
 
@@ -12,6 +13,16 @@ public class State implements StateI {
     // Default value
     protected Double minimalUtility = 0.0;
     protected Action bestAction;
+
+    public List<Action> getBestActions() {
+        return bestActions;
+    }
+
+    public void setBestActions(List<Action> bestActions) {
+        this.bestActions = bestActions;
+    }
+
+    protected List<Action> bestActions;
     protected Boolean isFinal = false;
     protected Boolean isInitial = false;
     protected Double previousUtility = 0.0;
