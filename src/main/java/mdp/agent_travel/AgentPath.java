@@ -3,7 +3,8 @@ package mdp.agent_travel;
 import mdp.ctp.State;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class to represent a single travel of the agent over the graph
@@ -19,14 +20,14 @@ public class AgentPath {
 
     private String failureMessage;
     private Double pathCost = 0.0;
-    private Set<State> path;
+    private List<State> path;
 
 
     public void setFailureMessage(String failureMessage) {
         this.failureMessage = failureMessage;
     }
 
-    public Set<State> getPath() {
+    public List<State> getPath() {
         return path;
     }
 
@@ -47,7 +48,7 @@ public class AgentPath {
     public AgentPath(Agent agent){
 
         this.agent = agent;
-        this.path = new HashSet<State>();
+        this.path = new LinkedList<State>();
         this.pathCost = 0.0;
     }
 

@@ -11,13 +11,39 @@ import java.util.Vector;
 
 public class State extends mdp.generic.State implements Comparable<State> {
 
-    // extends best action?
-    protected mdp.ctp.Action graphBestAction;
+    // Visited - and not let to a solution - hence the state is invalid.
+    private Integer agentVisits = 0;
+
+    // The index to approach the current best action
+    //private Integer agentActionsIndex = -1;
 
     private State parentState;
 
-    // Visited - and not let to a solution - hence the state is invalid.
-    private Boolean isAgentVisited = false;
+    public void setAgentVisits() {
+        this.agentVisits++;
+        //this.agentActionsIndex++;
+    }
+
+    /**
+     * Set the next action and return it , when exists:
+     * @return
+     */
+    public State copyStateSetNextBestAction(){
+
+        // Check whether the agent has no actions not yet visited:
+        if(hasNextBestAction()){
+            return null;
+        }
+
+        State newSt  = new State(this.getAgentLocation(),new Vector(this.getStatuses().values()));
+
+        newSt.bestAction = bestActions.get(agentVisits);
+        newSt.minimalUtility = bestAction.getUtility();
+        newSt.agentVisits = agentVisits;
+        newSt.bestActions = bestActions;
+        return newSt;
+    }
+
 
     public HashMap<String, CTPEdge> getStatuses() {
         return statuses;
@@ -32,8 +58,10 @@ public class State extends mdp.generic.State implements Comparable<State> {
         this.parentState = parentState;
     }
 
-    public Boolean getAgentVisited() {
-        return isAgentVisited;
+
+    // Check if the agent is already visited enough
+    public Boolean hasNextBestAction() {
+        return bestActions!=null && agentVisits == bestActions.size();
     }
 
     public State(Vertex agentLocation, Vector<CTPEdge> statuses) {
@@ -51,17 +79,10 @@ public class State extends mdp.generic.State implements Comparable<State> {
     @Override
     public void setBestAction(mdp.generic.Action action){
         this.bestAction = action;
-        if(action instanceof mdp.ctp.Action){
-            this.graphBestAction = (mdp.ctp.Action)action;
-        }
+
     }
 
-    // todo: implement.
-    public mdp.ctp.Action getGraphBestAction(){
-        return graphBestAction;
-    }
-
-    public BlockingStatus getEdgeStatus(){
+       public BlockingStatus getEdgeStatus(){
 
         if(this.bestAction == null){
             return null;
@@ -102,8 +123,5 @@ public class State extends mdp.generic.State implements Comparable<State> {
         return  this.getUtility() > state.getUtility()?1:-1;
     }
 
-    public void setIsVisited(boolean visited){
-        this.isAgentVisited = visited;
-    }
 }
 

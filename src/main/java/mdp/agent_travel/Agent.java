@@ -4,7 +4,6 @@ import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.ctp.MDPFromGraph;
 import mdp.ctp.State;
-import mdp.generic.Action;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
 
@@ -59,21 +58,21 @@ public class Agent implements Runnable {
     }
 
 
-    private List<State> findInitialStts() {
-
-        State firstInitial = buildInitialStt();
-
-        // todo: make sure to configure the other states as expected.
-        List<State> initials = findSiblings(firstInitial);
-
-        initials.add(firstInitial);
-        if (initials.isEmpty()) {
-            System.out.println("Failed to find appropriate initial state!");
-        }
-
-        return sortStatesByUtility(initials);
-
-    }
+//    private List<State> findInitialStts() {
+//
+//        State firstInitial = buildInitialStt();
+//
+//        // todo: make sure to configure the other states as expected.
+//        List<State> initials = findSiblings(firstInitial);
+//
+//        initials.add(firstInitial);
+//        if (initials.isEmpty()) {
+//            System.out.println("Failed to find appropriate initial state!");
+//        }
+//
+//        return sortStatesByUtility(initials);
+//
+//    }
 
     /**
      * Change unknown statuses into 'opened':
@@ -106,8 +105,8 @@ public class Agent implements Runnable {
      * find initial state, run, return a valid path when reached a final state.
      */
     public void run() {
-        List<State> initials = findInitialStts();
-        AgentPath path = travelPath2(initials.get(0), new AgentPath(this));
+        State initial = buildInitialStt();
+        AgentPath path = travelPath2(initial, new AgentPath(this));
 
         System.out.println(path);
 
@@ -174,7 +173,7 @@ public class Agent implements Runnable {
 
     private AgentPath travelPath2(State current, AgentPath currentPath) {
 
-        current.setIsVisited(true);
+        current.setAgentVisits();
         currentPath.addToPath(current);
         if (current.getAgentLocation().isFinal()) {
             currentPath.setSucceeded(true);
@@ -192,17 +191,17 @@ public class Agent implements Runnable {
             System.out.println("Going to the next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
             return travelPath2(nextState, currentPath);
         } else {
-            List<State> filteredStates = findSiblings(current);
-            List<State> siblingStates = sortStatesByUtility(filteredStates);
 
-            for (State s : siblingStates) {
-                System.out.println("returned sorted sibling:" + s);
-            }
+            // if next is blocked etc -
+            // try to set next action and revisit.
+            // if no next best action -
+            // go to parent and try again
 
-            if (!siblingStates.isEmpty()) {
-                System.out.println("Travelling sibling for current :"+current);
+            if (!current.hasNextBestAction()) {
+                State newStt = current.copyStateSetNextBestAction();
+                System.out.println("Travelling sibling-action for current :"+newStt);
 
-                return travelSiblings( siblingStates, currentPath );
+                return travelPath2( newStt, currentPath );
             } else {
 
                 // if we already visited the state and its siblings, go to parent and try again..
@@ -220,7 +219,7 @@ public class Agent implements Runnable {
 
     private Boolean isActionNotNullAndNotVisited(State current){
         if (current.getBestAction() == null && !current.getAgentLocation().isFinal() ||
-                current.getAgentVisited()) {
+                current.hasNextBestAction()) {
             return false;
         }
 
@@ -270,7 +269,7 @@ public class Agent implements Runnable {
      * Filter states by vertex, validity, and sort by utility asc.
      */
 
-    private List<State> findSiblings(State current) {
+    /*private List<State> findSiblings(State current) {
         Vertex vert = current.getAgentLocation();
         List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
 
@@ -286,7 +285,7 @@ public class Agent implements Runnable {
 
 
         return filteredStates;
-    }
+    }*/
 
     /**
      * Make sure the current state is entirely as expected by the graphConfiguration
