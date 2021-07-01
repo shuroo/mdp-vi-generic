@@ -54,12 +54,12 @@ public class MDPCreator {
                         rewards.put(rewardObj.getId(),rewardObj);
 
                     }
-                    else{
-                        Action statesVirtualAction = new Action(source,dest);
-                        Double reward = 0.0;
-                        Reward rewardObj = new Reward(stt, stt2, statesVirtualAction, reward);
-                        rewards.put(rewardObj.getId(),rewardObj);
-                    }
+//                    else{
+//                        Action statesVirtualAction = new Action(source,dest);
+//                        Double reward = 0.0;
+//                        Reward rewardObj = new Reward(stt, stt2, statesVirtualAction, reward);
+//                        rewards.put(rewardObj.getId(),rewardObj);
+//                    }
                 }));
 
         return rewards;

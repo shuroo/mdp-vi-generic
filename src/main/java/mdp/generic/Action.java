@@ -6,14 +6,15 @@ import ctp.CTPEdge;
 import java.util.HashMap;
 
 /**
- *
-    The actions are related t the states in a 1:* relation.
- *  Every state s has a probability P(s|s') to move to state s' with action a.
+ * The actions are related t the states in a 1:* relation.
+ * Every state s has a probability P(s|s') to move to state s' with action a.
  */
 
 public class Action {
 
     protected String actionId;
+    protected boolean isReversed = false;
+    protected String displayId;
 
     public Double getUtility() {
         return utility;
@@ -29,17 +30,19 @@ public class Action {
         return actionId;
     }
 
-    public Action(String actionId){
+    public Action(String actionId) {
         this.actionId = actionId;
+        this.displayId = actionId;
     }
 
 
     @Override
-    public String toString(){
-        return actionId;
+    public String toString() {
+        return displayId;
     }
 
-    public Action(){}
+    public Action() {
+    }
 
     // TBD: override this and implement by constraints in the future (Blocked edge etc..)
     public Boolean actionIsAllowed(final State st) {

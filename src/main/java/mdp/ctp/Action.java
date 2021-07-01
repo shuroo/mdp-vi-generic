@@ -30,11 +30,17 @@ public class Action extends mdp.generic.Action {
         return source.toString() + "_" + dest.toString();
     }
 
-    public Action(Vertex source, Vertex dest) {
+    private Action(Vertex source, Vertex dest) {
 
         this.source = source;
         this.dest = dest;
         this.actionId = generateId(this.source, this.dest);
+    }
+
+    public void reverseAction(){
+       // Seperate display id from id:
+        this.displayId = generateId(this.dest,this.source);
+        this.isReversed = true;
     }
 
     public Action(Edge edge) {
@@ -43,25 +49,7 @@ public class Action extends mdp.generic.Action {
         this.dest = edge.getDest();
         this.sourceEdge = edge;
         this.actionId = generateId(this.source, this.dest);
+        this.displayId = actionId;
     }
-
-    /**
-     * Make sure to return only allowed actions by the current state ( - edge is not blocked or unknown ).
-     * @param state
-     * @param
-     * @return
-     */
-/*
-    @Override
-
-        public Boolean actionIsAllowed(final mdp.generic.State state) {
-
-        if(!( state instanceof mdp.ctp.State )){
-            return true;
-        }
-        HashMap<String, CTPEdge> stateStatuses = ((mdp.ctp.State)state).getStatuses();
-        return ((CTPEdge)stateStatuses.get(this.getActionId())).getStatus() == BlockingStatus.Opened;
-    }
-}*/
 
 }

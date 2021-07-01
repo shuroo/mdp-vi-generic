@@ -184,8 +184,6 @@ public class Agent implements Runnable {
 
         // else: try the parent...
         State parentSt = current.getParentState();
-
-        currentPath.addGoBackState(current);
         return travelPath2(parentSt, currentPath);
 
     }
@@ -217,13 +215,17 @@ public class Agent implements Runnable {
 
     }
 
+    private boolean isFinal(State current){
+        return (current.getAgentLocation().isFinal()) ;
+    }
+
     private AgentPath travelPath2(State current, AgentPath currentPath) {
 
         current.setAgentVisits();
         currentPath.addToPath(current);
-        if (current.getAgentLocation().isFinal()) {
+
+        if (isFinal(current)) {
             currentPath.setSucceeded(true);
-            System.out.println("we have reached the destination!!!");
             return currentPath;
         }
 
@@ -233,7 +235,12 @@ public class Agent implements Runnable {
 
         State nextState = buildNextStt(current);
 
-        if (!edgeIsOpened(nextState)) {
+        if(isFinal(nextState)){
+            currentPath.setSucceeded(true);
+            currentPath.addToPath(nextState);
+            return currentPath;
+        }
+        else if (!edgeIsOpened(nextState)) {
             currentPath.addGoBackState(nextState);
             return trySiblingsThenParent(current, currentPath);
         }

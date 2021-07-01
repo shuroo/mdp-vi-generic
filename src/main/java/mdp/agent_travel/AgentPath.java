@@ -1,9 +1,11 @@
 package mdp.agent_travel;
 
 import mdp.ctp.State;
+import mdp.generic.Action;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Class to represent a single travel of the agent over the graph
@@ -36,14 +38,16 @@ public class AgentPath {
         if (parentSt == null) {
             return;
         }
-        State goBackState = new State(current.getAgentLocation(), current.getStatuses().values(),
+        State goBackState = new State(current.getAgentLocation(), new Vector(current.getStatuses().values()));
 
-                // Fetch the best action from the parent (and reverse it maybe - TBD)!
-                parentSt.getUtility(),
-                parentSt.getBestActions(), parentSt.getAgentVisits());
-        // Go Back - readd the current action with its cost:
+                // Fetch the best action from the parent (and reverse it maybe - TBD)!);
+
+        mdp.ctp.Action originalAction = agent.mdp.getExtendedAction(parentSt);
+        mdp.ctp.Action reversedAction = new mdp.ctp.Action(originalAction.getSourceEdge());
+        reversedAction.reverseAction();
+        goBackState.setBestAction(reversedAction);
+        // Go Back - read the current action with its cost:
         this.addToPath(goBackState);
-        System.out.println("****************");
     }
 
     public void addToPath(State current) {

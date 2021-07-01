@@ -77,6 +77,6 @@ public class MDPFromGraph extends MDP {
         if(state.getBestAction() == null){
             return null;
         }
-        return this.getExtededActions().get(state.getBestAction().toString());
+        return this.getExtededActions().get(state.getBestAction().getActionId());
     }
 }
