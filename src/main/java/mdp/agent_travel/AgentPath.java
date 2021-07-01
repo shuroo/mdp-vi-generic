@@ -2,7 +2,6 @@ package mdp.agent_travel;
 
 import mdp.ctp.State;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,20 +31,38 @@ public class AgentPath {
     }
 
 
+    public void addGoBackState(State current) {
+        State parentSt = current.getParentState();
+        if (parentSt == null) {
+            return;
+        }
+        State goBackState = new State(current.getAgentLocation(), current.getStatuses().values(),
+
+                // Fetch the best action from the parent (and reverse it maybe - TBD)!
+                parentSt.getUtility(),
+                parentSt.getBestActions(), parentSt.getAgentVisits());
+        // Go Back - readd the current action with its cost:
+        this.addToPath(goBackState);
+        System.out.println("****************");
+    }
+
     public void addToPath(State current) {
+
+        System.out.println("-----***Adding to path state:" + current + " with action:" + current.getBestAction() + "***-----");
         this.path.add(current);
 
-        Double currentReward = current.getBestAction() == null? 0.0 :agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
+        Double currentReward = current.getBestAction() == null ? 0.0 : agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
         this.pathCost += currentReward;
-        System.out.println("Adding: "+this.pathCost+" to path with state:"+current);
+        System.out.println("Adding: " + this.pathCost + " to path with state:" + current);
     }
 
     /**
      * Go back , update the path, and update the agent cost upon regression:
+     *
      * @param agent
      */
 
-    public AgentPath(Agent agent){
+    public AgentPath(Agent agent) {
 
         this.agent = agent;
         this.path = new LinkedList<State>();
@@ -53,17 +70,19 @@ public class AgentPath {
     }
 
 
-    public void setSucceeded(Boolean succeeded){
+    public void setSucceeded(Boolean succeeded) {
         this.isSucceeded = succeeded;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder res = new StringBuilder();
         res.append("|Path:");
-        this.path.stream().forEach(stt-> { res.append(stt.toString()+"|Action:"+stt.getBestAction());
-        res.append(System.getProperty("line.separator")); });
-        res.append("|"+isSucceeded+"|"+pathCost+"|");
+        this.path.stream().forEach(stt -> {
+            res.append(stt.toString() + "|Action:" + stt.getBestAction());
+            res.append(System.getProperty("line.separator"));
+        });
+        res.append("|" + isSucceeded + "|" + pathCost + "|");
         return res.toString();
 
     }

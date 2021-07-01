@@ -25,7 +25,7 @@ public class GraphReader {
         Double discountFactor = 0.9;
 
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discountFactor);
-        MDP mdpNew = uc.setOptimalPolicy();
+        uc.setOptimalPolicy();
 //        for (State s : mdpNew.getStates().values()) {
 //            System.out.println(s.getId() + ",,," + s.getBestAction()+","+s.getUtility());
 //        }
@@ -35,8 +35,8 @@ public class GraphReader {
             graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
         });
 
-//        Edge edge = graphConfiguration.get("v2_v3").getEdge();
-//        graphConfiguration.put("v2_v3", new CTPEdge(edge, BlockingStatus.Closed));
+        Edge edge = graphConfiguration.get("v2_v3").getEdge();
+        graphConfiguration.put("v2_v3", new CTPEdge(edge, BlockingStatus.Closed));
 //        Edge edge2 = graphConfiguration.get("v1_v3").getEdge();
 //        graphConfiguration.put("v1_v3", new CTPEdge(edge2, BlockingStatus.Closed));
         Agent ag = new Agent(mdp, graphConfiguration);

@@ -2,14 +2,16 @@ package mdp.agent_travel;
 
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
+import mdp.ctp.Action;
 import mdp.ctp.MDPFromGraph;
 import mdp.ctp.State;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
 
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 public class Agent implements Runnable {
 
@@ -36,10 +38,11 @@ public class Agent implements Runnable {
      */
 
 
-    private State fetchStateByVertexAndStatuses(Vertex ver){
+    private State fetchStateByVertexAndStatuses(Vertex ver) {
         State result = new State(ver, new Vector(graphConfiguration.values()));
         return mdp.getExtededStates().get(result.getId());
     }
+
     private State buildInitialStt() {
         HashMap<String, State> states = mdp.getExtededStates();
 
@@ -49,7 +52,7 @@ public class Agent implements Runnable {
                     // stt.getBestAction().actionIsAllowed(stt) && //todo: improve this condition and code
                     stt.getAgentLocation().isInitial()) {
 
-               return fetchStateByVertexAndStatuses(stt.getAgentLocation());
+                return fetchStateByVertexAndStatuses(stt.getAgentLocation());
             }
         }
 
@@ -137,39 +140,82 @@ public class Agent implements Runnable {
         return (parentSt == null);
     }
 
-    private AgentPath travelSiblings( List<State> siblingStates, AgentPath currentPath) {
-
-
-        State minimalUtilitySiblingStt = siblingStates.get(0);
-        System.out.println("running with minimalUtilSib:" + minimalUtilitySiblingStt + " and utility:" + minimalUtilitySiblingStt.getUtility() + " and action:" + minimalUtilitySiblingStt.getBestAction());
-        return travelPath2(minimalUtilitySiblingStt, currentPath);
-
-    }
+    /**
+     * private AgentPath travelPath2(State current, AgentPath currentPath) {
+     * <p>
+     * if (current.getAgentLocation().isFinal()) {
+     * currentPath.setSucceeded(true);
+     * System.out.println("we have reached the destination!!!");
+     * return currentPath;
+     * }
+     * <p>
+     * // if the current edge is possible - proceed.
+     * // Else - try siblings
+     * // If no siblings - go to parent, try again
+     * <p>
+     * if (bestActionNotNullAndNotVisited(current)) {
+     * current.setAgentVisits();
+     * currentPath.addToPath(current);
+     * State nextState = buildNextStt(current);
+     * System.out.println("Going to the next state for current :" + current + " and next:" + nextState + " . noticed they should not be siblings!");
+     * return travelPath2(nextState, currentPath);
+     * } else if (current.getBestAction() != null && !current.allActionsVisited()) {
+     * State newStt = current.setNextBestAction();
+     * System.out.println("Travelling sibling-action for current :" + newStt);
+     * <p>
+     * return travelPath2(newStt, currentPath);
+     * } else {
+     * <p>
+     * // if we already visited the state and its siblings, go to parent and try again..
+     * //  return travelParent(current, currentPath);
+     * <p>
+     * State parentSt = current.getParentState();
+     * return travelPath2(parentSt, currentPath);
+     * }
+     * }
+     *
+     * @param current
+     * @param currentPath
+     * @return
+     */
 
 
     private AgentPath travelParent(State current, AgentPath currentPath) {
 
-        // Go Back - readd the current action with its cost:
-        currentPath.addToPath(current);
         // else: try the parent...
         State parentSt = current.getParentState();
 
-        if (parentSt == null) {
-            System.out.println("The parent is null - try siblings again...");
-            currentPath.setSucceeded(false);
-            return currentPath;
-        } else {
-            // try the parent again:
-            // reset visited flag to try the sibling with a new path.
-            // reset path history:
+        currentPath.addGoBackState(current);
+        return travelPath2(parentSt, currentPath);
 
-            //todo: update path cost:
-            System.out.println("running with parent:" + parentSt);
-
-            return travelPath2(parentSt, currentPath);
-        }
     }
 
+
+    private AgentPath trySiblingsThenParent(State current, AgentPath currentPath) {
+
+        if (!current.allActionsVisited()) {
+
+            // Advance next action and try again:
+            State newStt = current.setNextBestAction();
+            System.out.println("Travelling sibling-action for current :" + newStt);
+
+            return travelPath2(newStt, currentPath);
+        } else {
+            // if we already visited the state and its siblings, go to parent and try again..
+            if (!isRootState(current)) {
+                return travelParent(current, currentPath);
+            } else {
+                // reached the root and no siblings -
+                System.out.println("The parent is null - try siblings again...");
+                currentPath.setSucceeded(false);
+                return currentPath;
+
+            }
+
+        }
+
+
+    }
 
     private AgentPath travelPath2(State current, AgentPath currentPath) {
 
@@ -187,39 +233,36 @@ public class Agent implements Runnable {
 
         State nextState = buildNextStt(current);
 
-        if (nextStateIsValid(current, nextState)) {
-            System.out.println("Going to the next state for current :"+current+" and next:"+nextState+" . noticed they should not be siblings!");
-            return travelPath2(nextState, currentPath);
-        } else {
-
-            // if next is blocked etc -
-            // try to set next action and revisit.
-            // if no next best action -
-            // go to parent and try again
-
-            if (!current.hasNextBestAction()) {
-                State newStt = current.copyStateSetNextBestAction();
-                System.out.println("Travelling sibling-action for current :"+newStt);
-
-                return travelPath2( newStt, currentPath );
-            } else {
-
-                // if we already visited the state and its siblings, go to parent and try again..
-                return travelParent(current, currentPath);
-            }
-
-
+        if (!edgeIsOpened(nextState)) {
+            currentPath.addGoBackState(nextState);
+            return trySiblingsThenParent(current, currentPath);
         }
+
+        else if(isActionNotNullOrNotAllVisited(nextState)) {
+            System.out.println("Going to the next state for current :" + current + " and next:" + nextState + " . noticed they should not be siblings!");
+            return travelPath2(nextState, currentPath);
+        }else if (!current.allActionsVisited()){
+                return trySiblingsThenParent(current, currentPath);
+        }
+
+        // if next is blocked etc -
+        // try to set next action and revisit.
+        // if no next best action -
+        // go to parent and try again
+        currentPath.setSucceeded(false);
+        System.out.println("No further Options - aborting.");
+        return currentPath;
+
+
     }
 
 
-    /**
-     * Check if
-     */
-
-    private Boolean isActionNotNullAndNotVisited(State current){
-        if (current.getBestAction() == null && !current.getAgentLocation().isFinal() ||
-                current.hasNextBestAction()) {
+    private Boolean isActionNotNullOrNotAllVisited(State current) {
+        if(current.getAgentLocation().isFinal()){
+           return true;
+        }
+        if (current.getBestAction() == null ||
+                current.allActionsVisited()) {
             return false;
         }
 
@@ -227,84 +270,21 @@ public class Agent implements Runnable {
     }
     // Check if the next state is at all possible - is the edge blocked?
 
-    /**
-     * State is valid:
-     * <p>
-     * - It's action's edge is not blocked;
-     * - Not yet visited;
-     *
-     * @param prev
-     * @param current
-     * @return
-     */
-    private boolean nextStateIsValid(State prev, State current) {
 
-        if(!isActionNotNullAndNotVisited(current)){
+    private Boolean edgeIsOpened(State current) {
+        Action best = this.mdp.getExtendedAction(current);
+        if(best == null){
             return false;
         }
-
-        Vertex source = prev.getAgentLocation();
-        Vertex dest = current.getAgentLocation();
+        Vertex source = best.getSource();
+        Vertex dest = best.getDest();
         CTPEdge edgeStatus = graphConfiguration.get(Edge.buildId(source, dest));
 
         if (edgeStatus != null && edgeStatus.getStatus() != BlockingStatus.Opened) {
             return false;
         }
         return true;
-
-        // todo: make sure 'unknown' is not valid!
     }
-
-    /**
-     * @param states
-     * @return
-     */
-    private List<State> sortStatesByUtility(List<State> states) {
-        Collections.sort(states, new StateComperator());
-        return states;
-    }
-
-
-    /**
-     * Filter states by vertex, validity, and sort by utility asc.
-     */
-
-    /*private List<State> findSiblings(State current) {
-        Vertex vert = current.getAgentLocation();
-        List<State> filteredStates = mdp.getExtededStates().values().stream().filter(stt ->
-
-                /// todo: improve this!!! 28/06/2021
-                        isActionNotNullAndNotVisited(stt) &&
-                                stt.getAgentLocation() == vert &&
-                                isSttExpectedStatuses(stt)
-        ).distinct().collect(Collectors.toList());
-
-        System.out.println("filteredStates? -from current:"+current+", and siblings:" + filteredStates.size());
-
-        filteredStates.forEach(stt-> System.out.println("found sibling:"+stt));
-
-
-        return filteredStates;
-    }*/
-
-    /**
-     * Make sure the current state is entirely as expected by the graphConfiguration
-     *
-     * @param stt
-     * @return
-     */
-    private Boolean isSttExpectedStatuses(State stt) {
-
-        Predicate<CTPEdge> edgeStatusesConfigured = edg -> graphConfiguration.get(edg.getEdge().getId()).getStatus() == edg.getStatus();
-
-
-        List<CTPEdge> validSttStatuses = stt.getStatuses().values().stream()
-                .filter(edgeStatusesConfigured)
-                .collect(Collectors.toList());
-
-        return validSttStatuses.size() == stt.getStatuses().size();
-    }
-
 
 }
 

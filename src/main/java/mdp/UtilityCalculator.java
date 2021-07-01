@@ -45,14 +45,14 @@ public class UtilityCalculator {
                 Double prevUtility = state.getPreviousUtility();
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
                 // max diff per ALL states ... //
-                if (maxLambda > diffUtility) {
+                if (/*maxLambda != 0 && */ maxLambda > diffUtility) {
                     maxLambda = diffUtility;
                 }
             }
 
             // When all states finished their current iteration - check lambda:
 
-            if (maxLambda <= stopCondition) {
+            if (/*maxLambda != 0 && */ maxLambda <= stopCondition) {
 
                 System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                 return currentMDP;
@@ -187,7 +187,7 @@ public class UtilityCalculator {
             // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
 
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
-            Double reward = rewardObj != null ? rewardObj.getReward() : null;
+            Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
 
             //System.out.println("*******Current dest utility for dest-state sw: "+dest.getId()+" is: "+dest.getUtility()+" *******");
@@ -204,14 +204,6 @@ public class UtilityCalculator {
      */
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
-
-       /* for (Transition tran : updatedTransitionsUtility.keySet()) {
-            if (tran.isValid()) {
-
-                Double tranUtility = updatedTransitionsUtility.get(tran);
-               // System.out.println("**** Final Utility for Transition:" + tranUtility + " transition is: " + tran.toString());
-            }
-        }*/
         HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
 
 

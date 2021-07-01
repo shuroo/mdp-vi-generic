@@ -5,9 +5,7 @@ import ctp.CTPEdge;
 import org.jgrapht.graph.Vertex;
 import utils.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 public class State extends mdp.generic.State implements Comparable<State> {
 
@@ -24,24 +22,48 @@ public class State extends mdp.generic.State implements Comparable<State> {
         //this.agentActionsIndex++;
     }
 
+    public Integer getAgentVisits() {
+        return agentVisits;
+    }
+
     /**
      * Set the next action and return it , when exists:
      * @return
      */
-    public State copyStateSetNextBestAction(){
+    public State setNextBestAction(){
 
         // Check whether the agent has no actions not yet visited:
-        if(hasNextBestAction()){
+        if(allActionsVisited()){
             return null;
         }
 
-        State newSt  = new State(this.getAgentLocation(),new Vector(this.getStatuses().values()));
 
-        newSt.bestAction = bestActions.get(agentVisits);
-        newSt.minimalUtility = bestAction.getUtility();
-        newSt.agentVisits = agentVisits;
-        newSt.bestActions = bestActions;
-        return newSt;
+        //newSt.bestAction = bestActions.get(agentVisits);
+//        newSt.minimalUtility = bestAction.getUtility();
+//        newSt.agentVisits = agentVisits;
+//        newSt.bestActions = bestActions;
+        return new State(this.getAgentLocation(),this.getStatuses().values(),this.minimalUtility,
+                bestActions, agentVisits);
+
+    }
+
+
+    /**
+     * Copy constructor - and more:
+     * @param location
+     * @param statuses
+     */
+    public State(Vertex location, Collection<CTPEdge> statuses,Double utility,
+                 List<mdp.generic.Action> bestActions, Integer actionsIndex){
+
+        this.agentLocation = location;
+        this.statuses = CollectionUtils.edgeToMap(statuses);
+        this.minimalUtility = utility;
+        this.agentVisits = actionsIndex;
+        this.bestActions = bestActions;
+        this.bestAction = bestActions.get(actionsIndex);
+        setStateId();
+
     }
 
 
@@ -60,8 +82,8 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
 
     // Check if the agent is already visited enough
-    public Boolean hasNextBestAction() {
-        return bestActions!=null && agentVisits == bestActions.size();
+    public Boolean allActionsVisited() {
+        return bestActions==null || agentVisits >= bestActions.size();
     }
 
     public State(Vertex agentLocation, Vector<CTPEdge> statuses) {

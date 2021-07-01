@@ -804,12 +804,15 @@ public class StrategyRunner {
 
     public static void main(String[] args) {
 
-        //UtilityCalculator uc = buildBookExample();
+        UtilityCalculator uc = buildBookExample();
 
-        UtilityCalculator uc = buildMDPAndExactSolutionMethodsExample();
+        //UtilityCalculator uc = buildMDPAndExactSolutionMethodsExample();
 
         //UtilityCalculator uc = buildAnotherExample();
 
-        uc.setOptimalPolicy();
+        MDP mdp = uc.setOptimalPolicy();
+
+        System.out.println(mdp);
     }
+
 }
