@@ -64,9 +64,9 @@ public class GraphReader {
 
       //  runStandardConfigurationGraph("src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
-       // runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
+        runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/first_graph_releifed.json");
 
-       runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
+       //runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
     }
 
 }

@@ -117,7 +117,6 @@ public class State extends mdp.generic.State implements Comparable<State> {
     private void setStateId() {
 
         stateId = buildId(this.agentLocation,this.getStatuses());
-        System.out.println("---found state with id:"+stateId+"----");
     }
 
     public static String buildId(Vertex agLoc, HashMap<String,CTPEdge> statuses){
