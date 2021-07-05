@@ -1,102 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ctp/CTPEdge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ctp/CTPEdge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ctp/translator/CTPGraphToMDP.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/CollectionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/CollectionUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/mdpvigeneric.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/CollectionUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/CollectionUtils.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/out/" />
-    <ignored path="$PROJECT_DIR$/target/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/first_graph.json">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/thumbnail_CTPExample1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/thumbnail_CTPExample3.jpg">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/third_graph.json">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/second_graph.json">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/data/graphs_data/dror_data/CTPExample2.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1800">
-              <caret line="131" selection-start-line="131" selection-end-line="131" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/Action.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#772#773#0" expanded="true" />
-                <element signature="e#804#805#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12150">
-              <caret line="812" column="15" selection-start-line="812" selection-start-column="12" selection-end-line="812" selection-end-column="15" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -206,12 +137,16 @@
       </list>
     </option>
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="132" />
     <option name="y" value="27" />
     <option name="width" value="1161" />
     <option name="height" value="584" />
   </component>
+  <component name="ProjectId" id="1uq46WjhQkqa7gZjQtiMGSwZE1i" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -238,10 +173,14 @@
       <pane id="PackagesPane" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1625351957087" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1625378385845" />
     <property name="last_opened_file_path" value="$USER_HOME$/Dev/Backend/informer" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
@@ -254,18 +193,6 @@
       <recent name="$PROJECT_DIR$/src/main/java" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager" selected="Application.GraphReader (1)">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
@@ -274,9 +201,10 @@
       </method>
     </configuration>
     <configuration name="GraphReader (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="utils.GraphReader" />
-      <module name="mdpvigeneric" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <module name="mdp-vi-generic" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="utils.*" />
@@ -378,67 +306,16 @@
       <list>
         <item itemvalue="Application.GraphReader (1)" />
         <item itemvalue="Application.StrategyRunner" />
-        <item itemvalue="Application.HashUuidCreator (1)" />
         <item itemvalue="Application.HashUuidCreator" />
+        <item itemvalue="Application.HashUuidCreator (1)" />
         <item itemvalue="Application.GraphReader" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SbtLocalSettings">
-    <option name="modificationStamps">
-      <map>
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/Identity" value="1453282009000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/authenticator" value="1480268534000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/cap-manager" value="1484039888000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/couchbase-scala" value="1470641706000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/etl" value="1485372384000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/flic" value="1454323096000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/googlepep" value="1473237627000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/identity2_deploy_14022016" value="1455438017000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/jessica-jones" value="1471951610000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/morpheus" value="1455009728000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/policy" value="1443620850000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/policy_play_25" value="1473083625000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/reactor" value="1466497608000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/salesforcepep" value="1466321252000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/verman" value="1443683757000" />
-        <entry key="$USER_HOME$/Dev/Backend/SAML-Test" value="1482053425000" />
-        <entry key="$USER_HOME$/Dev/Backend/ScalaExercises2018" value="1540387186000" />
-        <entry key="$USER_HOME$/Dev/Backend/Third_Party_Apps_Analyzer" value="1461514618000" />
-        <entry key="$USER_HOME$/Dev/Backend/analyze_backend" value="1469530554000" />
-        <entry key="$USER_HOME$/Dev/Backend/canary" value="1469656845000" />
-        <entry key="$USER_HOME$/Dev/Backend/cap_etl" value="1502981665000" />
-        <entry key="$USER_HOME$/Dev/Backend/daredevil" value="1466413034000" />
-        <entry key="$USER_HOME$/Dev/Backend/dexter" value="1446366342000" />
-        <entry key="$USER_HOME$/Dev/Backend/flapi" value="1473867741000" />
-        <entry key="$USER_HOME$/Dev/Backend/hello_world" value="1441284673000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity" value="1460878053000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity1FixStale" value="1470565522000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity_play25" value="1480590076000" />
-        <entry key="$USER_HOME$/Dev/Backend/informant_service" value="1441617962000" />
-        <entry key="$USER_HOME$/Dev/Backend/informer" value="1480268341000" />
-        <entry key="$USER_HOME$/Dev/Backend/nforce" value="1480841359000" />
-        <entry key="$USER_HOME$/Dev/Backend/nforce2" value="1448383550000" />
-        <entry key="$USER_HOME$/Dev/Backend/office-peps" value="1464624361000" />
-        <entry key="$USER_HOME$/Dev/Backend/policy" value="1463990812000" />
-        <entry key="$USER_HOME$/Dev/Backend/projects2018/scalaExercises2018" value="1540418740000" />
-        <entry key="$USER_HOME$/Dev/Backend/reporter" value="1480268650000" />
-        <entry key="$USER_HOME$/Dev/Backend/reports-scheduler" value="1461701982000" />
-        <entry key="$USER_HOME$/Dev/Backend/rest_ws" value="1441526016000" />
-        <entry key="$USER_HOME$/Dev/Backend/rules_engine" value="1481622500000" />
-        <entry key="$USER_HOME$/Dev/Backend/salesforce_pep2" value="1467798406000" />
-        <entry key="$USER_HOME$/Dev/Backend/salesforcenew" value="1471272382000" />
-        <entry key="$USER_HOME$/Dev/Backend/skynet" value="1451306273000" />
-        <entry key="$USER_HOME$/Dev/Backend/third-party-apps" value="1462711247000" />
-        <entry key="$USER_HOME$/Dev/Backend/third_party_apps" value="1461700986000" />
-        <entry key="$USER_HOME$/Dev/Backend/verman" value="1443683757000" />
-        <entry key="$USER_HOME$/Dev/Backend/verman_branch" value="1473680146000" />
-      </map>
-    </option>
-  </component>
   <component name="ScalaProjectSettings">
     <option name="outputLimit" value="2000" />
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration>$USER_HOME$/.subversion</configuration>
   </component>
@@ -503,54 +380,23 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
           <line>14</line>
-          <properties />
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
           <line>149</line>
-          <properties />
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>59</line>
-          <properties />
+          <line>65</line>
           <option name="timeStamp" value="125" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java</url>
-          <line>57</line>
-          <properties />
-          <option name="timeStamp" value="281" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java</url>
-          <line>59</line>
-          <properties />
-          <option name="timeStamp" value="282" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java</url>
-          <line>58</line>
-          <properties />
-          <option name="timeStamp" value="283" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="prev" language="JAVA" />
-        <watch expression="current" language="JAVA" />
-        <watch expression="nextEdgeIsOpened(current, nextState)" language="JAVA" />
-        <watch expression="current" language="JAVA" />
-        <watch expression="current.getBestAction()" language="JAVA" />
-        <watch expression="reversedAction" language="JAVA" />
-        <watch expression="((Action) goBackState.getBestAction()).sourceEdge.getReward()" language="JAVA" custom="mdp.ctp.Action" />
-        <watch expression="agent.mdp.getExtendedAction(current)" language="JAVA" />
-        <watch expression="agent.mdp.getExtendedAction(current).getSourceEdge()" language="JAVA" />
-        <watch expression="agent.mdp.getExtendedAction(current).getSourceEdge().getReward()" language="JAVA" />
-        <watch expression="current.getBestAction()" language="JAVA" />
+        <watch expression="initial" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

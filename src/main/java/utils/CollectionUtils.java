@@ -14,6 +14,21 @@ public class CollectionUtils<T> {
         return flatList;
     }
 
+    // Function to sort map by Key
+    public  void sortMapbykeys(HashMap<String,T> stts)
+    {
+        ArrayList<String> sortedKeys
+                = new ArrayList<String>(stts.keySet());
+
+        Collections.sort(sortedKeys);
+/*
+        // Display the TreeMap which is naturally sorted
+        for (String x : sortedKeys)
+            System.out.println("Key = " + x
+                    + ", Value = " + stts.get(x));*/
+    }
+
+
     public static Map<String, State> stateToMap(Collection<State> states) {
         return states.stream()
                 .collect(Collectors.toMap(State::getId, state -> state));

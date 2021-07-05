@@ -1,12 +1,20 @@
 package ctp;
 
+import mdp.generic.Action;
 import org.jgrapht.graph.Edge;
+
+import java.util.Comparator;
 
 /**
  * Edge with Status, to be used later with MDP.
  */
 
-public class CTPEdge {
+public class CTPEdge implements  Comparable<CTPEdge> {
+
+        @Override
+        public int compareTo(CTPEdge status) {
+            return this.getId().compareTo(status.getId());
+        }
 
     private Edge edge;
     private BlockingStatus status;

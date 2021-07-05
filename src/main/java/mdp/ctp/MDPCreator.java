@@ -91,10 +91,16 @@ public class MDPCreator {
 
         List<Set<State>> allStatesByLocations =
                 statusCombinations.stream().map(statusList -> generateStatesFromStatus(statusList)).collect(Collectors.toList());
+
         // Flatten list:
 
         CollectionUtils<State> cu = new CollectionUtils<State>();
         List<State> allStates = cu.flattenList(allStatesByLocations);
+
+        // Sort the List of states:
+
+        // todo: sort by ids:
+
         Map<String, State> allStatesMap = cu.stateToMap(allStates);
 
         return allStatesMap;
@@ -110,6 +116,9 @@ public class MDPCreator {
 
         Set<State> resultingStates = (Set<State>) graph.getVertices().values().stream().map(vert -> {
             Vector<CTPEdge> statusVector = new Vector<CTPEdge>();
+
+            // sort statuses by alphabet -
+            Collections.sort(statusList);
             statusVector.addAll(statusList);
             return new State((Vertex) vert, statusVector);
         }).collect(Collectors.toSet());

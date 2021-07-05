@@ -60,23 +60,6 @@ public class Agent implements Runnable {
         return null;
     }
 
-
-//    private List<State> findInitialStts() {
-//
-//        State firstInitial = buildInitialStt();
-//
-//        // todo: make sure to configure the other states as expected.
-//        List<State> initials = findSiblings(firstInitial);
-//
-//        initials.add(firstInitial);
-//        if (initials.isEmpty()) {
-//            System.out.println("Failed to find appropriate initial state!");
-//        }
-//
-//        return sortStatesByUtility(initials);
-//
-//    }
-
     /**
      * Change unknown statuses into 'opened':
      *

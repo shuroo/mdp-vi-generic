@@ -19,7 +19,6 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     public void setAgentVisits() {
         this.agentVisits++;
-        //this.agentActionsIndex++;
     }
 
     public Integer getAgentVisits() {
@@ -38,10 +37,6 @@ public class State extends mdp.generic.State implements Comparable<State> {
         }
 
 
-        //newSt.bestAction = bestActions.get(agentVisits);
-//        newSt.minimalUtility = bestAction.getUtility();
-//        newSt.agentVisits = agentVisits;
-//        newSt.bestActions = bestActions;
         return new State(this.getAgentLocation(),this.getStatuses().values(),this.minimalUtility,
                 bestActions, agentVisits);
 
@@ -122,18 +117,20 @@ public class State extends mdp.generic.State implements Comparable<State> {
     private void setStateId() {
 
         stateId = buildId(this.agentLocation,this.getStatuses());
+        System.out.println("---found state with id:"+stateId+"----");
     }
 
     public static String buildId(Vertex agLoc, HashMap<String,CTPEdge> statuses){
         StringBuilder uniqueStateStr = new StringBuilder();
-        uniqueStateStr.append("Ag_Location::" +agLoc + ",");
-        Iterator<CTPEdge> statusIterator = statuses.values().iterator();
-        while (statusIterator.hasNext()) {
-            uniqueStateStr.append(statusIterator.next().toString());
-            if (statusIterator.hasNext()) {
-                uniqueStateStr.append(",");
-            }
-        }
+        uniqueStateStr.append("Ag_Location::" +agLoc);
+
+         CollectionUtils cu = new CollectionUtils();
+        cu.sortMapbykeys(statuses);
+
+        statuses.values().stream().sorted().forEach(status->{
+            uniqueStateStr.append(status.toString());
+            uniqueStateStr.append(",");
+        });
 
         return uniqueStateStr.toString();
     }

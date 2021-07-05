@@ -20,7 +20,10 @@ public class GraphReader {
     public static void runConfigurationGraph(String graphName,HashMap<String,CTPEdge> blockedEdges){
         Graph gr = new Graph(graphName);
 
+        System.out.println("Constructing MDP:");
         MDPFromGraph mdp = new MDPFromGraph(gr);
+
+        System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
         Double epsilon = 0.6;
         Double discountFactor = 0.9;
 
@@ -41,7 +44,10 @@ public class GraphReader {
             }
         }
 
+        System.out.println("Initializing Agent...");
         Agent ag = new Agent(mdp, graphConfiguration);
+
+        System.out.println("Running Agent...");
         ag.run();
 
     }
@@ -56,11 +62,11 @@ public class GraphReader {
 
     public static void main(String[] args) {
 
-     //   runStandardConfigurationGraph("src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
+      //  runStandardConfigurationGraph("src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
        // runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
 
-        runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/first_graph.json");
+       runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
     }
 
 }

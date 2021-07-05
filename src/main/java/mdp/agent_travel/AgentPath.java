@@ -52,9 +52,7 @@ public class AgentPath {
 
     public void addToPath(State current) {
 
-        System.out.println("-----***Adding to path state:" + current + " with action:" + current.getBestAction() + "***-----");
         this.path.add(current);
-
         Double currentReward = current.getBestAction() == null ? 0.0 : agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
         this.pathCost += currentReward;
         System.out.println("Adding: " + this.pathCost + " to path with state:" + current);
