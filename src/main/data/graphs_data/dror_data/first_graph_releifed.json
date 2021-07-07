@@ -14,6 +14,11 @@
         "isInitial": false
     },{
 
+        "identifier": "v4",
+        "isFinal": false,
+        "isInitial": false
+    },{
+
         "identifier": "t",
         "isFinal": true,
         "isInitial": false
@@ -34,9 +39,15 @@
         },
         {
             "source": "v1",
-            "target": "t",
+            "target": "v4",
             "blockingProbability": 0.5,
             "reward": 1
+        },
+        {
+            "source": "v4",
+            "target": "t",
+            "blockingProbability": 0,
+            "reward": 0.0
         },
         {
             "source":       "s",

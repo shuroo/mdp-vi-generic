@@ -64,9 +64,18 @@ public class GraphReader {
 
       //  runStandardConfigurationGraph("src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json");
 
-        runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/first_graph_releifed.json");
+        String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
+        runStandardConfigurationGraph(firstGraph);
 
+       // HashMap<String,CTPEdge> blockedEdges = new HashMap<String,CTPEdge>();
+       // (Edge) edge.getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
        //runStandardConfigurationGraph("src/main/data/graphs_data/dror_data/second_graph.json");
+
+/*        Graph gr = new Graph(firstGraph);
+        MDPFromGraph mdp = new MDPFromGraph(gr);
+        HashMap<String,CTPEdge> blockedMap = new HashMap<String,CTPEdge>();
+        blockedMap.put("v1_t", new CTPEdge((Edge)gr.getEdges().get("v1_t"), BlockingStatus.Closed))
+        runConfigurationGraph(firstGraph,blockedMap);*/
     }
 
 }

@@ -63,7 +63,6 @@ public class MDPFromGraph extends MDP {
         this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values());
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
-
     }
 
 
