@@ -54,8 +54,11 @@ public class AgentPath {
 
         this.path.add(current);
         Double currentReward = current.getBestAction() == null ? 0.0 : agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
+
+        System.out.println("||**Adding cost: " + currentReward + "to original cost:"+this.pathCost+" to path by best action"+current.getBestAction()+" in " +
+                "state:" + current+"**||");
         this.pathCost += currentReward;
-        System.out.println("Adding: " + this.pathCost + " to path with state:" + current);
+
     }
 
     /**

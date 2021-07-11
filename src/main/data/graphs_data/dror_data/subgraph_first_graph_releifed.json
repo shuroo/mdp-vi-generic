@@ -1,17 +1,8 @@
 {
     "vertices": [{
-        "identifier": "s",
-        "isFinal": false,
-        "isInitial": true
-    },{
         "identifier": "v1",
         "isFinal": false,
-        "isInitial": false
-    },{
-
-        "identifier": "v2",
-        "isFinal": false,
-        "isInitial": false
+        "isInitial": true
     },{
 
         "identifier": "v4",
@@ -25,12 +16,6 @@
     }
     ],
     "edges": [
-        {
-            "source": "s",
-            "target": "v1",
-            "blockingProbability": 0.0,
-            "reward": 10.0
-        },
         {
             "source": "v1",
             "target": "t",
@@ -48,19 +33,6 @@
             "target": "t",
             "blockingProbability": 0.0,
             "reward": 0.0
-        },
-        {
-            "source":       "s",
-            "target":       "v2",
-            "blockingProbability": 0.0,
-            "reward":       10.0
-        },
-        {
-            "source":              "v2",
-            "target":              "t",
-            "blockingProbability": 0.5,
-            "reward":              100.0
         }
-
     ]
 }

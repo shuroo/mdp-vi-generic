@@ -4,6 +4,7 @@ import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import org.jgrapht.graph.Vertex;
 import utils.CollectionUtils;
+import utils.Constants;
 
 import java.util.*;
 
@@ -121,7 +122,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     public static String buildId(Vertex agLoc, HashMap<String,CTPEdge> statuses){
         StringBuilder uniqueStateStr = new StringBuilder();
-        uniqueStateStr.append("Ag_Location::" +agLoc);
+        uniqueStateStr.append(Constants.statesPrefix +agLoc);
 
          CollectionUtils cu = new CollectionUtils();
         cu.sortMapbykeys(statuses);

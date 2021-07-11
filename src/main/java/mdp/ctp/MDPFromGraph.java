@@ -55,7 +55,7 @@ public class MDPFromGraph extends MDP {
         this.graph = g;
         MDPCreator creator = new MDPCreator(graph);
         this.extededActions = creator.generateAllActions();
-        this.extededStates = (HashMap) creator.generateAllStates();//generateAllStates()
+        this.extededStates = (HashMap) creator.generateAllStates();
         this.rewards = creator.generateAllRewards(this.extededStates, this.extededActions);
         this.extededTransitions = creator.generateTransitions(this.extededStates, this.extededActions);
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
@@ -63,6 +63,9 @@ public class MDPFromGraph extends MDP {
         this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values());
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
+
+        // Try to garbage collect...
+        System.gc();
     }
 
 

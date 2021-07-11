@@ -3,8 +3,12 @@ package mdp;
 import mdp.action_sorters.ActionSortAsc;
 import mdp.action_sorters.ActionSortDesc;
 import mdp.generic.*;
+import utils.Constants;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class UtilityCalculator {
@@ -29,7 +33,7 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        while (maxLambda > stopCondition) {
+        while (maxLambda > stopCondition && iterationCounter < 2) {
 
             HashMap<String, State> allStates = currentMDP.getStates();
 
@@ -38,25 +42,40 @@ public class UtilityCalculator {
 
             setUtilitiesForStatesIteration(allStates);
 
+            //*** Stop condition Version 1 - "Normal"  stop condition:*** //
+            //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.
             // Check diff to stop...
+
+            //*** Stop condition Version 2 -  stop condition by the number of states converged upon a single iteration :*** //
+
+            Integer numOfConvertedStates = 0;
             for (State state : allStates.values()) {
 
                 Double minimalUtility = state.getUtility();
                 Double prevUtility = state.getPreviousUtility();
                 Double diffUtility = Math.abs(minimalUtility - prevUtility);
+                if (diffUtility <= stopCondition) {
+                    numOfConvertedStates++;
+                }
                 // max diff per ALL states ... //
-                if (/*maxLambda != 0 && */ maxLambda > diffUtility) {
+                if (maxLambda > diffUtility) {
+                    System.out.println("** Setting lambda to :" + diffUtility + "**");
                     maxLambda = diffUtility;
                 }
+
+
             }
 
             // When all states finished their current iteration - check lambda:
 
-            if (/*maxLambda != 0 && */ maxLambda <= stopCondition) {
+            if (maxLambda > 0.0 && maxLambda <= stopCondition) {
 
                 System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                 return currentMDP;
             }
+
+
+            System.out.println("** current number of states converted:" + numOfConvertedStates + " maxLambda:" + maxLambda + ",stopCondition:" + stopCondition);
 
 
         }
@@ -104,15 +123,21 @@ public class UtilityCalculator {
                 continue;
             }
             Action sampleAction = relatedActions.get(0);
+            Integer numberOfParticipants = 0;
             for (Action action : relatedActions) {
-
-                accUtility += action.getUtility();
+                if (action.getUtility() > 0) {
+                    accUtility += action.getUtility();
+                    numberOfParticipants++;
+                }
             }
-
-            sampleAction.setUtility(accUtility);
+            numberOfParticipants = numberOfParticipants ==0? 1 : numberOfParticipants;
+            Double finalUtil = accUtility / numberOfParticipants;
+            System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
+            sampleAction.setUtility(finalUtil);
             actionsWithGroupedUtility.put(sourceActionId, sampleAction);
+            currentMDP.getActions().get(sampleAction.getActionId()).setUtility(finalUtil);
         }
-
+        // todo: return void...
         return actionsWithGroupedUtility;
     }
 
@@ -140,7 +165,6 @@ public class UtilityCalculator {
         HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
 
         for (Transition transition : currentMDP.getTransitions().values()) {
-
 
             Double actionLocalUtility = calcStatesUtility(transition);
             if (!actionsPerSourceStt.containsKey(transition)) {
@@ -175,8 +199,6 @@ public class UtilityCalculator {
         } else {
 
             // get P(s,s',a)
-            /*Transition transition = currentMDP.getTransitions().get(Transition.buildId(action
-                    , source, dest));*/
 
             // The probability for transition between the above states
             Double joinedProb = transition.getProbability();
@@ -189,13 +211,10 @@ public class UtilityCalculator {
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
             Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
-
-            //System.out.println("*******Current dest utility for dest-state sw: "+dest.getId()+" is: "+dest.getUtility()+" *******");
-            // we DON'T set the source utility at this point YET! choosing minimum.
-
             return actionSubUtility;
         }
     }
+
     /**
      * Method to set utility per iteration for all states.
      *
@@ -204,20 +223,19 @@ public class UtilityCalculator {
      */
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
-        HashMap<String, Action> utilityPerActionState = groupByActionAndSourceState(updatedTransitionsUtility);
-
+        groupByActionAndSourceState(updatedTransitionsUtility);
 
         for (State state : allStates.values()) {
-            setUtilitySingleState(state, utilityPerActionState);
+            setUtilitySingleState(state);
         }
 
         return allStates;
     }
 
-    private void setUtilitySingleState(State state, HashMap<String, Action> updatedStateActionsUtility) {
+    private void setUtilitySingleState(State state) {
 
         //  Get all actions belonging to this state:
-        HashMap<String, Action> actionsWithUtility = filterStateActions(state, updatedStateActionsUtility);
+        HashMap<String, Action> actionsWithUtility = filterStateActions(state, currentMDP.getActions());
 
         List<Action> minimalUtilityActions = null;
         Action minimalUtilityAction = null;
@@ -241,6 +259,10 @@ public class UtilityCalculator {
             state.setBestAction(minimalUtilityAction);
             state.setBestActions(minimalUtilityActions);
 
+            System.out.println("^^^ updating state's minimal utility:: Setting Action:" + minimalUtilityAction + " by utility:" + minimalUtility + " for " +
+                    "state:" + state);
+
+
         }
 
 
@@ -252,10 +274,11 @@ public class UtilityCalculator {
 
     /**
      * Sort actions by order - biggest at the top
+     *
      * @param sttActionsWithutility
      * @return
      */
-    private List<Action> sortMaximalActions(HashMap<String, Action> sttActionsWithutility){
+    private List<Action> sortMaximalActions(HashMap<String, Action> sttActionsWithutility) {
         List<Action> sortedActionsDesc = sttActionsWithutility.values().stream().collect(Collectors.toList());
         Collections.sort(sortedActionsDesc, new ActionSortDesc());
         return sortedActionsDesc;
@@ -263,10 +286,11 @@ public class UtilityCalculator {
 
     /**
      * Sort actions by order - smaller ones at the top
+     *
      * @param sttActionsWithutility
      * @return
      */
-    private List<Action> sortMinimalActions(HashMap<String, Action> sttActionsWithutility){
+    private List<Action> sortMinimalActions(HashMap<String, Action> sttActionsWithutility) {
         List<Action> sortedActionsAsc = sttActionsWithutility.values().stream().collect(Collectors.toList());
         Collections.sort(sortedActionsAsc, new ActionSortAsc());
         return sortedActionsAsc;
@@ -302,6 +326,7 @@ public class UtilityCalculator {
 //
 //        return result;
 //    }
+
     /**
      * Given a state, filter all given actions related to it with updated calculated utility..
      *
@@ -316,13 +341,13 @@ public class UtilityCalculator {
 
         // check whether 'key' = action.getId()_state.getId(), and filter accordingly.
         stateActionsWithUtility.entrySet().stream().filter(act ->
-                act.getKey().endsWith("_src:" + state.getId())
-                && act.getValue().actionIsAllowed(state)
+                //act.getKey().endsWith("_src:" + state.getId())
+                state.getId().startsWith(Constants.statesPrefix+act.getKey().split("_")[0])
+                        && act.getValue().actionIsAllowed(state)
         ).forEach(entry ->
                 stateActions.put(entry.getKey(), entry.getValue()));
 
         // todo: add sort --- IF NEEDED! (currently it isn't , just use min or max)
-        //stateTransitions.values();
         return stateActions;
     }
 

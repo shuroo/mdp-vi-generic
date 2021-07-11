@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/subgraph_first_graph_releifed.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/first_graph_releifed.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/first_graph_releifed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPFromGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/UtilityCalculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mdp/UtilityCalculator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/ctp/MDPFromGraph.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mdp/ctp/MDPFromGraph.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,6 +77,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -370,29 +386,29 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>14</line>
+          <line>17</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
-          <line>149</line>
+          <line>173</line>
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>65</line>
-          <option name="timeStamp" value="125" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>34</line>
-          <option name="timeStamp" value="127" />
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
+          <line>343</line>
+          <option name="timeStamp" value="171" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="initial" language="JAVA" />
+        <watch expression="currentMDP.getActions()" language="JAVA" />
+        <watch expression="currentMDP.getActions()" language="JAVA" />
+        <watch expression="state" language="JAVA" />
+        <watch expression="minimalUtilityActions" language="JAVA" />
+        <watch expression="minimalUtilityAction" language="JAVA" />
+        <watch expression="current" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

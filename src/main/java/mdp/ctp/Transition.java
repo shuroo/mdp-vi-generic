@@ -11,9 +11,10 @@ public class Transition extends mdp.generic.Transition {
     State extendedDestState;
     mdp.ctp.Action extendedAction;
 
-    public State getSource(){
+    public State getSource() {
         return extendedSourceState;
     }
+
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
@@ -41,4 +42,50 @@ public class Transition extends mdp.generic.Transition {
         this.probability = diffStatesToCalcProbability();
 
     }
+
+    @Override
+    public Boolean isValid() {
+
+        mdp.ctp.Action act = this.extendedAction;
+        mdp.ctp.State source = this.extendedSourceState;
+        mdp.ctp.State dest = this.extendedDestState;
+
+        // case 1 - The action doesn't fit
+        if (source.getAgentLocation() != act.getSourceEdge().getSource() ||
+                dest.getAgentLocation() != act.getSourceEdge().getDest()
+        ) {
+            return false;
+        } else if (source.getAgentLocation() == act.getSourceEdge().getSource()) {
+
+            // case 2: th action's edge is blocked
+
+            Edge currentEdg = act.getSourceEdge();
+            for (CTPEdge statusEdge : source.getStatuses().values()) {
+                if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.Closed) {
+                    return false;
+                }
+            }
+            // case 3 - a source state is not in status 'unknown'
+
+            for (CTPEdge status : source.getStatuses().values()) {
+                if (status.getStatus() == BlockingStatus.Unknown) {
+                    return false;
+                }
+            }
+
+
+            // case 4 - the dest status is change to 'unknown':
+            for (CTPEdge sourceStatus : source.getStatuses().values()) {
+
+                CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+                if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && destStatus.getStatus() == BlockingStatus.Unknown) {
+                    return false;
+                }
+            }
+        }
+
+
+        return true;
+    }
+
 }
