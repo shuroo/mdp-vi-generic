@@ -13,6 +13,8 @@ import org.jgrapht.graph.Graph;
 import org.jgrapht.graph.Vertex;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GraphReader {
 
@@ -20,7 +22,7 @@ public class GraphReader {
     /**
      * Run Graph with the trivial configuration: Having only open edges;
      */
-    public static void runConfigurationGraph(String graphName,HashMap<String,CTPEdge> blockedEdges,Double epsilon, Double discount){
+    public static void runConfigurationGraph(String graphName, List<String> edgeKeysToBlock, Double epsilon, Double discount){
         Graph gr = new Graph(graphName);
 
         System.out.println("Constructing MDP:");
@@ -40,7 +42,7 @@ public class GraphReader {
 
 
         // Override the existing configuration:
-        for(String key : blockedEdges.keySet()) {
+        for(String key : edgeKeysToBlock) {
             if (graphConfiguration.containsKey(key)) {
                 Edge edge2 = graphConfiguration.get(key).getEdge();
                 graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.Closed));
@@ -60,16 +62,27 @@ public class GraphReader {
      * Run Graph with the trivial configuration: Having only open edges;
      */
     public static void runStandardConfigurationGraph(String graphName,Double epsilon,Double discount){
-        runConfigurationGraph(graphName,new HashMap<String,CTPEdge> (),epsilon,discount);
+        runConfigurationGraph(graphName,new LinkedList<String> (),epsilon,discount);
     }
 
+    public static void runSimpleGraphWithBlocks(){
+        String simpleGraph = "src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json";
+        List<String> edgesToBlock = new LinkedList<String>();
+        edgesToBlock.add("v1_v3");
+        edgesToBlock.add("v2_v3");
+        runConfigurationGraph(simpleGraph,edgesToBlock,0.6,0.9);
+    }
+
+    public static void runFirstGraphWithBlocks(){
+        String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
+        List<String> edgesToBlock = new LinkedList<String>();
+        edgesToBlock.add("v1_v4");
+        edgesToBlock.add("v1_t");
+        runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
+    }
     public static void main(String[] args) {
 
-        String simpleGraph = "src/main/data/graphs_data/very_basic_mdp_example_graphs/small_graph_81_states.json";
-        Graph gr = new Graph(simpleGraph);
-        HashMap<String,CTPEdge> blockedMap = new HashMap<String,CTPEdge>();
-        blockedMap.put("v1_t", new CTPEdge((Edge)gr.getEdges().get("v2_v3"), BlockingStatus.Closed));
-        runConfigurationGraph(simpleGraph,blockedMap,0.6,0.9);
+        runFirstGraphWithBlocks();
 
       //  String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
      //   runStandardConfigurationGraph(firstGraph,0.5,0.98);
