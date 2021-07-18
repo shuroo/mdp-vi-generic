@@ -198,8 +198,83 @@ public class Agent implements Runnable {
 
     }
 
-    private boolean isFinal(State current){
-        return (current.getAgentLocation().isFinal()) ;
+    private boolean isFinal(State current) {
+        return (current.getAgentLocation().isFinal());
+    }
+
+
+    // todo: set to maximal in the parallel problem:
+    // When   edge is found blocked, decide where to go to next:
+
+    /**
+     * Find minimal state to go to in case of regression:
+     *
+     * @param current
+     * @param currentPath
+     * @param bestActionsIndex
+     * @return
+     */
+    private State findMinimalState(State current, AgentPath currentPath, Integer bestActionsIndex) {
+        State bestSt = current;
+        Double minimalUtility = 100000000.0;
+        for (State st : currentPath.getPath()) {
+            if (st.getBestActions().size() >= bestActionsIndex) {
+                continue;
+            } else if (st.getBestActions().get(bestActionsIndex).getUtility() < minimalUtility) {
+                bestSt = st;
+                minimalUtility = st.getBestActions().get(bestActionsIndex).getUtility();
+            }
+        }
+
+        return bestSt;
+    }
+
+    private AgentPath travelOptimally(State current, AgentPath currentPath) {
+
+        Integer regressionIndex = 0;
+        current.setAgentVisits();
+        currentPath.addToPath(current);
+
+        if (isFinal(current)) {
+            currentPath.setSucceeded(true);
+            return currentPath;
+        }
+
+        // For the current state:
+        // - Take best action
+
+        State nextState = buildNextStt(current);
+
+        if (isFinal(nextState)) {
+            currentPath.setSucceeded(true);
+            currentPath.addToPath(nextState);
+            return currentPath;
+        } else if (!edgeIsOpened(nextState)) {
+            regressionIndex++;
+            State nextStateByRegression = findMinimalState(current, currentPath,regressionIndex);
+            while(current != nextStateByRegression){
+                currentPath.addGoBackState(current);
+                current = current.getParentState();
+            }
+            return travelOptimally(current, currentPath);
+        } else if (isActionNotNullOrNotAllVisited(nextState)) {
+            System.out.println("Going to the next state for current :" + current + " and next:" + nextState + " . noticed they should not be siblings!");
+            return travelPath2(nextState, currentPath);
+        } else if (!current.allActionsVisited()) {
+            currentPath.addGoBackState(current);
+            current = current.getParentState();
+            return travelOptimally(current, currentPath);
+        }
+
+        // if next is blocked etc -
+        // try to set next action and revisit.
+        // if no next best action -
+        // go to parent and try again
+        currentPath.setSucceeded(false);
+        System.out.println("No further Options - aborting.");
+        return currentPath;
+
+
     }
 
     private AgentPath travelPath2(State current, AgentPath currentPath) {
@@ -218,21 +293,18 @@ public class Agent implements Runnable {
 
         State nextState = buildNextStt(current);
 
-        if(isFinal(nextState)){
+        if (isFinal(nextState)) {
             currentPath.setSucceeded(true);
             currentPath.addToPath(nextState);
             return currentPath;
-        }
-        else if (!edgeIsOpened(nextState)) {
+        } else if (!edgeIsOpened(nextState)) {
             currentPath.addGoBackState(nextState);
             return trySiblingsThenParent(current, currentPath);
-        }
-
-        else if(isActionNotNullOrNotAllVisited(nextState)) {
+        } else if (isActionNotNullOrNotAllVisited(nextState)) {
             System.out.println("Going to the next state for current :" + current + " and next:" + nextState + " . noticed they should not be siblings!");
             return travelPath2(nextState, currentPath);
-        }else if (!current.allActionsVisited()){
-                return trySiblingsThenParent(current, currentPath);
+        } else if (!current.allActionsVisited()) {
+            return trySiblingsThenParent(current, currentPath);
         }
 
         // if next is blocked etc -
@@ -248,8 +320,8 @@ public class Agent implements Runnable {
 
 
     private Boolean isActionNotNullOrNotAllVisited(State current) {
-        if(current.getAgentLocation().isFinal()){
-           return true;
+        if (current.getAgentLocation().isFinal()) {
+            return true;
         }
         if (current.getBestAction() == null ||
                 current.allActionsVisited()) {
@@ -263,7 +335,7 @@ public class Agent implements Runnable {
 
     private Boolean edgeIsOpened(State current) {
         Action best = this.mdp.getExtendedAction(current);
-        if(best == null){
+        if (best == null) {
             return false;
         }
         Vertex source = best.getSource();
