@@ -52,7 +52,9 @@ public class AgentPath {
 
     public void addToPath(State current) {
 
-        this.path.add(current);
+        // do not pass by reference, as the original state can change..
+        State copyCurrent = new State(current);
+        this.path.add(copyCurrent);
         Double currentReward = current.getBestAction() == null ? 0.0 : agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
 
         System.out.println("||**Adding cost: " + currentReward + "to original cost:"+this.pathCost+" to path by best action"+current.getBestAction()+" in " +

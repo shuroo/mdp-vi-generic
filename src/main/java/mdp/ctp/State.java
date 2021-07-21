@@ -33,7 +33,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
     public State setNextBestAction(){
 
         // Check whether the agent has no actions not yet visited:
-        if(allActionsVisited()){
+        if(allBestStateActionsAreTried()){
             return null;
         }
 
@@ -62,6 +62,22 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     }
 
+    /**
+     * Copy constructor
+     * @param stToCpy
+     */
+    public State(State stToCpy){
+
+        this.agentLocation = stToCpy.agentLocation;
+        this.statuses = stToCpy.statuses;
+        this.minimalUtility = stToCpy.minimalUtility;
+        this.agentVisits = stToCpy.agentVisits;
+        this.bestActions = stToCpy.bestActions;
+        this.bestAction = stToCpy.bestAction;
+        this.stateId = stToCpy.stateId;
+
+    }
+
 
     public HashMap<String, CTPEdge> getStatuses() {
         return statuses;
@@ -78,7 +94,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
 
     // Check if the agent is already visited enough
-    public Boolean allActionsVisited() {
+    public Boolean allBestStateActionsAreTried() {
         return bestActions==null || agentVisits >= bestActions.size();
     }
 

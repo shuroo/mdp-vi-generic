@@ -35,7 +35,7 @@
             "source": "v1",
             "target": "t",
             "blockingProbability": 0.0,
-            "reward": 1000.0
+            "reward": 20.0
         },
         {
             "source": "v1",
