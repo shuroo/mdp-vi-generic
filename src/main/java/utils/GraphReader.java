@@ -4,13 +4,10 @@ import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.UtilityCalculator;
 import mdp.agent_travel.Agent;
-import mdp.ctp.Action;
 import mdp.ctp.MDPFromGraph;
-import mdp.ctp.State;
 import mdp.generic.MDP;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
-import org.jgrapht.graph.Vertex;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,9 +26,9 @@ public class GraphReader {
         MDPFromGraph mdp = new MDPFromGraph(gr);
         System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
-        uc.setOptimalPolicy();
+        MDP mdpWithUtility = uc.setOptimalPolicy();
 
-        for(mdp.generic.Action action : mdp.getActions().values()){
+        for(mdp.generic.Action action : mdpWithUtility.getActions().values()){
             System.out.println(">> action:"+action+" has utility:"+action.getUtility());
         }
 
@@ -77,7 +74,7 @@ public class GraphReader {
         String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
         List<String> edgesToBlock = new LinkedList<String>();
         edgesToBlock.add("v1_v4");
-        edgesToBlock.add("v1_t");
+        edgesToBlock.add("s_v2");
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
     public static void main(String[] args) {

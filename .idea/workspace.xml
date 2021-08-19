@@ -6,10 +6,28 @@
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/first_graph_releifed.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/first_graph_releifed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/data/graphs_data/dror_data/subgraph_first_graph_releifed.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ctp/BlockingStatus.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ctp/CTPEdge.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/UtilityCalculator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/ctp/MDPFromGraph.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/generic/MDP.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/generic/Reward.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/generic/StrategyRunner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/interfaces/MDPI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mdp/interfaces/StateI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jgrapht/graph/Edge.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jgrapht/graph/EdgeStatus.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jgrapht/graph/Graph.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jgrapht/graph/Vertex.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/CollectionUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/Constants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/GraphReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/HashUuidCreator.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -378,7 +396,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>19</line>
+          <line>16</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -388,34 +406,26 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
-          <line>343</line>
+          <line>350</line>
           <option name="timeStamp" value="171" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
-          <line>277</line>
-          <option name="timeStamp" value="179" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="mdp.agent_travel.AgentPath" memberName="path" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="currentMDP.getActions()" language="JAVA" />
-        <watch expression="currentMDP.getActions()" language="JAVA" />
-        <watch expression="state" language="JAVA" />
-        <watch expression="minimalUtilityActions" language="JAVA" />
-        <watch expression="minimalUtilityAction" language="JAVA" />
-        <watch expression="current" language="JAVA" />
+        <watch expression="currentPath" language="JAVA" />
         <watch expression="nextState" language="JAVA" />
         <watch expression="nextStateByRegression" language="JAVA" />
-        <watch expression="currentPath" language="JAVA" />
-        <watch expression="nextState.getParentState()" language="JAVA" />
-        <watch expression="regressionIndex" language="JAVA" />
-        <watch expression="nextStateByRegression.getUtility()" language="JAVA" />
-        <watch expression="nextStateByRegression.getBestActions()" language="JAVA" />
-        <watch expression="currentPath" language="JAVA" />
-        <watch expression="nextState" language="JAVA" />
         <watch expression="nextState.getBestAction()" language="JAVA" />
+        <watch expression="nextStateByRegression" language="JAVA" />
+        <watch expression="regressionIndex" language="JAVA" />
+        <watch expression="nextStateByRegression.bestAction" language="JAVA" />
+        <watch expression="nextStateByRegression" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

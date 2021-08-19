@@ -7,7 +7,6 @@ import mdp.ctp.MDPFromGraph;
 import mdp.ctp.State;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,7 +91,7 @@ public class Agent implements Runnable {
      */
     public void run() {
         State initial = buildInitialStt();
-        AgentPath path = travelOptimally(initial, new AgentPath(this));
+        AgentPath path = travelOptimally(initial, new AgentPath(this),0);
 
         System.out.println(path);
 
@@ -198,8 +197,16 @@ public class Agent implements Runnable {
 
     }
 
+    /**
+     * Check whether the current state is final, or its next action should be final (like in v4_t
+     * - this is the last state to be added to the path as t is a
+     * final state).
+     * @param current
+     * @return
+     */
     private boolean isFinal(State current) {
-        return (current.getAgentLocation().isFinal());
+        return (current.getAgentLocation().isFinal() ||
+                mdp.getExtededActions().get(current.getBestAction().getActionId()).getDest().isFinal());
     }
 
 
@@ -209,33 +216,33 @@ public class Agent implements Runnable {
     /**
      * Find minimal state to go to in case of regression:
      *
-     * @param current
+     * @param 
      * @param currentPath
      * @param bestActionsIndex
      * @return
      */
-    private State findMinimalStateAmongCurrentAndParents(State current, AgentPath currentPath, Integer bestActionsIndex) {
-        State bestSt = current;
+    private State findMinimalStateAmongSiblingsAndParents(State blockedNext, AgentPath currentPath, Integer bestActionsIndex) {
+        State bestSt = null;
         Double minimalUtility = 100000000.0;
-        for (State st : currentPath.getPath()) {
-            System.out.println("^^^&&& Comparing action:::::"+st.getBestActions().get(bestActionsIndex)+" in find minimal action after block");
-            if (st.getBestActions().size() >= bestActionsIndex) {
-                continue;
-            } else if (st.getBestActions().get(bestActionsIndex).getUtility() < minimalUtility) {
+        List<State> statesToCompareWithSiblingsAndParents = new LinkedList<>();
+        statesToCompareWithSiblingsAndParents.addAll(currentPath.getPath());
+        statesToCompareWithSiblingsAndParents.add(blockedNext);
+        for (State st : statesToCompareWithSiblingsAndParents) {
+             if (bestActionsIndex < st.getBestActions().size()  &&
+                     st.getBestActions().get(bestActionsIndex).getUtility() < minimalUtility) {
+                System.out.println("^^^&&& Comparing action:::::"+st.getBestActions().get(bestActionsIndex)+" with utility:"+st.getBestActions().get(bestActionsIndex).getUtility()+"  in find minimal action after " +
+                        "block");
                 bestSt = st;
                 minimalUtility = st.getBestActions().get(bestActionsIndex).getUtility();
 
             }
         }
 
+        bestSt.setBestAction(bestSt.getBestActions().get(bestActionsIndex));
         return bestSt;
     }
 
-    private AgentPath travelOptimally(State current, AgentPath currentPath) {
-
-        Integer regressionIndex = 0;
-        current.setAgentVisits();
-        currentPath.addToPath(current);
+    private AgentPath travelOptimally(State current, AgentPath currentPath,Integer regressionIndex) {
 
         if (current == null) {
             System.out.println("We have reached the root state!");
@@ -245,24 +252,23 @@ public class Agent implements Runnable {
             currentPath.setSucceeded(true);
             return currentPath;
         }
-
-        // For the current state:
-        // - Take best action
-
-        State nextState = buildNextStt(current);
-
         if (isFinal(nextState)) {
             currentPath.setSucceeded(true);
             currentPath.addToPath(nextState);
             return currentPath;
         } else if (!edgeIsOpened(nextState)) {
             regressionIndex++;
-            State nextStateByRegression = findMinimalStateAmongCurrentAndParents(current, currentPath, regressionIndex);
-            while (nextState != nextStateByRegression) {
+            State nextStateByRegression = findMinimalStateAmongSiblingsAndParents(nextState, currentPath, regressionIndex);
+            while (nextState != null && nextState != nextStateByRegression
+            ) {
                 currentPath.addGoBackState(nextState);
-                nextState = nextState.getParentState();
+                if (nextState.getParentState() != null) {
+                    nextState = nextState.getParentState();
+                } else {
+                    break;
+                }
             }
-            nextState.setBestAction(nextState.getBestActions().get(regressionIndex));
+            nextState = nextStateByRegression;
 
             if (isRootState(current) && current.allBestStateActionsAreTried()) {
                 // if next is blocked etc -
@@ -275,18 +281,17 @@ public class Agent implements Runnable {
 
 
             }
-            return travelOptimally(nextState, currentPath);
-//        } else if (isFinalStateOrNotAllVisited(nextState)) {
-//            System.out.println("Going to the next state for current :" + current + " and next:" + nextState + " . noticed they should not be siblings!");
-//            return travelOptimally(nextState, currentPath);
-//        } else if (!current.allBestStateActionsAreTried()) {
-//            currentPath.addGoBackState(current);
-//            current = current.getParentState();
-//            nextState.setBestAction(nextState.getBestActions().get(regressionIndex));
-        } else {
-            //return travelOptimally(current, currentPath);
-            return travelOptimally(nextState, currentPath);
         }
+        current.setAgentVisits();
+
+        currentPath.addToPath(current);
+
+        // For the current state:
+        // - Take best action
+
+        State nextState = buildNextStt(current);
+
+        return travelOptimally(nextState, currentPath,regressionIndex);
 
     }
 

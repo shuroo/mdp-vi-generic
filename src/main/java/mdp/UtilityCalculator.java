@@ -130,8 +130,8 @@ public class UtilityCalculator {
                     numberOfParticipants++;
                 }
             }
-            numberOfParticipants = numberOfParticipants ==0? 1 : numberOfParticipants;
-            Double finalUtil = accUtility / numberOfParticipants;
+           // numberOfParticipants = numberOfParticipants ==0? 1 : numberOfParticipants;
+            Double finalUtil = accUtility ;/// numberOfParticipants;
             System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
             sampleAction.setUtility(finalUtil);
             actionsWithGroupedUtility.put(sourceActionId, sampleAction);
@@ -334,6 +334,13 @@ public class UtilityCalculator {
      * @return HashMap<String, Double>
      **/
 
+    /**
+     * Filter state and find its actions. notice - Even if the action is blocked and NOT possible,
+     * so we can find other possible actions down its bestActions list.
+     * @param state
+     * @param stateActionsWithUtility
+     * @return
+     */
     private HashMap<String, Action> filterStateActions(final State state, HashMap<String, Action> stateActionsWithUtility) {
 
         //todo: one can add filter for unneeded transitions de to constraints in the future.
@@ -343,7 +350,7 @@ public class UtilityCalculator {
         stateActionsWithUtility.entrySet().stream().filter(act ->
                 //act.getKey().endsWith("_src:" + state.getId())
                 state.getId().startsWith(Constants.statesPrefix+act.getKey().split("_")[0])
-                        && act.getValue().actionIsAllowed(state)
+                       // bug:: removed:   && act.getValue().actionIsAllowed(state)
         ).forEach(entry ->
                 stateActions.put(entry.getKey(), entry.getValue()));
 

@@ -52,12 +52,19 @@ public class AgentPath {
 
     public void addToPath(State current) {
 
+        if(current.getBestActions() != null) {
+            for (Action curAct : current.getBestActions()) {
+                if (curAct.getUtility() > 0) {
+                    System.out.println("*********Detected positive utility. on: " + curAct + ",utility:" + curAct.getUtility() + " *********");
+                }
+            }
+        }
         // do not pass by reference, as the original state can change..
         State copyCurrent = new State(current);
         this.path.add(copyCurrent);
         Double currentReward = current.getBestAction() == null ? 0.0 : agent.mdp.getExtendedAction(current).getSourceEdge().getReward();
 
-        System.out.println("||**Adding cost: " + currentReward + "to original cost:"+this.pathCost+" to path by best action"+current.getBestAction()+" in " +
+        System.out.println("||**Adding cost: " + currentReward + " to original cost:"+this.pathCost+" to path by best action::"+current.getBestAction()+" in " +
                 "state:" + current+"**||");
         this.pathCost += currentReward;
 
