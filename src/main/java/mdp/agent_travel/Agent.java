@@ -250,25 +250,21 @@ public class Agent implements Runnable {
             return currentPath;
         } else if (isFinal(current)) {
             currentPath.setSucceeded(true);
+            currentPath.addToPath(current);
             return currentPath;
-        }
-        if (isFinal(nextState)) {
-            currentPath.setSucceeded(true);
-            currentPath.addToPath(nextState);
-            return currentPath;
-        } else if (!edgeIsOpened(nextState)) {
+        } else if (!edgeIsOpened(current)) {
             regressionIndex++;
-            State nextStateByRegression = findMinimalStateAmongSiblingsAndParents(nextState, currentPath, regressionIndex);
-            while (nextState != null && nextState != nextStateByRegression
+            State nextStateByRegression = findMinimalStateAmongSiblingsAndParents(current, currentPath, regressionIndex);
+            while (current != null && current != nextStateByRegression
             ) {
-                currentPath.addGoBackState(nextState);
-                if (nextState.getParentState() != null) {
-                    nextState = nextState.getParentState();
+                currentPath.addGoBackState(current);
+                if (current.getParentState() != null) {
+                    current = current.getParentState();
                 } else {
                     break;
                 }
             }
-            nextState = nextStateByRegression;
+            current = nextStateByRegression;
 
             if (isRootState(current) && current.allBestStateActionsAreTried()) {
                 // if next is blocked etc -
@@ -285,9 +281,6 @@ public class Agent implements Runnable {
         current.setAgentVisits();
 
         currentPath.addToPath(current);
-
-        // For the current state:
-        // - Take best action
 
         State nextState = buildNextStt(current);
 
