@@ -75,6 +75,7 @@ public class GraphReader {
         List<String> edgesToBlock = new LinkedList<String>();
         edgesToBlock.add("v1_v4");
         edgesToBlock.add("s_v2");
+        edgesToBlock.add("v1_t");
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
     public static void main(String[] args) {

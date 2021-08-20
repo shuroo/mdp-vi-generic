@@ -232,9 +232,11 @@ public class Agent implements Runnable {
                      st.getBestActions().get(bestActionsIndex).getUtility() < minimalUtility) {
                 System.out.println("^^^&&& Comparing action:::::"+st.getBestActions().get(bestActionsIndex)+" with utility:"+st.getBestActions().get(bestActionsIndex).getUtility()+"  in find minimal action after " +
                         "block");
-                bestSt = st;
-                minimalUtility = st.getBestActions().get(bestActionsIndex).getUtility();
-
+                 if(st.getBestActions() != null &&
+                         actionIsOpened((Action)st.getBestActions().get(bestActionsIndex))) {
+                     bestSt = st;
+                     minimalUtility = st.getBestActions().get(bestActionsIndex).getUtility();
+                 }
             }
         }
 
@@ -342,6 +344,11 @@ public class Agent implements Runnable {
 
     private Boolean edgeIsOpened(State current) {
         Action best = this.mdp.getExtendedAction(current);
+        return actionIsOpened(best);
+    }
+
+    private Boolean actionIsOpened(Action action) {
+        Action best = this.mdp.getExtededActions().get(action.getActionId());
         if (best == null) {
             return false;
         }
