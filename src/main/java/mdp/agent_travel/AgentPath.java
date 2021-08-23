@@ -39,26 +39,22 @@ public class AgentPath {
             return;
         }
         State goBackState = new State(current.getAgentLocation(), new Vector(current.getStatuses().values()));
-
+        goBackState.setUtility(current.getUtility());
                 // Fetch the best action from the parent (and reverse it maybe - TBD)!);
 
         mdp.ctp.Action originalAction = agent.mdp.getExtendedAction(parentSt);
         mdp.ctp.Action reversedAction = new mdp.ctp.Action(originalAction.getSourceEdge());
         reversedAction.reverseAction();
         goBackState.setBestAction(reversedAction);
+        goBackState.setBestActions(new LinkedList<Action>());
+        goBackState.getBestActions().add(reversedAction);
+
         // Go Back - read the current action with its cost:
         this.addToPath(goBackState);
     }
 
     public void addToPath(State current) {
 
-        if(current.getBestActions() != null) {
-            for (Action curAct : current.getBestActions()) {
-                if (curAct.getUtility() > 0) {
-                    System.out.println("*********Detected positive utility. on: " + curAct + ",utility:" + curAct.getUtility() + " *********");
-                }
-            }
-        }
         // do not pass by reference, as the original state can change..
         State copyCurrent = new State(current);
         this.path.add(copyCurrent);
@@ -96,7 +92,7 @@ public class AgentPath {
             res.append(stt.toString() + "|Action:" + stt.getBestAction());
             res.append(System.getProperty("line.separator"));
         });
-        res.append("|" + isSucceeded + "|" + pathCost + "|");
+        res.append("|Success status for path is: " + isSucceeded + "| Total Cost:" + pathCost + "|");
         return res.toString();
 
     }

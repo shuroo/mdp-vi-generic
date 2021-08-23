@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/AgentPath.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -388,6 +390,26 @@
           <line>350</line>
           <option name="timeStamp" value="171" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="176" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java</url>
+          <line>258</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Strategy.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="181" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java</url>
+          <line>251</line>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
@@ -397,14 +419,9 @@
     </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="currentPath" language="JAVA" />
-        <watch expression="nextState" language="JAVA" />
-        <watch expression="nextStateByRegression" language="JAVA" />
-        <watch expression="nextState.getBestAction()" language="JAVA" />
-        <watch expression="nextStateByRegression" language="JAVA" />
-        <watch expression="regressionIndex" language="JAVA" />
-        <watch expression="nextStateByRegression.bestAction" language="JAVA" />
-        <watch expression="nextStateByRegression" language="JAVA" />
+        <watch expression="stt.getBestAction()" language="JAVA" />
+        <watch expression="stt" language="JAVA" />
+        <watch expression="mdp" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

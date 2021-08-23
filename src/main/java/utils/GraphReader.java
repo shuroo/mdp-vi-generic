@@ -28,10 +28,6 @@ public class GraphReader {
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
         MDP mdpWithUtility = uc.setOptimalPolicy();
 
-        for(mdp.generic.Action action : mdpWithUtility.getActions().values()){
-            System.out.println(">> action:"+action+" has utility:"+action.getUtility());
-        }
-
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
         gr.getEdges().values().stream().forEach(edge -> {
             graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
@@ -74,8 +70,9 @@ public class GraphReader {
         String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
         List<String> edgesToBlock = new LinkedList<String>();
         edgesToBlock.add("v1_v4");
-        edgesToBlock.add("s_v2");
-        edgesToBlock.add("v1_t");
+        //ערועביןל1984
+        // edgesToBlock.add("s_v2");
+        //edgesToBlock.add("v1_t");
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
     public static void main(String[] args) {
