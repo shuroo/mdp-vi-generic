@@ -27,7 +27,6 @@ public class GraphReader {
         System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
         UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
         MDP mdpWithUtility = uc.setOptimalPolicy();
-
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
         gr.getEdges().values().stream().forEach(edge -> {
             graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
@@ -70,14 +69,20 @@ public class GraphReader {
         String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
         List<String> edgesToBlock = new LinkedList<String>();
         edgesToBlock.add("v1_v4");
-        //ערועביןל1984
-        // edgesToBlock.add("s_v2");
+        edgesToBlock.add("s_v2");
         //edgesToBlock.add("v1_t");
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
+
+    public static void runThirdGraphNoBlocks(){
+        String firstGraph = "src/main/data/graphs_data/dror_data/third_graph_releifed.json";
+        runStandardConfigurationGraph(firstGraph,0.6,0.9);
+    }
     public static void main(String[] args) {
 
-        runFirstGraphWithBlocks();
+        //runFirstGraphWithBlocks();
+        runThirdGraphNoBlocks();
+
 
       //  String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
      //   runStandardConfigurationGraph(firstGraph,0.5,0.98);

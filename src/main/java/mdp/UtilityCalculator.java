@@ -132,7 +132,7 @@ public class UtilityCalculator {
             }
            // numberOfParticipants = numberOfParticipants ==0? 1 : numberOfParticipants;
             Double finalUtil = accUtility ;/// numberOfParticipants;
-            System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
+            //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
             sampleAction.setUtility(finalUtil);
             actionsWithGroupedUtility.put(sourceActionId, sampleAction);
             currentMDP.getActions().get(sampleAction.getActionId()).setUtility(finalUtil);
@@ -258,9 +258,9 @@ public class UtilityCalculator {
             state.setUtility(minimalUtility);
             state.setBestAction(minimalUtilityAction);
             state.setBestActions(minimalUtilityActions);
-
-            System.out.println("^^^ updating state's minimal utility:: Setting Action:" + minimalUtilityAction + " by utility:" + minimalUtility + " for " +
-                    "state:" + state);
+//
+//            System.out.println("^^^ updating state's minimal utility:: Setting Action:" + minimalUtilityAction + " by utility:" + minimalUtility + " for " +
+//                    "state:" + state);
 
 
         }

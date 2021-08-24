@@ -200,8 +200,8 @@ public class Agent implements Runnable {
      * @return
      */
     private boolean isFinal(State current) {
-        return (current.getAgentLocation().isFinal() ||
-                mdp.getExtededActions().get(current.getBestAction().getActionId()).getDest().isFinal());
+        return (current.getAgentLocation().isFinal()); //||
+                //mdp.getExtededActions().get(current.getBestAction().getActionId()).getDest().isFinal());
     }
 
 
