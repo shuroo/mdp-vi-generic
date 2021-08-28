@@ -258,7 +258,10 @@ public class UtilityCalculator {
             state.setUtility(minimalUtility);
             state.setBestAction(minimalUtilityAction);
             state.setBestActions(minimalUtilityActions);
-//
+          //  LocalCacheManager.storeStateInCache(state);
+//  ......%%%%%
+
+
 //            System.out.println("^^^ updating state's minimal utility:: Setting Action:" + minimalUtilityAction + " by utility:" + minimalUtility + " for " +
 //                    "state:" + state);
 
