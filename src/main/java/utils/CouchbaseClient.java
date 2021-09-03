@@ -3,6 +3,8 @@ package utils;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
+import com.couchbase.client.java.ReactiveCollection;
+import com.couchbase.client.java.codec.JsonTranscoder;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.MutationResult;
@@ -11,19 +13,33 @@ import mdp.generic.Action;
 import mdp.generic.Reward;
 import mdp.generic.State;
 import mdp.generic.Transition;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.sun.activation.registries.LogSupport.log;
 
 public class CouchbaseClient {
 
-    public static Collection getCollection(String bcktName){
+    private static Bucket getBucket(String bcktName){
         System.setProperty("com.couchbase.env.timeout.kvTimeout", "30000s");
         System.setProperty("com.couchbase.env.timeout.queryTimeout", "30000s");
         Cluster cluster = Cluster.connect("127.0.0.1", "Administrator", "Administrator");
-        Bucket bucket = cluster.bucket(bcktName);
+        return cluster.bucket(bcktName);
+    }
+
+    public  static ReactiveCollection getReactiveCollection(String bcktName){
+        Bucket bucket = getBucket(bcktName);
+        return bucket.reactive().defaultCollection();
+    }
+
+    public static Collection getCollection(String bcktName){
+        Bucket bucket = getBucket(bcktName);
         Collection collection = bucket.defaultCollection();
         return collection;
     }
@@ -40,9 +56,8 @@ public class CouchbaseClient {
         return bestActions.stream().map(a->a.getActionId()).collect(Collectors.toList());
     }
 
-    public static void insertState(State s){
-        Collection collection = getCollection("states");
-        JsonObject content = JsonObject.create().put("id",s.getId())
+    private static JsonObject stateToJson(State s){
+        return JsonObject.create().put("id",s.getId())
                 .put("bestAction",(s.getBestAction() != null ? s.getBestAction().getActionId() : null ))
                 .put("bestActions",(s.getBestActions() != null ? bestActionsToJson(s.getBestActions()) : new LinkedList() ))
                 .put("utility",s.getUtility())
@@ -50,18 +65,35 @@ public class CouchbaseClient {
                 .put("prevUtility",s.getPreviousUtility())
                 .put("utility",s.getUtility());
 
-        Observable
-                .from(documents)
-                .flatMap(new Func1<JsonDocument, Observable<JsonDocument>>() {
-                    @Override
-                    public Observable<JsonDocument> call(final JsonDocument docToInsert) {
-                        return bucket.async().insert(docToInsert);
-                    }
-                })
-                .last()
-                .toBlocking()
-                .single();
+    }
+    public static void insertState(State s){
+        Collection collection = getCollection("states");
+        JsonObject content = stateToJson(s);
         collection.upsert(Constants.stateRecordPrefix+HashUuidCreator.getSha1Uuid(s.getId()),content );
+    }
+
+    public static void insertBulkStates(Set<mdp.ctp.State> states){
+        List<JsonDocument> jsonStates   = states.stream().map(st-> new JsonDocument(st.getId(),stateToJson(st))).collect(Collectors.toList()) ;
+        Flux.fromIterable(jsonStates)
+                .flatMap(docToInsert ->
+                        getReactiveCollection("states").insert(
+                                        Constants.stateRecordPrefix+HashUuidCreator.getSha1Uuid(docToInsert.getId()),
+                                docToInsert.getContent())
+
+                                )
+                                .blockLast();
+//
+//        Observable
+//                .from(jsonStates)
+//                .flatMap(new Func1<JsonDocument, Observable<JsonDocument>>() {
+//                    @Override
+//                    public Observable<JsonDocument> call(final JsonDocument docToInsert) {
+//                        return bucket.async().insert(docToInsert);
+//                    }
+//                })
+//                .last()
+//                .toBlocking()
+//                .single();
     }
 
     public static State getExtendedState(String sttId){
@@ -108,7 +140,6 @@ public class CouchbaseClient {
                 .put("source",a.getSource().toString())
                         .put("dest",a.getDest().toString())
                 .put("utility",a.getUtility());
-                //.put("edge",gson.toJson(a.getSourceEdge()));
 
         collection.upsert(Constants.extendedActionPrefix+HashUuidCreator.getSha1Uuid(a.getActionId()),content );
     }

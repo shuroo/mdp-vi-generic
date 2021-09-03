@@ -8,6 +8,7 @@ import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
 import org.jgrapht.graph.Vertex;
 import utils.CollectionUtils;
+import utils.CouchbaseClient;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -126,9 +127,10 @@ public class MDPCreator {
             Collections.sort(statusList);
             statusVector.addAll(statusList);
             State s = new State((Vertex) vert, statusVector);
-            utils.CouchbaseClient.insertState(s);
             return s;
         }).collect(Collectors.toSet());
+
+        CouchbaseClient.insertBulkStates(resultingStates);
         return resultingStates;
     }
 
