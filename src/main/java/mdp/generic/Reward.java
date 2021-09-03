@@ -66,11 +66,26 @@ public class Reward {
         return buildId(this.sourceState,this.destState,this.action);
     }
 
+    // deprecated
     public static String buildId(State source, State dest, Action action){
 
         String baseId = "";
         try{
-            baseId = action.toString() + "_" + source.toString() + "_" + dest.toString();
+            baseId = action.toString() + "_" + source.getId() + "_" + dest.getId();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.rewardsPrefix+HashUuidCreator.getSha1Uuid(baseId);
+    }
+
+    //to be used with cb..
+    public static String buildId(String sourceSttId, String destSttId, Action action){
+
+        String baseId = "";
+        try{
+            baseId = action.toString() + "_" + sourceSttId + "_" + destSttId;
 
         }
         catch(Exception e){

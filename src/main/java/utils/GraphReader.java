@@ -24,28 +24,28 @@ public class GraphReader {
 
         System.out.println("Constructing MDP:");
         MDPFromGraph mdp = new MDPFromGraph(gr);
-        System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
-        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
-        MDP mdpWithUtility = uc.setOptimalPolicy();
-        HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
-        gr.getEdges().values().stream().forEach(edge -> {
-            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
-        });
-
-
-        // Override the existing configuration:
-        for(String key : edgeKeysToBlock) {
-            if (graphConfiguration.containsKey(key)) {
-                Edge edge2 = graphConfiguration.get(key).getEdge();
-                graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.Closed));
-            }
-        }
-
-        System.out.println("Initializing Agent...");
-        Agent ag = new Agent(mdp, graphConfiguration);
-
-        System.out.println("Running Agent...");
-        ag.run();
+//        System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
+//        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
+//        MDP mdpWithUtility = uc.setOptimalPolicy();
+//        HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
+//        gr.getEdges().values().stream().forEach(edge -> {
+//            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
+//        });
+//
+//
+//        // Override the existing configuration:
+//        for(String key : edgeKeysToBlock) {
+//            if (graphConfiguration.containsKey(key)) {
+//                Edge edge2 = graphConfiguration.get(key).getEdge();
+//                graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.Closed));
+//            }
+//        }
+//
+//        System.out.println("Initializing Agent...");
+//        Agent ag = new Agent(mdp, graphConfiguration);
+//
+//        System.out.println("Running Agent...");
+//        ag.run();
 
     }
 

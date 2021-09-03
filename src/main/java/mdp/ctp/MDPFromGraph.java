@@ -55,7 +55,9 @@ public class MDPFromGraph extends MDP {
         this.graph = g;
         MDPCreator creator = new MDPCreator(graph);
         this.extededActions = creator.generateAllActions();
-        this.extededStates = (HashMap) creator.generateAllStates();
+
+        // CREATE INDEX idx_s_d ON states(id, utility);
+        this.extededStates = (HashMap)creator.generateAllStates();
         this.rewards = creator.generateAllRewards(this.extededStates, this.extededActions);
         this.extededTransitions = creator.generateTransitions(this.extededStates, this.extededActions);
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
@@ -64,8 +66,14 @@ public class MDPFromGraph extends MDP {
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
 
+        // Free memory after creation ...
+        this.extededStates = null;
+        this.states = null;
+        this.extededActions = null;
+        // todo: add it all!
         // Try to garbage collect...
         System.gc();
+        System.out.println("Done creating data.");
     }
 
 
