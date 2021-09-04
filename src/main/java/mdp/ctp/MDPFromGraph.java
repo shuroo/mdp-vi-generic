@@ -58,6 +58,7 @@ public class MDPFromGraph extends MDP {
 
         // CREATE INDEX idx_s_d ON states(id, utility);
         this.extededStates = (HashMap)creator.generateAllStates();
+        System.out.println("Successfully generate "+this.extededStates.size()+" states");
         this.rewards = creator.generateAllRewards(this.extededStates, this.extededActions);
         this.extededTransitions = creator.generateTransitions(this.extededStates, this.extededActions);
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();

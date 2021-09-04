@@ -32,7 +32,6 @@ public class MDPCreator {
 
                         Action statesAction = allActions.get(Action.generateId(source, dest));
                         mdp.ctp.Transition tran = new mdp.ctp.Transition(stt, stt2,statesAction );
-                        utils.CouchbaseClient.insertTransition(tran);
                         allTransitions.put(tran.getTransitionId(),tran);
 
                     }
@@ -53,7 +52,6 @@ public class MDPCreator {
                         Action statesAction = allActions.get(Action.generateId(source, dest));
                         Double reward = statesAction.getSourceEdge().getReward();
                         Reward rewardObj = new Reward(stt, stt2, statesAction, reward);
-                        utils.CouchbaseClient.insertReward(rewardObj);
                         rewards.put(rewardObj.getId(),rewardObj);
 
                     }
@@ -74,8 +72,6 @@ public class MDPCreator {
         graph.getEdges().values().stream().forEach(
                 edge -> {
                     Action action = new Action((Edge) edge);
-                    utils.CouchbaseClient.insertExtendedAction(action);
-                    //todo: take from extended: utils.CouchbaseClient.insertAction((mdp.generic.Action)action);
                     allActionsMap.put(action.getActionId(), action);
                 });
 
@@ -130,7 +126,8 @@ public class MDPCreator {
             return s;
         }).collect(Collectors.toSet());
 
-        CouchbaseClient.insertBulkStates(resultingStates);
+        CouchbaseClient cb = new CouchbaseClient();
+        cb.insertBulkStates(resultingStates);
         return resultingStates;
     }
 
