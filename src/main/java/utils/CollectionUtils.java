@@ -8,10 +8,10 @@ import mdp.ctp.*;
 public class CollectionUtils<T> {
 
 
-    public List<T> flattenList(List<Set<T>> nestedList) {
-        List<T> flatList = new ArrayList<T>();
-        nestedList.forEach(flatList::addAll);
-        return flatList;
+    public Set<T> flattenSet(List<Set<T>> nestedList) {
+        Set<T> flatSet = new HashSet<>();
+        nestedList.forEach(flatSet::addAll);
+        return flatSet;
     }
 
     // Function to sort map by Key

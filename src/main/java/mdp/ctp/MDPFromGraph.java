@@ -58,11 +58,14 @@ public class MDPFromGraph extends MDP {
 
         // CREATE INDEX idx_s_d ON states(id, utility);
         this.extededStates = (HashMap)creator.generateAllStates();
-        System.out.println("Successfully generate "+this.extededStates.size()+" states");
-        this.rewards = creator.generateAllRewards(this.extededStates, this.extededActions);
-        this.extededTransitions = creator.generateTransitions(this.extededStates, this.extededActions);
+        System.out.println("Successfully generated "+this.extededStates.size()+" states");
+        this.rewards = creator.generateAllRewards(this.extededActions);
+        System.out.println("Successfully generated "+this.rewards.size()+" rewards");
+        System.out.println("******************************************************");
+       // this.extededTransitions = creator.generateTransitions(  this.extededStates,this.extededActions);
+       // System.out.println("Successfully generated "+this.extededTransitions.size()+" transitions");
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
-        this.states = cu.objToHMap((Collection<State>) extededStates.values());
+//        this.states = cu.objToHMap((Collection<State>) extededStates.values());
         this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values());
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
@@ -70,7 +73,6 @@ public class MDPFromGraph extends MDP {
         // Free memory after creation ...
         this.extededStates = null;
         this.states = null;
-        this.extededActions = null;
         // todo: add it all!
         // Try to garbage collect...
         System.gc();

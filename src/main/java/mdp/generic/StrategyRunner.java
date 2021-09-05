@@ -235,7 +235,7 @@ public class StrategyRunner {
             for (State s1 : states.values()) {
 
                 for (State s2 : states.values()) {
-                    Reward reward = new Reward(s1, s2, action, 0.0);
+                    Reward reward = new Reward(s1.getId(), s2.getId(), action, 0.0);
                     rewards.put(reward.getId(), reward);
                 }
             }
@@ -508,7 +508,7 @@ public class StrategyRunner {
             for (State s1 : states.values()) {
 
                 for (State s2 : states.values()) {
-                    Reward reward = new Reward(s1, s2, action, -0.04);
+                    Reward reward = new Reward(s1.getId(), s2.getId(), action, -0.04);
                     rewards.put(reward.getId(), reward);
                 }
             }
@@ -782,7 +782,7 @@ public class StrategyRunner {
             for (State s1 : states.values()) {
 
                 for (State s2 : states.values()) {
-                    Reward reward = new Reward(s1, s2, action, -0.02);
+                    Reward reward = new Reward(s1.getId(), s2.getId(), action, -0.02);
                     rewards.put(reward.getId(), reward);
                 }
             }

@@ -1,6 +1,7 @@
 
 package mdp.ctp;
 
+import com.couchbase.client.java.json.JsonObject;
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.generic.Reward;
@@ -23,45 +24,69 @@ public class MDPCreator {
 
     public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates, HashMap<String, Action> allActions){
         HashMap<String,mdp.ctp.Transition> allTransitions = new HashMap<String,mdp.ctp.Transition>();
-        allStates.values().forEach(stt ->
-                allStates.values().forEach(stt2 ->
-                {
-                    Vertex source = stt.getAgentLocation();
-                    Vertex dest = stt2.getAgentLocation();
-                    if (allActions.containsKey(Action.generateId(source, dest))) {
+//        allStates.values().forEach(stt ->
+//                allStates.values().forEach(stt2 ->
+//                {
+//                    Vertex source = stt.getAgentLocation();
+//                    Vertex dest = stt2.getAgentLocation();
+//                    if (allActions.containsKey(Action.generateId(source, dest))) {
+//
+//                        Action statesAction = allActions.get(Action.generateId(source, dest));
+//                        mdp.ctp.Transition tran = new mdp.ctp.Transition(stt, stt2,statesAction );
+//                        allTransitions.put(tran.getTransitionId(),tran);
+//
+//                    }
+//                }));
 
-                        Action statesAction = allActions.get(Action.generateId(source, dest));
-                        mdp.ctp.Transition tran = new mdp.ctp.Transition(stt, stt2,statesAction );
-                        allTransitions.put(tran.getTransitionId(),tran);
 
-                    }
-                }));
-
+        for(Action action : allActions.values()) {
+            Vertex source = action.getSource();
+            Vertex dest = action.getDest();
+            for(State src : allStates.values().stream().filter(stt->stt.getAgentLocation() == source).collect(Collectors.toList())) {
+                for(State dst : allStates.values().stream().filter(stt->stt.getAgentLocation() == dest).collect(Collectors.toList())) {
+                    mdp.ctp.Transition tran = new mdp.ctp.Transition(src, dst,action );
+                    allTransitions.put(tran.getTransitionId(),tran);
+                }
+            }
+        }
         return allTransitions;
     }
 
-    public HashMap<String, Reward> generateAllRewards(HashMap<String, State> allStates, HashMap<String, Action> allActions) {
+    public HashMap<String, Reward> generateAllRewards(HashMap<String, Action> allActions) {
         HashMap<String,Reward> rewards = new HashMap<String,Reward>();
-        allStates.values().forEach(stt ->
-                allStates.values().forEach(stt2 ->
-                {
-                    Vertex source = stt.getAgentLocation();
-                    Vertex dest = stt2.getAgentLocation();
-                    if (allActions.containsKey(Action.generateId(source, dest))) {
 
-                        Action statesAction = allActions.get(Action.generateId(source, dest));
-                        Double reward = statesAction.getSourceEdge().getReward();
-                        Reward rewardObj = new Reward(stt, stt2, statesAction, reward);
-                        rewards.put(rewardObj.getId(),rewardObj);
+        for(Action action : allActions.values()) {
+            Vertex source = action.getSource();
+            Vertex dest = action.getDest();
+            CouchbaseClient cb = new CouchbaseClient();
+            List<JsonObject> actionSrcStates = cb.fetchStatesByLocation(source);
+            List<JsonObject> actionDestStates = cb.fetchStatesByLocation(dest);
+                    Double reward = action.getSourceEdge().getReward();
+                    Reward rewardObj = new Reward(srcJson.getString("id"), destJson.getString("id"), action, reward);
+                    rewards.put(rewardObj.getId(),rewardObj);
 
-                    }
+            }
+        }
+//        allStates.values().forEach(stt ->
+//                allStates.values().forEach(stt2 ->
+//                {
+//                    Vertex source = stt.getAgentLocation();
+//                    Vertex dest = stt2.getAgentLocation();
+//                    if (allActions.containsKey(Action.generateId(source, dest))) {
+//
+//                        Action statesAction = allActions.get(Action.generateId(source, dest));
+//                        Double reward = statesAction.getSourceEdge().getReward();
+//                        Reward rewardObj = new Reward(stt, stt2, statesAction, reward);
+//                        rewards.put(rewardObj.getId(),rewardObj);
+//
+//                    }
 //                    else{
 //                        Action statesVirtualAction = new Action(source,dest);
 //                        Double reward = 0.0;
 //                        Reward rewardObj = new Reward(stt, stt2, statesVirtualAction, reward);
 //                        rewards.put(rewardObj.getId(),rewardObj);
 //                    }
-                }));
+           //     }));
 
         return rewards;
     }
@@ -97,8 +122,10 @@ public class MDPCreator {
         // Flatten list:
 
         CollectionUtils<State> cu = new CollectionUtils<State>();
-        List<State> allStates = cu.flattenList(allStatesByLocations);
+        Set<State> allStates = cu.flattenSet(allStatesByLocations);
 
+        CouchbaseClient cb = new CouchbaseClient();
+        cb.insertBulkStates(allStates);
         // Sort the List of states:
 
         // todo: sort by ids:
@@ -126,8 +153,6 @@ public class MDPCreator {
             return s;
         }).collect(Collectors.toSet());
 
-        CouchbaseClient cb = new CouchbaseClient();
-        cb.insertBulkStates(resultingStates);
         return resultingStates;
     }
 

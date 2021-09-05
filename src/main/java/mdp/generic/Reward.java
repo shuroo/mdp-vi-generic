@@ -5,25 +5,25 @@ import utils.HashUuidCreator;
 
 public class Reward {
 
-    private State sourceState;
-    private State destState;
+    private String sourceStateId;
+    private String destStateId;
     private Action action;
 
-    public State getSourceState() {
-        return sourceState;
+    public String getSourceState() {
+        return sourceStateId;
     }
 
-    public void setSourceState(State sourceState) {
-        this.sourceState = sourceState;
-    }
+//    public void setSourceState(State sourceState) {
+//        this.sourceState = sourceState;
+//    }
 
-    public State getDestState() {
-        return destState;
+    public String getDestState() {
+        return destStateId;
     }
-
-    public void setDestState(State destState) {
-        this.destState = destState;
-    }
+//
+//    public void setDestState(State destState) {
+//        this.destState = destState;
+//    }
 
     public Action getAction() {
         return action;
@@ -54,16 +54,16 @@ public class Reward {
 
      private String id;
 
-    public Reward(State sourceState, State destState, Action action, Double reward) {
-        this.sourceState = sourceState;
-        this.destState = destState;
+    public Reward(String sourceStateId, String destStateId, Action action, Double reward) {
+        this.sourceStateId = sourceStateId;
+        this.destStateId = destStateId;
         this.action = action;
         this.reward = reward;
         this.id = generateId();
     }
 
     private String generateId() {
-        return buildId(this.sourceState,this.destState,this.action);
+        return buildId(this.sourceStateId,this.destStateId,this.action);
     }
 
     // deprecated
