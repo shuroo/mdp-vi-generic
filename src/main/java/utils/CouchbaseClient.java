@@ -14,6 +14,7 @@ import org.jgrapht.graph.Vertex;
 import reactor.core.publisher.Flux;
 import static com.couchbase.client.java.query.QueryOptions.queryOptions;
 
+import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,54 +26,55 @@ public class CouchbaseClient {
     Cluster cluster = null;
     ReactiveCollection statesReactiveCollection = getReactiveCollection("states");
 
-    private Bucket getBucket(String bcktName){
+    private Bucket getBucket(String bcktName) {
         System.setProperty("com.couchbase.env.timeout.kvTimeout", "3000000s");
         System.setProperty("com.couchbase.env.timeout.queryTimeout", "3000000s");
         cluster = Cluster.connect("127.0.0.1", "Administrator", "Administrator");
         return cluster.bucket(bcktName);
     }
 
-    public ReactiveCollection getReactiveCollection(String bcktName){
+    public ReactiveCollection getReactiveCollection(String bcktName) {
         Bucket bucket = getBucket(bcktName);
         return bucket.reactive().defaultCollection();
     }
 
-    public Collection getCollection(String bcktName){
+    public Collection getCollection(String bcktName) {
         Bucket bucket = getBucket(bcktName);
         Collection collection = bucket.defaultCollection();
         return collection;
     }
 
-    public State getState(String sttId){
+    public State getState(String sttId) {
         Collection collection = getCollection("states");
-        String dbStateId = Constants.stateRecordPrefix+HashUuidCreator.getSha1Uuid(sttId);
+        String dbStateId = Constants.stateRecordPrefix + HashUuidCreator.getSha1Uuid(sttId);
         GetResult sttJson = collection.get(dbStateId);
         State stt = sttJson.contentAs(State.class);
         cluster.disconnect();
         return stt;
     }
 
-    private List<String> bestActionsToJson(List<Action> bestActions){
-        return bestActions.stream().map(a->a.getActionId()).collect(Collectors.toList());
+    private List<String> bestActionsToJson(List<Action> bestActions) {
+        return bestActions.stream().map(a -> a.getActionId()).collect(Collectors.toList());
     }
 
-    private JsonObject stateToJson(mdp.ctp.State s){
-        return JsonObject.create().put("id",s.getId())
-                .put("bestAction",(s.getBestAction() != null ? s.getBestAction().getActionId() : null ))
-                .put("bestActions",(s.getBestActions() != null ? bestActionsToJson(s.getBestActions()) : new LinkedList() ))
-                .put("utility",s.getUtility())
-                .put("agentLocation",s.getAgentLocation().toString())
+    private JsonObject stateToJson(mdp.ctp.State s) {
+        return JsonObject.create().put("id", s.getId())
+                .put("bestAction", (s.getBestAction() != null ? s.getBestAction().getActionId() : null))
+                .put("bestActions", (s.getBestActions() != null ? bestActionsToJson(s.getBestActions()) : new LinkedList()))
+                .put("utility", s.getUtility())
+                .put("agentLocation", s.getAgentLocation().toString())
                 //.put("statuses",s.getStatuses().toString())
                 // todo: add more in the future...
-                .put("getInitial",s.getInitial())
-                .put("prevUtility",s.getPreviousUtility())
-                .put("utility",s.getUtility());
+                .put("getInitial", s.getInitial())
+                .put("prevUtility", s.getPreviousUtility())
+                .put("utility", s.getUtility());
 
     }
-    public void insertState(mdp.ctp.State s){
+
+    public void insertState(mdp.ctp.State s) {
         Collection collection = getCollection("states");
         JsonObject content = stateToJson(s);
-        collection.upsert(Constants.stateRecordPrefix+HashUuidCreator.getSha1Uuid(s.getId()),content );
+        collection.upsert(Constants.stateRecordPrefix + HashUuidCreator.getSha1Uuid(s.getId()), content);
         cluster.disconnect();
     }
 
@@ -119,11 +121,11 @@ public class CouchbaseClient {
 //        return act;
 //    }
 
-    public void insertAction(Action a){
+    public void insertAction(Action a) {
         Collection collection = getCollection("actions");
-        JsonObject content = JsonObject.create().put("id",a.getActionId())
-                .put("utility",a.getUtility());
-        collection.upsert(Constants.actionPrefix+HashUuidCreator.getSha1Uuid(a.getActionId()),content );
+        JsonObject content = JsonObject.create().put("id", a.getActionId())
+                .put("utility", a.getUtility());
+        collection.upsert(Constants.actionPrefix + HashUuidCreator.getSha1Uuid(a.getActionId()), content);
         cluster.disconnect();
     }
 //
@@ -136,51 +138,58 @@ public class CouchbaseClient {
 //        return stt;
 //    }
 
-    public void insertExtendedAction(mdp.ctp.Action a){
+    public void insertExtendedAction(mdp.ctp.Action a) {
         Collection collection = getCollection("actions");
         Gson gson = new Gson();
-        JsonObject content = JsonObject.create().put("id",a.getActionId())
-                .put("source",a.getSource().toString())
-                .put("dest",a.getDest().toString())
-                .put("utility",a.getUtility());
+        JsonObject content = JsonObject.create().put("id", a.getActionId())
+                .put("source", a.getSource().toString())
+                .put("dest", a.getDest().toString())
+                .put("utility", a.getUtility());
 
-        collection.upsert(Constants.extendedActionPrefix+HashUuidCreator.getSha1Uuid(a.getActionId()),content );
+        collection.upsert(Constants.extendedActionPrefix + HashUuidCreator.getSha1Uuid(a.getActionId()), content);
         cluster.disconnect();
     }
 
-    public void insertTransition(Transition t){
+    public void insertTransition(Transition t) {
         Collection collection = getCollection("transitions");
-        JsonObject content = JsonObject.create().put("id",t.getTransitionId())
-                .put("source",t.getSourceState().getId())
-                .put("dest",t.getDestState().getId())
-                .put("action",t.getAction().getActionId())
-                .put("prob",t.getProbability());
-        collection.upsert(Constants.transitionPrefix+HashUuidCreator.getSha1Uuid(t.getTransitionId()),content);
+        JsonObject content = JsonObject.create().put("id", t.getTransitionId())
+                .put("source", t.getSourceState().getId())
+                .put("dest", t.getDestState().getId())
+                .put("action", t.getAction().getActionId())
+                .put("prob", t.getProbability());
+        collection.upsert(Constants.transitionPrefix + HashUuidCreator.getSha1Uuid(t.getTransitionId()), content);
         cluster.disconnect();
     }
 
-    public void insertReward(Reward r){
+    public void insertReward(Reward r) {
         Collection collection = getCollection("rewards");
-        JsonObject content = JsonObject.create().put("id",r.getId())
-                .put("source",r.getSourceState())
-                .put("dest",r.getDestState())
-                .put("action",r.getAction().getActionId())
-                .put("rewardValue",r.getReward());
-        collection.upsert(r.getId(),content );
+        JsonObject content = JsonObject.create().put("id", r.getId())
+                .put("source", r.getSourceState())
+                .put("dest", r.getDestState())
+                .put("action", r.getAction().getActionId())
+                .put("rewardValue", r.getReward());
+        collection.upsert(r.getId(), content);
         cluster.disconnect();
     }
 
-    public List<JsonObject> fetchStatesByLocation(Vertex vertex){
+    public List<JsonObject> fetchStatesByLocation(Vertex vertex) {
 
         QueryResult result = cluster.query("select meta().id as stateId, * from `states`.`_default`.`_default` data where " +
-                "agentLocation=\""+vertex.toString()+"\" order by meta().id offset 0");
+                "agentLocation=\"" + vertex.toString() + "\" order by meta().id offset 0");
 
-        System.out.println("Fetched "+ result.rowsAsObject().size()+" filtered states ");
+        System.out.println("Fetched " + result.rowsAsObject().size() + " filtered states ");
         return result.rowsAsObject();
     }
 
 
-    public void main(String [] args) {
+
+    public static void main(String [] args) {
+
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        long memorySize = ((com.sun.management.OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
+
+        System.out.println(maxMemory+","+memorySize);
 
         Cluster cluster = Cluster.connect("127.0.0.1", "Administrator", "Administrator");
 

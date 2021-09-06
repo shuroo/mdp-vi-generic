@@ -22,29 +22,37 @@ public class MDPCreator {
         graph = g;
     }
 
-    public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates, HashMap<String, Action> allActions){
-        HashMap<String,mdp.ctp.Transition> allTransitions = new HashMap<String,mdp.ctp.Transition>();
-
-        for(Action action : allActions.values()) {
-            Vertex source = action.getSource();
-            Vertex dest = action.getDest();
-            CouchbaseClient cb = new CouchbaseClient();
-            List<JsonObject> actionSrcStates = cb.fetchStatesByLocation(source);
-            List<JsonObject> actionDestStates = cb.fetchStatesByLocation(dest);
-            for(JsonObject src :  actionSrcStates) {
-                for(JsonObject dst :  actionDestStates) {
-                   String srcId = src.getObject("data").getString("id");
-                    String dstId = dst.getObject("data").getString("id");
-                    mdp.ctp.Transition tran = new mdp.ctp.Transition(allStates.get(srcId), allStates.get(dstId),action );
-
-                    if(tran.isValid()) {
-                        cb.insertTransition(tran);
-                        allTransitions.put(tran.getTransitionId(),tran);
-                    }
-
-                }
+    private  List<Transition>  fetchActionRelatedTransitions(Action action,HashMap<String, mdp.ctp.State> allStates) {
+        Vertex source = action.getSource();
+        Vertex dest = action.getDest();
+        CouchbaseClient cb = new CouchbaseClient();
+        List<JsonObject> actionSrcStates = cb.fetchStatesByLocation(source);
+        List<JsonObject> actionDestStates = cb.fetchStatesByLocation(dest);
+        List<mdp.ctp.Transition> transitions = new LinkedList<mdp.ctp.Transition>();
+        for (JsonObject src : actionSrcStates) {
+            for (JsonObject dst : actionDestStates) {
+                String srcId = src.getObject("data").getString("id");
+                String dstId = dst.getObject("data").getString("id");
+                mdp.ctp.Transition tran = new mdp.ctp.Transition(allStates.get(srcId), allStates.get(dstId), action);
+                transitions.add(tran);
             }
         }
+        return transitions;
+    }
+    public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates, HashMap<String, Action> allActions){
+        HashMap<String,mdp.ctp.Transition> allTransitions = new HashMap<String,mdp.ctp.Transition>();
+        CouchbaseClient cb = new CouchbaseClient();
+        for(Action action : allActions.values()) {
+            List<Transition> actionTransitions = fetchActionRelatedTransitions(action);
+            for (mdp.ctp.Transition tran : actionTransitions) {
+                if (tran.isValid()) {
+                    cb.insertTransition(tran);
+                    allTransitions.put(tran.getTransitionId(), tran);
+                }
+
+            }
+        }
+
         return allTransitions;
     }
 
@@ -114,6 +122,10 @@ public class MDPCreator {
 
         List<LinkedList<CTPEdge>> statusCombinations = generateStatusedEdges();
 
+        System.out.println("Generated:"+statusCombinations.size()+" Statuses for "+graph.getEdges().size()+" edges");
+        System.out.println("Should Generate: "+(Math.pow(3,graph.getEdges().size()))+" statuses, ");
+        System.out.println("And: "+(Math.pow(3,graph.getEdges().size())*graph.getVertices().size())+" states exactly.");
+
         List<Set<State>> allStatesByLocations =
                 statusCombinations.stream().map(statusList -> generateStatesFromStatus(statusList)).collect(Collectors.toList());
 
@@ -157,20 +169,21 @@ public class MDPCreator {
 
     protected List<LinkedList<CTPEdge>> generateStatusedEdges() {
 
-
         Collection<Edge> edges = graph.getEdges().values(); //
         List<LinkedList<CTPEdge>> edgeStatusesToCombine = new LinkedList<LinkedList<CTPEdge>>();
         for (Edge edge : edges) {
-            //Edge edge = edges.remove(i);
-
 
             if (edgeStatusesToCombine.isEmpty()) {
 
                 List<Vector<CTPEdge>> edgeStatuses = generateAllStatusesFromEdge(edge);
 
+                if(edgeStatuses.size() != 3){
+                    System.out.println("Unexpected number of edge statuses produced - "+edgeStatuses.size()+"! for edge:"+edge.toString());
+                }
                 // create a list of single status element (*3)
                 for (List<CTPEdge> status : edgeStatuses) {
-                    LinkedList<CTPEdge> edgeSingleStatusList = new LinkedList<CTPEdge>();
+                    LinkedList<CTPEdge> edgeSingleStatusList =
+                            new LinkedList<CTPEdge>();
                     // edge+O OR
                     // edge+C
                     // OR edge+U

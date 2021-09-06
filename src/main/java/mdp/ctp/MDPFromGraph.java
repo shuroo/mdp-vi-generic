@@ -61,18 +61,19 @@ public class MDPFromGraph extends MDP {
         System.out.println("Successfully generated "+this.extededStates.size()+" states");
         this.rewards = creator.generateAllRewards(this.extededActions);
         System.out.println("Successfully generated "+this.rewards.size()+" rewards");
-        this.extededTransitions = creator.generateTransitions(  this.extededStates,this.extededActions);
-        System.out.println("Successfully generated "+this.extededTransitions.size()+" transitions");
+        // correction: do not generate transitions! do it on the fly!
+        //this.extededTransitions = creator.generateTransitions(  this.extededStates,this.extededActions);
+        //System.out.println("Successfully generated "+this.extededTransitions.size()+" transitions");
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
-//        this.states = cu.objToHMap((Collection<State>) extededStates.values());
+        this.states = cu.objToHMap((Collection<State>) extededStates.values());
 //        this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values());
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
 
-        // Free memory after creation ...
-        this.extededStates = null;
-        this.states = null;
-        this.extededTransitions = null;
+//        // Free memory after creation ...
+//        this.extededStates = null;
+//        this.states = null;
+//        this.extededTransitions = null;
         // todo: add it all!
         // Try to garbage collect...
         System.gc();
