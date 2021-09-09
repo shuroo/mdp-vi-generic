@@ -2,9 +2,9 @@ package utils;
 
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
-import mdp.UtilityCalculator;
 import mdp.agent_travel.Agent;
 import mdp.ctp.MDPFromGraph;
+import mdp.ctp.UtilityCalculator;
 import mdp.generic.MDP;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
@@ -24,13 +24,14 @@ public class GraphReader {
 
         System.out.println("Constructing MDP:");
         MDPFromGraph mdp = new MDPFromGraph(gr);
-//        System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
-//        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
-//        MDP mdpWithUtility = uc.setOptimalPolicy();
-//        HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
-//        gr.getEdges().values().stream().forEach(edge -> {
-//            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
-//        });
+        System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
+        mdp.ctp.UtilityCalculator uc = new UtilityCalculator( mdp, epsilon, discount);
+        // todo: should we pass this .. to the agent??
+        MDP mdpWithUtility = uc.setOptimalPolicy();
+        HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
+        gr.getEdges().values().stream().forEach(edge -> {
+            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
+        });
 //
 //
 //        // Override the existing configuration:
@@ -40,12 +41,12 @@ public class GraphReader {
 //                graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.Closed));
 //            }
 //        }
-//
-//        System.out.println("Initializing Agent...");
-//        Agent ag = new Agent(mdp, graphConfiguration);
-//
-//        System.out.println("Running Agent...");
-//        ag.run();
+
+        System.out.println("Initializing Agent...");
+        Agent ag = new Agent(mdp, graphConfiguration);
+
+        System.out.println("Running Agent...");
+        ag.run();
 
     }
 
@@ -80,8 +81,8 @@ public class GraphReader {
     }
     public static void main(String[] args) {
 
-        //runFirstGraphWithBlocks();
-        runThirdGraphNoBlocks();
+        runFirstGraphWithBlocks();
+        //runThirdGraphNoBlocks();
 
 
       //  String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";

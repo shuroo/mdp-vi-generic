@@ -22,7 +22,7 @@ public class MDPCreator {
         graph = g;
     }
 
-    private  List<Transition>  fetchActionRelatedTransitions(Action action,HashMap<String, mdp.ctp.State> allStates) {
+    public static  List<Transition>  fetchActionRelatedTransitions(Action action,HashMap<String, mdp.ctp.State> allStates) {
         Vertex source = action.getSource();
         Vertex dest = action.getDest();
         CouchbaseClient cb = new CouchbaseClient();
@@ -33,20 +33,21 @@ public class MDPCreator {
             for (JsonObject dst : actionDestStates) {
                 String srcId = src.getObject("data").getString("id");
                 String dstId = dst.getObject("data").getString("id");
+                /// we should use the EXTENDED transition (and not the GENERIC kind), to make sure we calc the probability like we should.
                 mdp.ctp.Transition tran = new mdp.ctp.Transition(allStates.get(srcId), allStates.get(dstId), action);
                 transitions.add(tran);
             }
         }
         return transitions;
     }
-    public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates, HashMap<String, Action> allActions){
+    public HashMap<String, mdp.ctp.Transition> generateTransitions(HashMap<String, mdp.ctp.State> allStates,
+                                                                   HashMap<String, Action> allActions){
         HashMap<String,mdp.ctp.Transition> allTransitions = new HashMap<String,mdp.ctp.Transition>();
         CouchbaseClient cb = new CouchbaseClient();
         for(Action action : allActions.values()) {
-            List<Transition> actionTransitions = fetchActionRelatedTransitions(action);
+            List<Transition> actionTransitions = fetchActionRelatedTransitions(action,allStates);
             for (mdp.ctp.Transition tran : actionTransitions) {
                 if (tran.isValid()) {
-                    cb.insertTransition(tran);
                     allTransitions.put(tran.getTransitionId(), tran);
                 }
 
@@ -69,7 +70,7 @@ public class MDPCreator {
         for(Action action : allActions.values()) {
 
             Double reward = action.getSourceEdge().getReward();
-            Reward rewardObj = new Reward(action, reward);
+            Reward rewardObj = new Reward("mockId","mockId",action, reward);
             rewards.put(rewardObj.getId(),rewardObj);
 
         }

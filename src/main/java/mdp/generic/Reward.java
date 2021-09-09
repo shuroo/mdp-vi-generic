@@ -54,12 +54,6 @@ public class Reward {
 
      private String id;
 
-     // Minimal representation reward - based on the action only.
-     public Reward(Action action, Double reward){
-         this.action = action;
-         this.reward = reward;
-         this.id = generateId();
-     }
     public Reward(String sourceStateId, String destStateId, Action action, Double reward) {
         this.sourceStateId = sourceStateId;
         this.destStateId = destStateId;

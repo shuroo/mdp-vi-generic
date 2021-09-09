@@ -1,8 +1,9 @@
-package mdp;
+package mdp.generic;
 
 import mdp.action_sorters.ActionSortAsc;
 import mdp.action_sorters.ActionSortDesc;
-import mdp.generic.*;
+import mdp.ctp.MDPCreator;
+import mdp.ctp.MDPFromGraph;
 import utils.Constants;
 
 import java.util.Collections;
@@ -13,17 +14,19 @@ import java.util.stream.Collectors;
 
 public class UtilityCalculator {
 
-    private Double epsilon;
-    private Double discountFactor;
-
-    private MDP currentMDP;
+    protected Double epsilon;
+    protected Double discountFactor;
+    protected MDPFromGraph graphMDP;
+    protected MDP currentMDP;
 
     // --- Parameter for setting during calculation. for private usage: ---
     private Double maxLambda = 100000.0;
 
-    public UtilityCalculator(MDP currentMDP, Double epsilon, Double discountFactor) {
+    protected UtilityCalculator(){}
 
-        this.currentMDP = currentMDP;
+    public UtilityCalculator(MDP mdp, Double epsilon, Double discountFactor) {
+
+        this.currentMDP = mdp;
         this.discountFactor = discountFactor;
         this.epsilon = epsilon;
     }
@@ -44,10 +47,11 @@ public class UtilityCalculator {
 
             //*** Stop condition Version 1 - "Normal"  stop condition:*** //
             //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.
-            // Check diff to stop...
+            // Check diff to stop...new Reward("mockId","mockId",action, reward);
 
             //*** Stop condition Version 2 -  stop condition by the number of states converged upon a single iteration :*** //
 
+            System.out.println("Successfully set utilities for all states in the current iteration.");
             Integer numOfConvertedStates = 0;
             for (State state : allStates.values()) {
 
@@ -83,6 +87,7 @@ public class UtilityCalculator {
         return currentMDP;
     }
 
+
     /**
      * Method to return list of transitions with utility for each ( for grouping them later by action ).
      *
@@ -91,30 +96,37 @@ public class UtilityCalculator {
      * action_utility <-- 0 if final_state, else Sigma(p(s|s')*U'(s'))
      * .
      * EXAMPLE CALC: stt2_3->stt_3_3 = 0.8*left_action_utility + 0.1 * right_action_utility + 0.1 * stay =  0.8 * 0.76 + 0.2 * -0.04
+     * <p>
+     * This method returns a hashmap of:
+     * <p>
+     * stt_3_3_left_stt_3_1 <- 0.8 *(left_action_utility)
+     * stt_3_3_left_stt_3_1 <- 0.1 *(right_action_utility)
+     * <p>
+     * etc...
      */
+    protected void calcUtilityPerTransition(List<Transition> transitions) {
 
-    public HashMap<String, Action> groupByActionAndSourceState(HashMap<Transition, Double> transtionsWithUtility) {
+        // Init & Build Map<Transition,Utility>
 
+        for (Transition transition : transitions) {
+
+            // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
+            Double actionLocalUtility = calcStatesUtility(transition);
+            System.out.println("Set - Transition:"+transition.getTransitionId()+", by Utility:"+(transition.getPrevUtility() + actionLocalUtility));
+            transition.updateUtility(transition.getPrevUtility() + actionLocalUtility);
+        }
+    }
+
+    /*
+    protected void setActionUtility() {
+
+        // setting utilities to: currentMDP.getTransitions().values()
+        calcUtilityPerTransition((List<Transition>) currentMDP.getTransitions().values());
         // Structure: <String , Double>
         HashMap<String, List<Action>> actionsWithUtility = new HashMap<String, List<Action>>();
 
-        for (Transition tran : transtionsWithUtility.keySet()) {
-            String transitionId = tran.getTransitionId();
-            String sourceActionKey = tran.getAction().toString() + "_" + transitionId.substring(transitionId.indexOf("_src:"));
-            Double utility = transtionsWithUtility.get(tran);
-
-            Action action = new Action(tran.getAction().getActionId());
-
-            if (!actionsWithUtility.containsKey(sourceActionKey)) {
-                actionsWithUtility.put(sourceActionKey, new LinkedList<Action>());
-            }
-
-            action.setUtility(utility);
-            actionsWithUtility.get(sourceActionKey).add(action);
-
-        }
-
         HashMap<String, Action> actionsWithGroupedUtility = new HashMap<String, Action>();
+
 
         for (String sourceActionId : actionsWithUtility.keySet()) {
             List<Action> relatedActions = actionsWithUtility.get(sourceActionId);
@@ -138,52 +150,40 @@ public class UtilityCalculator {
             currentMDP.getActions().get(sampleAction.getActionId()).setUtility(finalUtil);
         }
         // todo: return void...
-        return actionsWithGroupedUtility;
     }
+    */
 
-    /**
-     * Method to return list of transitions with utility for each ( for grouping them later by action ).
-     *
-     * @param - states to calc utility from
-     * @return updated utilities on actions with sorted list.
-     * action_utility <-- 0 if final_state, else Sigma(p(s|s')*U'(s'))
-     * .
-     * EXAMPLE CALC: stt2_3->stt_3_3 = 0.8*left_action_utility + 0.1 * right_action_utility + 0.1 * stay =  0.8 * 0.76 + 0.2 * -0.04
-     * <p>
-     * This method returns a hashmap of:
-     * <p>
-     * stt_3_3_left_stt_3_1 <- 0.8 *(left_action_utility)
-     * stt_3_3_left_stt_3_1 <- 0.1 *(right_action_utility)
-     * <p>
-     * etc...
-     */
-    private HashMap<Transition, Double> calcTransitionsUtility() {
+    public void setActionUtility() {
 
+            HashMap<String, mdp.ctp.Action> allActions = graphMDP.getExtededActions();
+            HashMap<String,Transition> allTransitions = currentMDP.getTransitions();
 
-        // Init & Build Map<Transition,Utility>
-
-        HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
-
-        for (Transition transition : currentMDP.getTransitions().values()) {
-
-            Double actionLocalUtility = calcStatesUtility(transition);
-            if (!actionsPerSourceStt.containsKey(transition)) {
-                actionsPerSourceStt.put(transition, actionLocalUtility);
-            } else {
-                Double prevUtil = actionsPerSourceStt.get(transition);
-                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
+            for(mdp.ctp.Action action : allActions.values()){
+            List<Transition> actionTransitions = new LinkedList<Transition>();
+            for(Transition tran : allTransitions.values()){
+                if(tran.getSourceState().agentLocation == action.getSource()){
+                    actionTransitions.add(tran);
+                }
             }
-        }
+            calcUtilityPerTransition(actionTransitions);
+            Double actionUtility = 0.0;
+            for(Transition tran : actionTransitions){
+                actionUtility += tran.getUtility();
+            }
+            action.setUtility(actionUtility);
+            System.out.println("Set utility for - Action:"+action.getActionId()+",Utility:"+actionUtility);
 
-        return actionsPerSourceStt;
+            }
     }
+
+
 
     // U(s) <- R(s) + Sigma[ P(s|s')*U(s') ]
 
     // OR
 
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
-    private Double calcStatesUtility(Transition transition) {
+    protected Double calcStatesUtility(Transition transition) {
 
         if (!transition.isValid()) {
             return 0.0;
@@ -207,8 +207,8 @@ public class UtilityCalculator {
 
             // Utility for the two states to add to the action.
             // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
-
-            Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
+            // todo: note to change this if using the original rewards matrix instead of the shrinked
+            Reward rewardObj = currentMDP.getRewards().get(Reward.buildId("mockId", "mockId", action));
             Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
             return actionSubUtility;
@@ -221,9 +221,9 @@ public class UtilityCalculator {
      * @param allStates - all possible states
      * @return
      */
-    private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
-        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
-        groupByActionAndSourceState(updatedTransitionsUtility);
+    private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String,State> allStates) {
+
+        setActionUtility();
 
         for (State state : allStates.values()) {
             setUtilitySingleState(state);

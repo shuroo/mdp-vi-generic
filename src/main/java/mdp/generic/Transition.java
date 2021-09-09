@@ -12,6 +12,8 @@ public class Transition {
 
     protected String transitionId;
 
+    protected Double utility = 0.0;
+    protected Double prevUtility = 0.0;
 
     public State getSourceState() {
         return sourceState;
@@ -64,4 +66,16 @@ public class Transition {
 
     protected Transition(){}
 
+    public Double getPrevUtility(){
+        return prevUtility;
+    }
+
+    public void updateUtility(Double value){
+        prevUtility = utility;
+        utility = value;
+    }
+
+    public Double getUtility(){
+        return utility;
+    }
 }

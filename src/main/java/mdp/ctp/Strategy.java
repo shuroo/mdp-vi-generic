@@ -1,6 +1,6 @@
 package mdp.ctp;
 
-import mdp.UtilityCalculator;
+import mdp.generic.UtilityCalculator;
 import mdp.generic.MDP;
 import org.jgrapht.graph.Graph;
 
@@ -19,7 +19,7 @@ public class Strategy {
     public static MDP constructStrategyFromGraph(Graph gr, Double epsilon, Double discountFactor) {
         MDPFromGraph mdp = new MDPFromGraph(gr);
 
-        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discountFactor);
+        UtilityCalculator uc = new UtilityCalculator(mdp, epsilon, discountFactor);
         MDP mdpNew = uc.setOptimalPolicy();
         for (mdp.generic.State s : mdpNew.getStates().values()) {
             System.out.println(s.getId() + ",,," + s.getBestAction());
@@ -35,7 +35,7 @@ public class Strategy {
         System.out.println(gr.toString());
         MDPFromGraph mdp = new MDPFromGraph(gr);
 
-        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discountFactor);
+        UtilityCalculator uc = new UtilityCalculator(mdp, epsilon, discountFactor);
         MDP mdpNew = uc.setOptimalPolicy();
         for (mdp.generic.State s : mdpNew.getStates().values()) {
             System.out.println(s.getId() + ",,," + s.getBestAction());
