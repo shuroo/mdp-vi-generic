@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/serilizers/StateSerilizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/CouchbaseClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/LocalCacheManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/CouchbaseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/CouchbaseClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,8 +178,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1625378385845" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/data/graphs_data/dror_data" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
@@ -197,7 +194,7 @@
       <recent name="$PROJECT_DIR$/src/main/data" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CouchbaseClient">
+  <component name="RunManager" selected="Application.GraphReader">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -306,8 +303,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.CouchbaseClient" />
+      <item itemvalue="Application.HashUuidCreator" />
+      <item itemvalue="Application.StrategyRunner" />
+      <item itemvalue="Application.GraphReader" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GraphReader" />
         <item itemvalue="Application.CouchbaseClient" />
         <item itemvalue="Application.StrategyRunner" />
         <item itemvalue="Application.HashUuidCreator" />
@@ -436,6 +440,11 @@
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/mdpvigeneric$GraphReader.ic" NAME="GraphReader Coverage Results" MODIFIED="1630841853691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>utils.*</FILTER>
+    </SUITE>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">

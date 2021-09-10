@@ -63,14 +63,6 @@ public class CouchbaseClient {
         collection.upsert(Constants.actionPrefix+HashUuidCreator.getSha1Uuid(a.getActionId()),gson.toJson(a) );
     }
 
-    public static State getState(String sttId){
-        Collection collection = getCollection("state");
-        String dbStateId = Constants.stateRecordPrefix+HashUuidCreator.getSha1Uuid(sttId);
-        GetResult sttJson = collection.get(dbStateId);
-        State stt = sttJson.contentAs(State.class);
-        return stt;
-    }
-
     public static void insertExtendedAction(Action a){
         Collection collection = getCollection("action");
         Gson gson = new Gson();
