@@ -2,16 +2,19 @@ package utils;
 
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
-import mdp.UtilityCalculator;
+import mdp.ctp.CTPUtilityCalculator;
+import mdp.generic.UtilityCalculator;
 import mdp.agent_travel.Agent;
 import mdp.ctp.MDPFromGraph;
 import mdp.generic.MDP;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Graph;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GraphReader {
 
@@ -25,8 +28,18 @@ public class GraphReader {
         System.out.println("Constructing MDP:");
         MDPFromGraph mdp = new MDPFromGraph(gr);
         System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
-        UtilityCalculator uc = new UtilityCalculator((MDP) mdp, epsilon, discount);
+        CTPUtilityCalculator uc = new CTPUtilityCalculator( mdp, epsilon, discount);
         MDP mdpWithUtility = uc.setOptimalPolicy();
+
+        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
+
+        for(Object s : statesList){
+            System.out.println(s);
+        }
+        //
+
+        ////////////////////////////////////////////////////////////////////////////
+
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
         gr.getEdges().values().stream().forEach(edge -> {
             graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
@@ -68,7 +81,7 @@ public class GraphReader {
     public static void runFirstGraphWithBlocks(){
         String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
         List<String> edgesToBlock = new LinkedList<String>();
-        edgesToBlock.add("v1_v4");
+        //edgesToBlock.add("v1_v4");
        // edgesToBlock.add("s_v2");
         //edgesToBlock.add("v1_t");
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);

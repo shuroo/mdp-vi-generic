@@ -1,7 +1,5 @@
 package mdp.generic;
 
-import mdp.UtilityCalculator;
-
 import java.util.HashMap;
 
 public class StrategyRunner {

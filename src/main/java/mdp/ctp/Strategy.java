@@ -1,6 +1,6 @@
 package mdp.ctp;
 
-import mdp.UtilityCalculator;
+import mdp.generic.UtilityCalculator;
 import mdp.generic.MDP;
 import org.jgrapht.graph.Graph;
 

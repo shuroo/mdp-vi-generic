@@ -24,6 +24,11 @@ public class MDPFromGraph extends MDP {
     }
 
     private HashMap<String, State> extededStates = new HashMap<String, State>();
+
+    public HashMap<String, Transition> getExtededTransitions() {
+        return extededTransitions;
+    }
+
     private HashMap<String, mdp.ctp.Transition> extededTransitions = new HashMap<String, Transition>();
 
     /**

@@ -1,4 +1,4 @@
-package mdp;
+package mdp.generic;
 
 import mdp.action_sorters.ActionSortAsc;
 import mdp.action_sorters.ActionSortDesc;
@@ -13,14 +13,15 @@ import java.util.stream.Collectors;
 
 public class UtilityCalculator {
 
-    private Double epsilon;
-    private Double discountFactor;
+    protected Double epsilon;
+    protected Double discountFactor;
 
-    private MDP currentMDP;
+    protected MDP currentMDP;
 
     // --- Parameter for setting during calculation. for private usage: ---
     private Double maxLambda = 100000.0;
 
+    public UtilityCalculator(){}
     public UtilityCalculator(MDP currentMDP, Double epsilon, Double discountFactor) {
 
         this.currentMDP = currentMDP;
@@ -157,7 +158,7 @@ public class UtilityCalculator {
      * <p>
      * etc...
      */
-    private HashMap<Transition, Double> calcTransitionsUtility() {
+    protected HashMap<Transition, Double> calcTransitionsUtility() {
 
 
         // Init & Build Map<Transition,Utility>
@@ -183,9 +184,10 @@ public class UtilityCalculator {
     // OR
 
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
-    private Double calcStatesUtility(Transition transition) {
+    protected Double calcStatesUtility(Transition transition) {
 
-        if (!transition.isValid()) {
+
+        if ( !transition.isValid()) {
             return 0.0;
         }
         State source = transition.getSourceState();
@@ -209,7 +211,7 @@ public class UtilityCalculator {
             // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
 
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
-            Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
+            Double reward = rewardObj.getReward() ;// rewardObj != null ? : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
             return actionSubUtility;
         }
@@ -222,6 +224,7 @@ public class UtilityCalculator {
      * @return
      */
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
+        // HERE WE CALC UTILITIES PER ACTIONS...
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
         groupByActionAndSourceState(updatedTransitionsUtility);
 
@@ -250,7 +253,7 @@ public class UtilityCalculator {
             minimalUtilityAction = minimalUtilityActions.isEmpty() ? null : minimalUtilityActions.get(0);
 
             // Value to compare before putting reward inside the equasion
-            minimalUtility = minimalUtilityAction != null ? minimalUtilityAction.getUtility() : 0.0;
+            minimalUtility =  minimalUtilityAction.getUtility(); // minimalUtilityAction != null ?: 0.0;
 
             minimalUtility = minimalUtility * this.discountFactor;
 
@@ -258,7 +261,7 @@ public class UtilityCalculator {
             state.setUtility(minimalUtility);
             state.setBestAction(minimalUtilityAction);
             state.setBestActions(minimalUtilityActions);
-          //  LocalCacheManager.storeStateInCache(state);
+
 //  ......%%%%%
 
 

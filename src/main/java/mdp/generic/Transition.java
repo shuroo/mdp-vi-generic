@@ -26,6 +26,9 @@ public class Transition {
     }
 
     public Boolean isValid(){
+        if(this instanceof mdp.ctp.Transition){
+            return ((mdp.ctp.Transition)this).isValid();
+        }
         return true;
     }
 
