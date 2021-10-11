@@ -19,7 +19,17 @@ public class CTPUtilityCalculator extends UtilityCalculator {
     }
 
     @Override
+    protected Double calcStatesUtility(Transition transition) {
+//        if ( !transition.isValid()) {
+//            return 0.0;
+//        }
+//
+//        System.out.println("&&&&&&&& 'isValid' !!! ' &&&&&&&&&&&&&&&&&");
+        return super.calcStatesUtility(transition);
+    }
+    @Override
     protected HashMap<mdp.generic.Transition, Double> calcTransitionsUtility() {
+
 
 
         // Init & Build Map<Transition,Utility>

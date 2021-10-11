@@ -3,6 +3,7 @@ package utils;
 import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.ctp.CTPUtilityCalculator;
+import mdp.generic.State;
 import mdp.generic.UtilityCalculator;
 import mdp.agent_travel.Agent;
 import mdp.ctp.MDPFromGraph;
@@ -34,7 +35,16 @@ public class GraphReader {
         List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
 
         for(Object s : statesList){
-            System.out.println(s);
+
+            if(((State)s).getUtility() > 0){
+
+                try {
+                    throw new Exception("######&&&****found a state of positive utility:"+s.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
         //
 

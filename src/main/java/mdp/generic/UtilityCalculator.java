@@ -5,10 +5,7 @@ import mdp.action_sorters.ActionSortDesc;
 import mdp.generic.*;
 import utils.Constants;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UtilityCalculator {
@@ -111,6 +108,9 @@ public class UtilityCalculator {
             }
 
             action.setUtility(utility);
+
+            //todo: fix by adding utility to the prev utility???
+            currentMDP.getActions().put(action.actionId,action);
             actionsWithUtility.get(sourceActionKey).add(action);
 
         }
@@ -163,20 +163,33 @@ public class UtilityCalculator {
 
         // Init & Build Map<Transition,Utility>
 
-        HashMap<Transition, Double> actionsPerSourceStt = new HashMap<Transition, Double>();
+        HashMap<Transition, Double> transitionsAccumedUtility = new HashMap<Transition, Double>();
 
         for (Transition transition : currentMDP.getTransitions().values()) {
 
-            Double actionLocalUtility = calcStatesUtility(transition);
-            if (!actionsPerSourceStt.containsKey(transition)) {
-                actionsPerSourceStt.put(transition, actionLocalUtility);
+            // The following line UPDATES the transition utility to be different from zero when required.
+            Double transitionUtility = calcStatesUtility(transition);
+            if (!transitionsAccumedUtility.containsKey(transition)) {
+                transitionsAccumedUtility.put(transition, transitionUtility);
             } else {
-                Double prevUtil = actionsPerSourceStt.get(transition);
-                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
+                Double prevUtil = transitionsAccumedUtility.get(transition);
+                transitionsAccumedUtility.put(transition, prevUtil + transitionUtility);
+            }
+
+            if(transitionUtility > 0){
+                System.out.println("FOUND POSITIVE transitionUtility:::"+transitionUtility);
+            }
+
+            if(transitionUtility > 0){
+                try {
+                    throw new Exception("Found positive transition:"+transitionUtility);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        return actionsPerSourceStt;
+        return transitionsAccumedUtility;
     }
 
     // U(s) <- R(s) + Sigma[ P(s|s')*U(s') ]
@@ -186,10 +199,6 @@ public class UtilityCalculator {
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
     protected Double calcStatesUtility(Transition transition) {
 
-
-        if ( !transition.isValid()) {
-            return 0.0;
-        }
         State source = transition.getSourceState();
         // To fetch updated utility, use the stat from the updated hashmap...
         State dest = transition.getDestState();///allStates.get(transition.getDestState().toString());
@@ -213,6 +222,20 @@ public class UtilityCalculator {
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
             Double reward = rewardObj.getReward() ;// rewardObj != null ? : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
+
+//            // FOR BUG:UTILITIES ARE ZERO!
+//            if(actionSubUtility > 0){
+//                try {
+//                    throw new Exception("Positive actionSubUtility!!"+actionSubUtility);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+            if(actionSubUtility > 0){
+                System.out.println("FOUND POSITIVE actionSubUtility:::"+actionSubUtility);
+            }
+
             return actionSubUtility;
         }
     }
@@ -226,6 +249,7 @@ public class UtilityCalculator {
     private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
         // HERE WE CALC UTILITIES PER ACTIONS...
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
+///--->
         groupByActionAndSourceState(updatedTransitionsUtility);
 
         for (State state : allStates.values()) {
