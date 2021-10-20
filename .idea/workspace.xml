@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" afterDir="false" />
@@ -306,9 +307,9 @@
     </configuration>
     <list>
       <item itemvalue="Application.CouchbaseClient" />
+      <item itemvalue="Application.GraphReader" />
       <item itemvalue="Application.HashUuidCreator" />
       <item itemvalue="Application.StrategyRunner" />
-      <item itemvalue="Application.GraphReader" />
     </list>
     <recent_temporary>
       <list>
@@ -386,28 +387,43 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>191</line>
+          <line>195</line>
           <option name="timeStamp" value="203" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>172</line>
+          <line>176</line>
           <option name="timeStamp" value="204" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>175</line>
+          <line>179</line>
           <option name="timeStamp" value="205" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>182</line>
+          <line>186</line>
           <option name="timeStamp" value="206" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>171</line>
+          <line>175</line>
           <option name="timeStamp" value="207" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
+          <line>94</line>
+          <option name="timeStamp" value="215" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="216" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="221" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -418,14 +434,13 @@
     </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="actionsWithUtility" language="JAVA" />
-        <watch expression="currentMDP.getActions()" language="JAVA" />
-        <watch expression="mdpWithUtility.getStates().get(&quot;&lt;Ag_Location::s|(s : v1)::Opened|,|(s : v2)::Opened|,|(v1 : t)::Opened|,|(v1 : v4)::Opened|,|(v2 : t)::Opened|,|(v4 : t)::Opened|,&gt;&lt; utility:0.0 &gt;&quot;)" language="JAVA" />
-        <watch expression="transition.isValid()" language="JAVA" />
-        <watch expression="transition.getProbability()" language="JAVA" />
-        <watch expression="transition" language="JAVA" />
-        <watch expression="transition.isValid()" language="JAVA" />
-        <watch expression="((MDPFromGraph) currentMDP).extededTransitions.get(transition.transitionId).isValid()" language="JAVA" custom="mdp.ctp.MDPFromGraph" />
+        <watch expression="sampleAction.getActionId()" language="JAVA" />
+        <watch expression="accUtility" language="JAVA" />
+        <watch expression="transtionsWithUtility.size() / 10000" language="JAVA" />
+        <watch expression="actionsWithUtility.get(0).size()" language="JAVA" />
+        <watch expression="Arrays.asList(actionsWithUtility.values()).get(0)" language="JAVA" />
+        <watch expression="((CTPVertex)((MDPFromGraph) currentMDP).graph.getVertices().get(&quot;v0&quot;))" language="JAVA" custom="mdp.ctp.MDPFromGraph,org.jgrapht.graph.Vertex" />
+        <watch expression="currentMDP.getStates().size()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

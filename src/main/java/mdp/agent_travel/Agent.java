@@ -88,6 +88,20 @@ public class Agent implements Runnable {
 
         System.out.println("*********************************************");
         System.out.println(path);
+        System.out.println("*******************^^^^^^^^^^^^^****************");
+        for( State stt : path.getPath()){
+            System.out.println("State:"+stt.getId()+" has the following best actions:");
+            if(stt.getBestActions() == null) {
+                System.out.println("State: "+stt.getId()+" Has No Best Actions specified");
+            }else{
+                for (int i = 0; i < stt.getBestActions().size(); i++) {
+                    mdp.generic.Action action = stt.getBestActions().get(i);
+                    if (action != null) {
+                        System.out.println("Best Action of priority:"+i+" Is Action:" + action.getActionId() + " has utility:" + action.getUtility());
+                    }
+                }
+            }
+        }
         System.out.println("*********************************************");
     }
 

@@ -20,11 +20,10 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
     @Override
     protected Double calcStatesUtility(Transition transition) {
-//        if ( !transition.isValid()) {
-//            return 0.0;
+//        if ( transition.isValid()) {
+//            System.out.println("*** The following transition was found VALID:: "+transition.getTransitionId()+" ***");
 //        }
-//
-//        System.out.println("&&&&&&&& 'isValid' !!! ' &&&&&&&&&&&&&&&&&");
+
         return super.calcStatesUtility(transition);
     }
     @Override

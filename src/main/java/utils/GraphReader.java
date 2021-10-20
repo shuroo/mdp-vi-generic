@@ -32,20 +32,20 @@ public class GraphReader {
         CTPUtilityCalculator uc = new CTPUtilityCalculator( mdp, epsilon, discount);
         MDP mdpWithUtility = uc.setOptimalPolicy();
 
-        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
-
-        for(Object s : statesList){
-
-            if(((State)s).getUtility() > 0){
-
-                try {
-                    throw new Exception("######&&&****found a state of positive utility:"+s.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+//        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
+//
+//        for(Object s : statesList){
+//
+//            if(((State)s).getUtility() > 0){
+//
+//                try {
+//                    throw new Exception("######&&&****found a state of positive utility:"+s.toString());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
         //
 
         ////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,12 @@ public class GraphReader {
         runConfigurationGraph(simpleGraph,edgesToBlock,0.6,0.9);
     }
 
-    public static void runFirstGraphWithBlocks(){
+    public static void runThirdGraphNoBlocks(){
+        String graphName = "src/main/data/graphs_data/dror_data/third_graph_releifed.json";
+        runStandardConfigurationGraph(graphName,0.6,0.9);
+    }
+
+    public static void runFirstGraph(){
         String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
         List<String> edgesToBlock = new LinkedList<String>();
         //edgesToBlock.add("v1_v4");
@@ -97,14 +102,25 @@ public class GraphReader {
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
 
-    public static void runThirdGraphNoBlocks(){
-        String firstGraph = "src/main/data/graphs_data/dror_data/third_graph_releifed.json";
-        runStandardConfigurationGraph(firstGraph,0.6,0.9);
+
+    public static void runSecondGraph(){
+        String graphName = "src/main/data/graphs_data/dror_data/second_graph.json";
+        List<String> edgesToBlock = new LinkedList<String>();
+        //edgesToBlock.add("v1_v4");
+        // edgesToBlock.add("s_v2");
+        //edgesToBlock.add("v1_t");
+        runConfigurationGraph(graphName,edgesToBlock,0.6,0.9);
     }
+
+
     public static void main(String[] args) {
 
-        runFirstGraphWithBlocks();
+       // runFirstGraphWithBlocks();
+
+        // runFirstGraph();
+        runSecondGraph();
         //runThirdGraphNoBlocks();
+        // runSimpleGraphWithBlocks();
 
 
       //  String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";

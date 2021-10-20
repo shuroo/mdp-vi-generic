@@ -124,15 +124,19 @@ public class UtilityCalculator {
                 continue;
             }
             Action sampleAction = relatedActions.get(0);
-            Integer numberOfParticipants = 0;
+            Integer numberOfParticipants = 1;
             for (Action action : relatedActions) {
                 if (action.getUtility() > 0) {
                     accUtility += action.getUtility();
-                    numberOfParticipants++;
+
                 }
             }
-           // numberOfParticipants = numberOfParticipants ==0? 1 : numberOfParticipants;
-            Double finalUtil = accUtility ;/// numberOfParticipants;
+
+            // Normalization factor  -
+            numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
+            System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
+
+            Double finalUtil = accUtility / numberOfParticipants ;
             //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
             sampleAction.setUtility(finalUtil);
             actionsWithGroupedUtility.put(sourceActionId, sampleAction);
@@ -176,17 +180,17 @@ public class UtilityCalculator {
                 transitionsAccumedUtility.put(transition, prevUtil + transitionUtility);
             }
 
-            if(transitionUtility > 0){
-                System.out.println("FOUND POSITIVE transitionUtility:::"+transitionUtility);
-            }
+//            if(transitionUtility > 0){
+//                System.out.println("FOUND POSITIVE transitionUtility:::"+transitionUtility);
+//            }
 
-            if(transitionUtility > 0){
-                try {
-                    throw new Exception("Found positive transition:"+transitionUtility);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//            if(transitionUtility > 0){
+//                try {
+//                    throw new Exception("Found positive transition:"+transitionUtility);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
 
         return transitionsAccumedUtility;
@@ -232,9 +236,9 @@ public class UtilityCalculator {
 //                }
 //            }
 
-            if(actionSubUtility > 0){
-                System.out.println("FOUND POSITIVE actionSubUtility:::"+actionSubUtility);
-            }
+//            if(actionSubUtility > 0){
+//                System.out.println("FOUND POSITIVE actionSubUtility:::"+actionSubUtility);
+//            }
 
             return actionSubUtility;
         }

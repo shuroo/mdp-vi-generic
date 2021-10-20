@@ -63,6 +63,7 @@ public class Transition extends mdp.generic.Transition {
         if (source.getAgentLocation() != act.getSourceEdge().getSource() ||
                 dest.getAgentLocation() != act.getSourceEdge().getDest()
         ) {
+           // System.out.println("first false in 'isValid'");
             return false;
         } else if (source.getAgentLocation() == act.getSourceEdge().getSource()) {
 
@@ -71,6 +72,7 @@ public class Transition extends mdp.generic.Transition {
             Edge currentEdg = act.getSourceEdge();
             for (CTPEdge statusEdge : source.getStatuses().values()) {
                 if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.Closed) {
+             //       System.out.println("second false in 'isValid'");
                     return false;
                 }
             }
@@ -78,6 +80,7 @@ public class Transition extends mdp.generic.Transition {
 
             for (CTPEdge status : source.getStatuses().values()) {
                 if (status.getStatus() == BlockingStatus.Unknown) {
+               //     System.out.println("third false in 'isValid'");
                     return false;
                 }
             }
@@ -88,6 +91,7 @@ public class Transition extends mdp.generic.Transition {
 
                 CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
                 if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && destStatus.getStatus() == BlockingStatus.Unknown) {
+//                    System.out.println("forth false in 'isValid'");
                     return false;
                 }
             }
