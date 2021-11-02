@@ -182,25 +182,30 @@ public class MDPCreator {
 
     protected static List<Vector<CTPEdge>> generateAllStatusesFromEdge(Edge edge) {
 
-        CTPEdge es = new CTPEdge(edge, BlockingStatus.Closed);
-
-        // (e1,c)p=...,(e1,o),(e1,u)
-
         List<Vector<CTPEdge>> results = new LinkedList<Vector<CTPEdge>>();
-        Vector<CTPEdge> st1_v = new Vector<CTPEdge>();
-        st1_v.add(es);
-        results.add(st1_v);
-
         Vector<CTPEdge> st2_v = new Vector<CTPEdge>();
         CTPEdge es2 = new CTPEdge(edge, BlockingStatus.Opened);
         st2_v.add(es2);
         results.add(st2_v);
 
-        Vector<CTPEdge> st3_v = new Vector<CTPEdge>();
-        CTPEdge es3 = new CTPEdge(edge, BlockingStatus.Unknown);
-        st3_v.add(es3);
-        results.add(st3_v);
+        // Made a fix:: Only if the edge blocking probability
+        // has a positive probability for blocking,
+        // - consider unknown and closed possible statuses.
+        if(edge.getBlockingProbability() > 0.0) {
 
+            CTPEdge es = new CTPEdge(edge, BlockingStatus.Closed);
+
+            // (e1,c)p=...,(e1,o),(e1,u)
+
+            Vector<CTPEdge> st1_v = new Vector<CTPEdge>();
+            st1_v.add(es);
+            results.add(st1_v);
+
+            Vector<CTPEdge> st3_v = new Vector<CTPEdge>();
+            CTPEdge es3 = new CTPEdge(edge, BlockingStatus.Unknown);
+            st3_v.add(es3);
+            results.add(st3_v);
+        }
         return results;
     }
 

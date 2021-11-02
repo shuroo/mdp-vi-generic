@@ -94,7 +94,7 @@ public class GraphReader {
     }
 
     public static void runFirstGraph(){
-        String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed.json";
+        String firstGraph = "src/main/data/graphs_data/dror_data/first_graph.json";
         List<String> edgesToBlock = new LinkedList<String>();
         //edgesToBlock.add("v1_v4");
        // edgesToBlock.add("s_v2");
@@ -106,7 +106,7 @@ public class GraphReader {
     public static void runSecondGraph(){
         String graphName = "src/main/data/graphs_data/dror_data/second_graph.json";
         List<String> edgesToBlock = new LinkedList<String>();
-        //edgesToBlock.add("v1_v4");
+        //edgesToBlock.add("v0_t");
         // edgesToBlock.add("s_v2");
         //edgesToBlock.add("v1_t");
         runConfigurationGraph(graphName,edgesToBlock,0.6,0.9);
@@ -117,8 +117,8 @@ public class GraphReader {
 
        // runFirstGraphWithBlocks();
 
-        // runFirstGraph();
-        runSecondGraph();
+         runFirstGraph();
+        //runSecondGraph();
         //runThirdGraphNoBlocks();
         // runSimpleGraphWithBlocks();
 

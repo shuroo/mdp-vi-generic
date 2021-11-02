@@ -239,10 +239,8 @@ public class Agent implements Runnable {
         for (State st : statesToCompareWithSiblingsAndParents) {
              if (bestActionsIndex < st.getBestActions().size()  &&
                      st.getBestActions().get(bestActionsIndex).getUtility() < minimalUtility) {
-                System.out.println("^^^&&& Comparing action:::::"+st.getBestActions().get(bestActionsIndex)+" with utility:"+st.getBestActions().get(bestActionsIndex).getUtility()+"  in find minimal action after " +
-                        "block");
                  if(st.getBestActions() != null &&
-                         actionIsOpened((Action)st.getBestActions().get(bestActionsIndex))) {
+                         actionIsOpened(mdp.getExtededActions().get(st.getBestActions().get(bestActionsIndex)))) {
                      bestSt = st;
                      minimalUtility = st.getBestActions().get(bestActionsIndex).getUtility();
                  }
@@ -367,8 +365,8 @@ public class Agent implements Runnable {
         return actionIsOpened(best);
     }
 
-    private Boolean actionIsOpened(Action action) {
-        Action best = this.mdp.getExtededActions().get(action.getActionId());
+    private Boolean actionIsOpened(mdp.ctp.Action best) {
+
         if (best == null) {
             return false;
         }

@@ -134,7 +134,7 @@ public class UtilityCalculator {
 
             // Normalization factor  -
             numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
-            System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
+           // System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
 
             Double finalUtil = accUtility / numberOfParticipants ;
             //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
