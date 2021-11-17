@@ -16,6 +16,9 @@ public class Transition extends mdp.generic.Transition {
     }
 
     public Double diffStatesToCalcProbability() {
+        if(!isValid()){
+            return 0.0;
+        }
         Double probability = 1.0;
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
             CTPEdge destStatus = this.extendedDestState.getStatuses().get(sourceStatus.getEdge().getId());
@@ -29,14 +32,6 @@ public class Transition extends mdp.generic.Transition {
 
         }
 
-        // BUG:: ALL Utilities ARE ZERO!!!
-//        if(probability > 0){
-//            try {
-//                throw new Exception("Positive probability!!"+probability);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
         return probability;
     }
 

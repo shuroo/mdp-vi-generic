@@ -2,7 +2,6 @@ package mdp.generic;
 
 import mdp.action_sorters.ActionSortAsc;
 import mdp.action_sorters.ActionSortDesc;
-import mdp.generic.*;
 import utils.Constants;
 
 import java.util.*;
@@ -31,15 +30,16 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        while (maxLambda > stopCondition && iterationCounter < 2) {
+        while (maxLambda > stopCondition  && iterationCounter < 5){
 
             HashMap<String, State> allStates = currentMDP.getStates();
 
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter + " with lambda:" + maxLambda);
 
-            setUtilitiesForStatesIteration(allStates);
+            HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility(currentMDP);
 
+            currentMDP = setMinimalUtilityPerState(updatedTransitionsUtility,currentMDP);
             //*** Stop condition Version 1 - "Normal"  stop condition:*** //
             //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.
             // Check diff to stop...
@@ -81,6 +81,39 @@ public class UtilityCalculator {
         return currentMDP;
     }
 
+
+    /***
+     * Alternative method for others here:
+     * - Per iteration , once transition utilities are set,
+     * - Set utility per state (if it's source state fits the transition, choose minimal value)
+     * - And take another iteration.
+     */
+
+    public MDP setMinimalUtilityPerState(HashMap<Transition, Double> transtionsWithUtility, MDP updatedMDP) {
+
+        HashMap<String, State> allStates = updatedMDP.getStates();
+        for (State state : allStates.values()) {
+            Double tmp_current_utility = null;
+            Action tmp_best_a = null;
+            for(Transition tran :transtionsWithUtility.keySet()) {
+
+                if(tran.sourceState.getId() == state.getId()) {
+                    double currentTranUtility = transtionsWithUtility.get(tran);
+                    if(tmp_current_utility == null ||  currentTranUtility > tmp_current_utility) {
+                        tmp_current_utility = currentTranUtility;
+                        tmp_best_a = tran.getAction();
+                    }
+
+                    state.setPreviousUtility(state.getUtility());
+                    state.setUtility(tmp_current_utility);
+                    state.setBestAction(tmp_best_a);
+                }
+            }
+        }
+        System.out.println("firstUtility:"+updatedMDP.states.values().stream().collect(Collectors.toList()).get(0).getUtility());
+        return updatedMDP;
+    }
+
     /**
      * Method to return list of transitions with utility for each ( for grouping them later by action ).
      *
@@ -91,61 +124,66 @@ public class UtilityCalculator {
      * EXAMPLE CALC: stt2_3->stt_3_3 = 0.8*left_action_utility + 0.1 * right_action_utility + 0.1 * stay =  0.8 * 0.76 + 0.2 * -0.04
      */
 
-    public HashMap<String, Action> groupByActionAndSourceState(HashMap<Transition, Double> transtionsWithUtility) {
 
-        // Structure: <String , Double>
-        HashMap<String, List<Action>> actionsWithUtility = new HashMap<String, List<Action>>();
+//    public HashMap<String, Action> groupTransitionsBySourceState(HashMap<Transition, Double> transtionsWithUtility) {
 
-        for (Transition tran : transtionsWithUtility.keySet()) {
-            String transitionId = tran.getTransitionId();
-            String sourceActionKey = tran.getAction().toString() + "_" + transitionId.substring(transitionId.indexOf("_src:"));
-            Double utility = transtionsWithUtility.get(tran);
 
-            Action action = new Action(tran.getAction().getActionId());
+//        // Structure: <String , Double>
+//        HashMap<String, List<Action>> actionsWithUtility = new HashMap<String, List<Action>>();
+//        for (Transition tran : transtionsWithUtility.keySet()) {
+//            String transitionId = tran.getTransitionId();
+//            String sourceActionKey = tran.getAction().toString() + "_" + transitionId.substring(transitionId.indexOf("_src:"));
+//            Double utility = transtionsWithUtility.get(tran);
 
-            if (!actionsWithUtility.containsKey(sourceActionKey)) {
-                actionsWithUtility.put(sourceActionKey, new LinkedList<Action>());
-            }
+//            Action action = new Action(tran.getAction().getActionId());
+//
+//            if (!actionsWithUtility.containsKey(sourceActionKey)) {
+//                actionsWithUtility.put(sourceActionKey, new LinkedList<Action>());
+//            }
+//
+//            action.setUtility(utility);
+//
+//            //todo: fix by adding utility to the prev utility???
+//            currentMDP.getActions().put(action.actionId,action);
+//            actionsWithUtility.get(sourceActionKey).add(action);
 
-            action.setUtility(utility);
+//        }
 
-            //todo: fix by adding utility to the prev utility???
-            currentMDP.getActions().put(action.actionId,action);
-            actionsWithUtility.get(sourceActionKey).add(action);
+//        HashMap<String, Action> actionsWithGroupedUtility = new HashMap<String, Action>();
+//
+//        for (String sourceActionId : actionsWithUtility.keySet()) {
+//            List<Action> relatedActions = actionsWithUtility.get(sourceActionId);
+//            Double accUtility = 0.0;
+//            if (relatedActions.isEmpty()) {
+//                continue;
+//            }
+//            Action sampleAction = relatedActions.get(0);
+//            for (Action action : relatedActions) {
+//                if (action.getUtility() > 0) {
+//                    //accUtility += action.getUtility();
+//
+//                    // Minimize the utility among the given transition options
+//                    if(accUtility >action.getUtility() && action.getUtility() > 0.0){
+//                        accUtility = action.getUtility();
+//                    }
+//
+//                }
+//            }
 
-        }
+        // Normalization factor  -
+        // numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
+        // System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
 
-        HashMap<String, Action> actionsWithGroupedUtility = new HashMap<String, Action>();
-
-        for (String sourceActionId : actionsWithUtility.keySet()) {
-            List<Action> relatedActions = actionsWithUtility.get(sourceActionId);
-            Double accUtility = 0.0;
-            if (relatedActions.isEmpty()) {
-                continue;
-            }
-            Action sampleAction = relatedActions.get(0);
-            Integer numberOfParticipants = 1;
-            for (Action action : relatedActions) {
-                if (action.getUtility() > 0) {
-                    accUtility += action.getUtility();
-
-                }
-            }
-
-            // Normalization factor  -
-            numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
-           // System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
-
-            Double finalUtil = accUtility / numberOfParticipants ;
-            //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
-            sampleAction.setUtility(finalUtil);
-            actionsWithGroupedUtility.put(sourceActionId, sampleAction);
-            currentMDP.getActions().get(sampleAction.getActionId()).setUtility(finalUtil);
-        }
-        // todo: return void...
-        return actionsWithGroupedUtility;
-    }
-
+//            Double finalUtil = accUtility  ;
+//            //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
+//            sampleAction.setUtility(finalUtil);
+//            actionsWithGroupedUtility.put(sourceActionId, sampleAction);
+//            currentMDP.getActions().get(sampleAction.getActionId()).setUtility(finalUtil);
+//        }
+//        // todo: return void...
+//        return actionsWithGroupedUtility;
+//    }
+  //  }
     /**
      * Method to return list of transitions with utility for each ( for grouping them later by action ).
      *
@@ -162,35 +200,25 @@ public class UtilityCalculator {
      * <p>
      * etc...
      */
-    protected HashMap<Transition, Double> calcTransitionsUtility() {
-
+    protected HashMap<Transition, Double> calcTransitionsUtility(MDP updatedMDP) {
 
         // Init & Build Map<Transition,Utility>
 
         HashMap<Transition, Double> transitionsAccumedUtility = new HashMap<Transition, Double>();
 
-        for (Transition transition : currentMDP.getTransitions().values()) {
+        for (Transition transition : updatedMDP.getTransitions().values()) {
 
             // The following line UPDATES the transition utility to be different from zero when required.
-            Double transitionUtility = calcStatesUtility(transition);
+            Double transitionUtility = updateTransitionsUtility(transition);
+            transitionsAccumedUtility.put(transition, transitionUtility);
             if (!transitionsAccumedUtility.containsKey(transition)) {
                 transitionsAccumedUtility.put(transition, transitionUtility);
             } else {
                 Double prevUtil = transitionsAccumedUtility.get(transition);
-                transitionsAccumedUtility.put(transition, prevUtil + transitionUtility);
+                if(prevUtil > transitionUtility && transitionUtility >0.0) {
+                    transitionsAccumedUtility.put(transition, transitionUtility);
+                }
             }
-
-//            if(transitionUtility > 0){
-//                System.out.println("FOUND POSITIVE transitionUtility:::"+transitionUtility);
-//            }
-
-//            if(transitionUtility > 0){
-//                try {
-//                    throw new Exception("Found positive transition:"+transitionUtility);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
         }
 
         return transitionsAccumedUtility;
@@ -201,7 +229,7 @@ public class UtilityCalculator {
     // OR
 
     // U(s) <- Sigma[  R(s,s',a) + P(s|s')*U(s') ]
-    protected Double calcStatesUtility(Transition transition) {
+    protected Double updateTransitionsUtility(Transition transition) {
 
         State source = transition.getSourceState();
         // To fetch updated utility, use the stat from the updated hashmap...
@@ -209,8 +237,10 @@ public class UtilityCalculator {
 
         Action action = transition.getAction();
 
-        if (source.getIsFinal()) {
-            return source.getUtility() == null ? 0.0 : source.getUtility();
+        if (dest.getIsFinal()) {
+            Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
+            Double reward = rewardObj.getReward() ;
+            return reward;
         } else {
 
             // get P(s,s',a)
@@ -225,20 +255,9 @@ public class UtilityCalculator {
 
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
             Double reward = rewardObj.getReward() ;// rewardObj != null ? : 0.0;
-            Double actionSubUtility = joinedProb * (reward + dest.getUtility());
-
-//            // FOR BUG:UTILITIES ARE ZERO!
-//            if(actionSubUtility > 0){
-//                try {
-//                    throw new Exception("Positive actionSubUtility!!"+actionSubUtility);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-//            if(actionSubUtility > 0){
-//                System.out.println("FOUND POSITIVE actionSubUtility:::"+actionSubUtility);
-//            }
+            // set initial utility when not set.
+            Double destUtility = dest.getUtility();
+            Double actionSubUtility = reward + (joinedProb * destUtility);
 
             return actionSubUtility;
         }
@@ -247,21 +266,22 @@ public class UtilityCalculator {
     /**
      * Method to set utility per iteration for all states.
      *
-     * @param allStates - all possible states
+     * @param  - all possible states
      * @return
      */
-    private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
-        // HERE WE CALC UTILITIES PER ACTIONS...
-        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
-///--->
-        groupByActionAndSourceState(updatedTransitionsUtility);
-
-        for (State state : allStates.values()) {
-            setUtilitySingleState(state);
-        }
-
-        return allStates;
-    }
+//    private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
+//        // HERE WE CALC UTILITIES PER ACTIONS...
+//        HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
+//
+/////--->
+//      //  groupTransitionsBySourceState(updatedTransitionsUtility);
+//
+//        for (State state : allStates.values()) {
+//            setUtilitySingleState(state);
+//        }
+//
+//        return allStates;
+//    }
 
     private void setUtilitySingleState(State state) {
 

@@ -32,21 +32,17 @@ public class GraphReader {
         CTPUtilityCalculator uc = new CTPUtilityCalculator( mdp, epsilon, discount);
         MDP mdpWithUtility = uc.setOptimalPolicy();
 
-//        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
-//
+   //     List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
+
 //        for(Object s : statesList){
 //
 //            if(((State)s).getUtility() > 0){
 //
-//                try {
-//                    throw new Exception("######&&&****found a state of positive utility:"+s.toString());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
+//               System.out.println("State: "+((State) s).getId()+" has utility:"+((State) s).getUtility());
 //            }
 //
 //        }
-        //
+
 
         ////////////////////////////////////////////////////////////////////////////
 
@@ -102,6 +98,16 @@ public class GraphReader {
         runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
     }
 
+    // |V| = 4, |E| = 5
+    public static void runFirstGraphShortened(){
+        String firstGraph = "src/main/data/graphs_data/dror_data/first_graph_releifed_v2.json";
+        List<String> edgesToBlock = new LinkedList<String>();
+        //edgesToBlock.add("v1_v4");
+        // edgesToBlock.add("s_v2");
+        //edgesToBlock.add("v1_t");
+        runConfigurationGraph(firstGraph,edgesToBlock,0.6,0.9);
+    }
+
 
     public static void runSecondGraph(){
         String graphName = "src/main/data/graphs_data/dror_data/second_graph.json";
@@ -116,8 +122,8 @@ public class GraphReader {
     public static void main(String[] args) {
 
        // runFirstGraphWithBlocks();
-
-         runFirstGraph();
+        runFirstGraphShortened();
+        // runFirstGraph();
         //runSecondGraph();
         //runThirdGraphNoBlocks();
         // runSimpleGraphWithBlocks();

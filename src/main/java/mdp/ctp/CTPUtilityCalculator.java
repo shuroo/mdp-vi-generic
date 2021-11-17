@@ -19,33 +19,33 @@ public class CTPUtilityCalculator extends UtilityCalculator {
     }
 
     @Override
-    protected Double calcStatesUtility(Transition transition) {
+    protected Double updateTransitionsUtility(Transition transition) {
 //        if ( transition.isValid()) {
 //            System.out.println("*** The following transition was found VALID:: "+transition.getTransitionId()+" ***");
 //        }
 
-        return super.calcStatesUtility(transition);
+        return super.updateTransitionsUtility(transition);
     }
-    @Override
-    protected HashMap<mdp.generic.Transition, Double> calcTransitionsUtility() {
-
-
-
-        // Init & Build Map<Transition,Utility>
-
-        HashMap<mdp.generic.Transition, Double> actionsPerSourceStt = new HashMap<mdp.generic.Transition, Double>();
-
-        for (Transition transition : extendedMDP.getExtededTransitions().values()) {
-
-            Double actionLocalUtility = calcStatesUtility(transition);
-            if (!actionsPerSourceStt.containsKey(transition)) {
-                actionsPerSourceStt.put(transition, actionLocalUtility);
-            } else {
-                Double prevUtil = actionsPerSourceStt.get(transition);
-                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
-            }
-        }
-
-        return actionsPerSourceStt;
-    }
+//    @Override
+//    protected HashMap<mdp.generic.Transition, Double> calcTransitionsUtility() {
+//
+//
+//
+//        // Init & Build Map<Transition,Utility>
+//
+//        HashMap<mdp.generic.Transition, Double> actionsPerSourceStt = new HashMap<mdp.generic.Transition, Double>();
+//
+//        for (Transition transition : extendedMDP.getExtededTransitions().values()) {
+//
+//            Double actionLocalUtility = updateTransitionsUtility(transition);
+//            if (!actionsPerSourceStt.containsKey(transition)) {
+//                actionsPerSourceStt.put(transition, actionLocalUtility);
+//            } else {
+//                Double prevUtil = actionsPerSourceStt.get(transition);
+//                actionsPerSourceStt.put(transition, prevUtil + actionLocalUtility);
+//            }
+//        }
+//
+//        return actionsPerSourceStt;
+//    }
 }

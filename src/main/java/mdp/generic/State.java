@@ -11,7 +11,7 @@ public class State implements StateI {
 
     protected String stateId;
     // Default value
-    protected Double minimalUtility = 0.0;
+    protected Double minimalUtility = null;
     protected Action bestAction;
 
     public List<Action> getBestActions() {
@@ -89,7 +89,10 @@ public class State implements StateI {
         this.previousUtility = prevUtil;
     }
 
-    public State(){}
+    public State(){
+
+        minimalUtility = (this.isFinal? 0.0 : 10000);
+    }
 
 
     // print states properly
