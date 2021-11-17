@@ -11,7 +11,8 @@ public class State implements StateI {
 
     protected String stateId;
     // Default value
-    protected Double minimalUtility = 0.0;
+    // FOR MINIMIZATION PROBLEMS ONLY!!
+    protected Double minimalUtility = 0.0;//10000.0;
     protected Action bestAction;
 
     public List<Action> getBestActions() {

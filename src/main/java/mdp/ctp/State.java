@@ -12,7 +12,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     // Visited - and not let to a solution - hence the state is invalid.
     private Integer agentVisits = 0;
-
+    //protected Double minimalUtility = 10000.0;
     // The index to approach the current best action
     //private Integer agentActionsIndex = -1;
 

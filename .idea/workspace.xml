@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/agent_travel/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/MDPCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
     </list>
@@ -412,11 +414,6 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
           <line>94</line>
-          <option name="timeStamp" value="215" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
-          <line>100</line>
           <option name="timeStamp" value="216" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -425,19 +422,19 @@
           <option name="timeStamp" value="221" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>32</line>
-          <option name="timeStamp" value="225" />
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="228" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java</url>
-          <line>40</line>
-          <option name="timeStamp" value="226" />
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
+          <line>69</line>
+          <option name="timeStamp" value="232" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/utils/GraphReader.java</url>
-          <line>31</line>
-          <option name="timeStamp" value="227" />
+          <url>file://$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="235" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -446,20 +443,6 @@
         <PinnedItemInfo parentTag="mdp.agent_travel.AgentPath" memberName="path" />
       </pinned-members>
     </pin-to-top-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="sampleAction.getActionId()" language="JAVA" />
-        <watch expression="accUtility" language="JAVA" />
-        <watch expression="transtionsWithUtility.size() / 10000" language="JAVA" />
-        <watch expression="actionsWithUtility.get(0).size()" language="JAVA" />
-        <watch expression="Arrays.asList(actionsWithUtility.values()).get(0)" language="JAVA" />
-        <watch expression="((CTPVertex)((MDPFromGraph) currentMDP).graph.getVertices().get(&quot;v0&quot;))" language="JAVA" custom="mdp.ctp.MDPFromGraph,org.jgrapht.graph.Vertex" />
-        <watch expression="currentMDP.getStates().size()" language="JAVA" />
-        <watch expression="this.mdp.getExtededActions()" language="JAVA" />
-        <watch expression="this.mdp.getExtededActions().get(action.getActionId())" language="JAVA" />
-        <watch expression="this.mdp.getExtededActions().get(action.getActionId())" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -31,7 +31,7 @@ public class UtilityCalculator {
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        while (maxLambda > stopCondition && iterationCounter < 2) {
+        while (true){//maxLambda > stopCondition && iterationCounter < 2) {
 
             HashMap<String, State> allStates = currentMDP.getStates();
 
@@ -66,7 +66,7 @@ public class UtilityCalculator {
 
             // When all states finished their current iteration - check lambda:
 
-            if (maxLambda > 0.0 && maxLambda <= stopCondition) {
+            if ( maxLambda <= stopCondition) {
 
                 System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                 return currentMDP;
@@ -78,7 +78,7 @@ public class UtilityCalculator {
 
         }
 
-        return currentMDP;
+        //return currentMDP;
     }
 
     /**
@@ -124,7 +124,7 @@ public class UtilityCalculator {
                 continue;
             }
             Action sampleAction = relatedActions.get(0);
-            Integer numberOfParticipants = 1;
+            //Integer numberOfParticipants = 1;
             for (Action action : relatedActions) {
                 if (action.getUtility() > 0) {
                     accUtility += action.getUtility();
@@ -133,10 +133,10 @@ public class UtilityCalculator {
             }
 
             // Normalization factor  -
-            numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
+            // numberOfParticipants =  relatedActions.size() / currentMDP.actions.size();
            // System.out.println("Division Factor for action "+sampleAction.getActionId() +", for utility: "+accUtility + " is:"+numberOfParticipants);
 
-            Double finalUtil = accUtility / numberOfParticipants ;
+            Double finalUtil = accUtility ;/// numberOfParticipants ;
             //System.out.println("Setting utility:"+finalUtil+" for action:"+sampleAction+", originally:"+accUtility+"  participants: "+numberOfParticipants);
             sampleAction.setUtility(finalUtil);
             actionsWithGroupedUtility.put(sourceActionId, sampleAction);
@@ -224,7 +224,7 @@ public class UtilityCalculator {
             // U(action) <--  Sigma[ P(s|s')*( R(s,s',a) + U(s') )]
 
             Reward rewardObj = currentMDP.getRewards().get(Reward.buildId(source, dest, action));
-            Double reward = rewardObj.getReward() ;// rewardObj != null ? : 0.0;
+            Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
 
 //            // FOR BUG:UTILITIES ARE ZERO!
