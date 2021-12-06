@@ -330,37 +330,6 @@ public class UtilityCalculator {
         return sortedActionsAsc;
     }
 
-//    private Action findMinimalAction(HashMap<String, Action> sttActionsWithutility) {
-//
-//        Double finalUtility = 10000.0;
-//        Action result = null;
-//        for (String actionStateKey : sttActionsWithutility.keySet()) {
-//            Action currentAction = sttActionsWithutility.get(actionStateKey);
-//            Double currentUtility = currentAction.getUtility();
-//            if (currentUtility <= finalUtility) {
-//                result = currentAction;
-//                finalUtility = currentUtility;
-//            }
-//        }
-//        return result;
-//    }
-//
-//    private Action findMaximalAction(HashMap<String, Action> sttActionsWithUtility) {
-//
-//        Double finalUtility = -10000.0;
-//        Action result = null;
-//        for (String actionStateKey : sttActionsWithUtility.keySet()) {
-//            Action currentAction = sttActionsWithUtility.get(actionStateKey);
-//            Double currentUtility = currentAction.getUtility();
-//            if (currentUtility > finalUtility) {
-//                result = currentAction;
-//                finalUtility = currentUtility;
-//            }
-//        }
-//
-//        return result;
-//    }
-
     /**
      * Given a state, filter all given actions related to it with updated calculated utility..
      *
