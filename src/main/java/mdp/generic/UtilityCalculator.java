@@ -179,18 +179,6 @@ public class UtilityCalculator {
                 Double prevUtil = transitionsAccumedUtility.get(transition);
                 transitionsAccumedUtility.put(transition, prevUtil + transitionUtility);
             }
-
-//            if(transitionUtility > 0){
-//                System.out.println("FOUND POSITIVE transitionUtility:::"+transitionUtility);
-//            }
-
-//            if(transitionUtility > 0){
-//                try {
-//                    throw new Exception("Found positive transition:"+transitionUtility);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
         }
 
         return transitionsAccumedUtility;
@@ -227,19 +215,6 @@ public class UtilityCalculator {
             Double reward = rewardObj != null ? rewardObj.getReward() : 0.0;
             Double actionSubUtility = joinedProb * (reward + dest.getUtility());
 
-//            // FOR BUG:UTILITIES ARE ZERO!
-//            if(actionSubUtility > 0){
-//                try {
-//                    throw new Exception("Positive actionSubUtility!!"+actionSubUtility);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-//            if(actionSubUtility > 0){
-//                System.out.println("FOUND POSITIVE actionSubUtility:::"+actionSubUtility);
-//            }
-
             return actionSubUtility;
         }
     }
@@ -250,7 +225,7 @@ public class UtilityCalculator {
      * @param allStates - all possible states
      * @return
      */
-    private HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
+    protected HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
         // HERE WE CALC UTILITIES PER ACTIONS...
         HashMap<Transition, Double> updatedTransitionsUtility = calcTransitionsUtility();
 ///--->
