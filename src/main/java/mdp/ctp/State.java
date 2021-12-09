@@ -99,8 +99,11 @@ public class State extends mdp.generic.State implements Comparable<State> {
     }
 
     public State(Vertex agentLocation, Vector<CTPEdge> statuses) {
+        /// THIS IS THE CONSTRUCTOR USED IN OUR EXAMPLE!!!
         this.agentLocation = agentLocation;
         this.statuses = CollectionUtils.edgeToMap(statuses);
+        this.isFinal = agentLocation.isFinal();
+        this.isInitial = agentLocation.isInitial();
         setStateId();
     }
 
