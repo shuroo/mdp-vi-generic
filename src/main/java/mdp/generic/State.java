@@ -13,7 +13,7 @@ public class State implements StateI {
     // Default value
     // FOR MINIMIZATION PROBLEMS ONLY!!
     // highly important - fetch zero for final states.
-    protected Double minimalUtility = ((this.isFinal!=null && this.isFinal)? 0.0 : 10000.0);
+    protected Double minimalUtility = null;
     protected Action bestAction;
 
     public List<Action> getBestActions() {
@@ -95,7 +95,13 @@ public class State implements StateI {
         this.previousUtility = prevUtil;
     }
 
-    public State(){}
+    public State()  {
+        try {
+            throw new Exception("using default state constructor - aborting");
+        }catch(Exception e){
+
+        }
+    }
 
 
     // print states properly

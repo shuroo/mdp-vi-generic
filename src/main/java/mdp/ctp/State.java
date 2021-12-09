@@ -12,9 +12,13 @@ public class State extends mdp.generic.State implements Comparable<State> {
 
     // Visited - and not let to a solution - hence the state is invalid.
     private Integer agentVisits = 0;
-    //protected Double minimalUtility = 10000.0;
+
+    public Double getMinimalUtility() {
+        return minimalUtility;
+    }
+
+
     // The index to approach the current best action
-    //private Integer agentActionsIndex = -1;
 
     private State parentState;
 
@@ -51,6 +55,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
      */
     public State(Vertex location, Collection<CTPEdge> statuses,Double utility,
                  List<mdp.generic.Action> bestActions, Integer actionsIndex){
+       // super(buildId(location,statuses), Boolean isInitial, Boolean isFinal,Double initialUtility);
 
         this.agentLocation = location;
         this.statuses = CollectionUtils.edgeToMap(statuses);
@@ -104,6 +109,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
         this.statuses = CollectionUtils.edgeToMap(statuses);
         this.isFinal = agentLocation.isFinal();
         this.isInitial = agentLocation.isInitial();
+        this.setUtility((this.isFinal ? 0.0 : 10000.0));
         setStateId();
     }
 
