@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/CTPUtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/ctp/Transition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/UtilityCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GraphReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
