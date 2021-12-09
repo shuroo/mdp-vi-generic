@@ -808,9 +808,9 @@ public class StrategyRunner {
 
         //UtilityCalculator uc = buildAnotherExample();
 
-        MDP mdp = uc.setOptimalPolicy();
+        //MDP mdp = uc.setOptimalPolicy();
 
-        System.out.println(mdp);
+       // System.out.println(mdp);
     }
 
 }

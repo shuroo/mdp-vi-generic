@@ -30,23 +30,21 @@ public class GraphReader {
         MDPFromGraph mdp = new MDPFromGraph(gr);
         System.out.println("Built MDP with:"+mdp.getStates().size()+" States");
         CTPUtilityCalculator uc = new CTPUtilityCalculator( mdp, epsilon, discount);
-        MDP mdpWithUtility = uc.setOptimalPolicy();
+        MDP mdpWithUtility = uc.setOptimalPolicy(mdp);
 
-//        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
-//
-//        for(Object s : statesList){
-//
-//            if(((State)s).getUtility() > 0){
-//
-//                try {
-//                    throw new Exception("######&&&****found a state of positive utility:"+s.toString());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        }
-        //
+        List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
+
+        for(Object s : statesList){
+
+            if(((State)s).getUtility() > 0){
+                State currentS = ((State)s);
+
+                System.out.println("State of agent location:"+currentS.getAgentLocation().toString()+" Has final Utility of:"+currentS.getUtility()+"| state " +
+                        "statuses:"+currentS.getId()+"|");
+            }
+
+        }
+
 
         ////////////////////////////////////////////////////////////////////////////
 

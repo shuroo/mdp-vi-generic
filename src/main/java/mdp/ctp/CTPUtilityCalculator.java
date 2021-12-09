@@ -16,13 +16,13 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
     public CTPUtilityCalculator(MDPFromGraph currentMDP, Double epsilon, Double discountFactor) {
 
-        this.currentMDP = (MDP)currentMDP;
+        this.currentMDP = currentMDP;
         this.extendedMDP = currentMDP;
         this.discountFactor = discountFactor;
         this.epsilon = epsilon;
     }
 
-    protected HashMap<mdp.generic.State, HashMap<mdp.generic.Action, List<Transition>>> aggregateTransitionsPerState() {
+    protected HashMap<mdp.generic.State, HashMap<mdp.generic.Action, List<Transition>>> aggregateTransitionsPerState(MDP updatedMDP) {
 
         // DATA STRUCTURE TO CALC UTILITY: FOR EACH STATE, FIND -
         // - ITS RELATED STATES ( IN WHICH ITS THEIR DEST )
@@ -34,7 +34,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
         HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap = new HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>>();
 
-        for (Transition transition : currentMDP.getTransitions().values()) {
+        for (Transition transition : updatedMDP.getTransitions().values()) {
 
             if(!statesDataMap.containsKey(transition.getSourceState())){
 
@@ -58,7 +58,48 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         return statesDataMap;
     }
 
-    protected HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> calcAndSetStatesUtilities() {
+    private HashMap<Action,Double> calcUtilityPerAction(State stt,
+                                                        HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap){
+
+        HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction = statesDataMap.get(stt);
+        HashMap<mdp.generic.Action,Double> utilityPerAction = new HashMap<mdp.generic.Action,Double>();
+        for(Action act : stateTransitionsPerAction.keySet()){
+            // initilize utility per action.
+            if(!utilityPerAction.containsKey(act)){
+                utilityPerAction.put(act,0.0);
+            }
+            List<Transition> actTransitions = stateTransitionsPerAction.get(act);
+            for(Transition tr : actTransitions){
+                if(!tr.isValid() ){
+                    continue;
+                }
+                if(tr.getProbability() == 1.0){
+                    // = reward + 1*(U(s'))
+                    utilityPerAction.put(act,tr.getDestState().getUtility());
+                    continue;
+                }
+                else{
+                    boolean hasNoProbabilityOneLegalStt =
+                            actTransitions.stream().filter(t-> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
+                    if(hasNoProbabilityOneLegalStt){
+                        Double currentUtil = utilityPerAction.get(act);
+                        utilityPerAction.put(act,currentUtil + tr.getDestState().getUtility());
+                    }
+                    else continue;
+                }
+            }
+
+            Double reward = extendedMDP.getExtededActions().containsKey(act.getActionId()) ?
+                    extendedMDP.getExtededActions().get(act.getActionId()).getSourceEdge().getReward() : 0.0;
+            Double currentUtil = utilityPerAction.get(act);
+            utilityPerAction.put(act,currentUtil + reward);
+
+        }
+
+        return utilityPerAction;
+    }
+
+    protected MDP calcAndSetStatesUtilities(MDP updatedMDP) {
 
         // DATA STRUCTURE TO CALC UTILITY: FOR EACH STATE, FIND -
         // - ITS RELATED STATES ( IN WHICH ITS THEIR DEST )
@@ -68,80 +109,100 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         // - WE ARE BUILDING THE DATA STRUCTURE AS FOLLOWS:
         //  HashMap<DEST_State, HashMap<Action,List{ List{ TUPLE<SRC_STATE,UTILITY,PROBABILITY>>}}>
 
-        HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap = aggregateTransitionsPerState() ;
-
+        HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap = aggregateTransitionsPerState(updatedMDP);
         for(State stt :  statesDataMap.keySet()){
-            HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction = statesDataMap.get(stt);
-            HashMap<mdp.generic.Action,Double> utilityPerAction = new HashMap<mdp.generic.Action,Double>();
-            // Find utility per state per action:
-            for(Action act : stateTransitionsPerAction.keySet()){
-                // init utility per action.
-                if(!utilityPerAction.containsKey(act)){
-                    utilityPerAction.put(act,0.0);
-                }
-                List<Transition> actTransitions = stateTransitionsPerAction.get(act);
-                for(Transition tr : actTransitions){
-                    if(!tr.isValid() ){
-                        continue;
-                    }
-                    if(tr.getProbability() == 1.0){
-                        // = reward + 1*(U(s'))
-                        utilityPerAction.put(act,tr.getDestState().getUtility());
-                        continue;
-                    }
-                    else{
-                        boolean hasNoProbabilityOneLegalStt =
-                                actTransitions.stream().filter(t-> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
-                        if(hasNoProbabilityOneLegalStt){
-                            Double currentUtil = utilityPerAction.get(act);
-                            utilityPerAction.put(act,currentUtil + tr.getDestState().getUtility());
-                        }
-                        else continue;
-                    }
-                }
-
-                Double reward = extendedMDP.getExtededActions().containsKey(act.getActionId()) ?
-                        extendedMDP.getExtededActions().get(act.getActionId()).getSourceEdge().getReward() : 0.0;
-                Double currentUtil = utilityPerAction.get(act);
-                utilityPerAction.put(act,currentUtil + reward);
-
-            }
+           // Find utility per state per action:
+            HashMap<mdp.generic.Action,Double> utilityPerAction = calcUtilityPerAction(stt,statesDataMap);
 
             // Then , find the minimal action and update the dest \ parent state accordingly.
-            findMinimalUtilityAmongActionsPerState(stt,utilityPerAction);
+            updatedMDP =findMinimalUtilityAmongActionsPerState(stt,utilityPerAction,updatedMDP);
         }
 
-        return statesDataMap;
+        return updatedMDP;
     }
 
     /**
      * For Each state and map of utility actions, choose the most minimal utility and update the state.
      */
-    private void findMinimalUtilityAmongActionsPerState(State st,HashMap<Action,Double> utilityActions){
+    private MDP findMinimalUtilityAmongActionsPerState(State st,HashMap<Action,Double> utilityActions, MDP updatedMDP){
+
         Double minimalUtil = null;
         Action chosenAction = null;
-        for(Action action : utilityActions.keySet()){
-            Double currentUtility = utilityActions.get(action);
-            if(minimalUtil == null || currentUtility < minimalUtil){
-                minimalUtil = currentUtility;
-                chosenAction = action;
+        if(st.getIsFinal()){
+            minimalUtil = 0.0;
+            chosenAction = null;
+        }
+        else {
+            for (Action action : utilityActions.keySet()) {
+                Double currentUtility = utilityActions.get(action);
+                if (minimalUtil == null || currentUtility < minimalUtil) {
+                    minimalUtil = currentUtility;
+                    chosenAction = action;
+                }
             }
         }
 
-        State stInMdp = currentMDP.getStates().get(st.toString());
-        stInMdp.setPreviousUtility(stInMdp.getUtility());
-        stInMdp.setUtility(minimalUtil);
-        System.out.println("Set utility:"+minimalUtil+" For State:"+stInMdp.getId());
-        stInMdp.setBestAction(chosenAction);
+        try {
+            st.setPreviousUtility(st.getUtility());
+            st.setUtility(minimalUtil);
+            System.out.println("!!!Set utility:"+minimalUtil+" For State:"+st.getId()+"!!!");
+            st.setBestAction(chosenAction);
+            // update state in the mdp:
+            updatedMDP.getStates().put(st.toString(),st);
+        } catch (NullPointerException e) {
+            System.out.print("State of id: "+st.toString()+" could not be found via mdp and hence, failed to update!");
+        }
+        return updatedMDP;
     }
 
     @Override
-    protected HashMap<String, State> setUtilitiesForStatesIteration(HashMap<String, State> allStates) {
+    public MDP setOptimalPolicy(MDP updatedMDP) {
 
-        System.out.println("in sub method -- setUtilitiesForStatesIteration!!!");
-        calcAndSetStatesUtilities();
+        Integer iterationCounter = 0;
+        Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
+        while (iterationCounter < 20) {
+            System.out.println("In subMethod - setOptimalPolicy!! going..."+(iterationCounter+1)+"th");
+            HashMap<String, State> allStates = updatedMDP.getStates();
+            iterationCounter++;
+            System.out.println("Starting iteration number:" + iterationCounter + " with lambda:" + maxLambda);
+            updatedMDP = calcAndSetStatesUtilities(updatedMDP);
+            State firstResultingStt = (State)updatedMDP.getStates().values().toArray()[0];
+            System.out.println(firstResultingStt.getAgentLocation()+","+firstResultingStt.getUtility());
 
-        return allStates;
+            //*** Stop condition Version 1 - "Normal"  stop condition:*** //
+            //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.
+            // Check diff to stop...
+
+            //*** Stop condition Version 2 -  stop condition by the number of states converged upon a single iteration :*** //
+
+            for (State state : allStates.values()) {
+
+                Double minimalUtility = state.getUtility();
+                Double prevUtility = state.getPreviousUtility();
+                Double diffUtility = Math.abs(minimalUtility - prevUtility);
+                // max diff per ALL states ... //
+                if (maxLambda > diffUtility) {
+                    System.out.println("** Setting lambda to :" + diffUtility + "**");
+                    maxLambda = diffUtility;
+                }
+
+
+            }
+
+             //When all states finished their current iteration - check lambda:
+
+//            if ( maxLambda!=0.0 && maxLambda<= stopCondition) {
+//
+//                System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
+//                return currentMDP;
+//            }
+
+
+
+
+        }
+
+        return currentMDP;
     }
 
 }

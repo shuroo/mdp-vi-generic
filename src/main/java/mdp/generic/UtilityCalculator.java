@@ -16,7 +16,7 @@ public class UtilityCalculator {
     protected MDP currentMDP;
 
     // --- Parameter for setting during calculation. for private usage: ---
-    private Double maxLambda = 100000.0;
+    protected Double maxLambda = 100000.0;
 
     public UtilityCalculator(){}
     public UtilityCalculator(MDP currentMDP, Double epsilon, Double discountFactor) {
@@ -26,14 +26,14 @@ public class UtilityCalculator {
         this.epsilon = epsilon;
     }
 
-    public MDP setOptimalPolicy() {
+    public MDP setOptimalPolicy(MDP updatedMDP) {
 
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
 
-        while (true){//maxLambda > stopCondition && iterationCounter < 2) {
+        while (maxLambda == 0.0 || maxLambda > stopCondition && iterationCounter < 4) {
 
-            HashMap<String, State> allStates = currentMDP.getStates();
+            HashMap<String, State> allStates = updatedMDP.getStates();
 
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter + " with lambda:" + maxLambda);
@@ -66,11 +66,11 @@ public class UtilityCalculator {
 
             // When all states finished their current iteration - check lambda:
 
-            if ( maxLambda <= stopCondition) {
-
-                System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
-                return currentMDP;
-            }
+//            if ( maxLambda!=0.0 && maxLambda<= stopCondition) {
+//
+//                System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
+//                return updatedMDP;
+//            }
 
 
             System.out.println("** current number of states converted:" + numOfConvertedStates + " maxLambda:" + maxLambda + ",stopCondition:" + stopCondition);
@@ -78,7 +78,7 @@ public class UtilityCalculator {
 
         }
 
-        //return currentMDP;
+        return updatedMDP;
     }
 
     /**

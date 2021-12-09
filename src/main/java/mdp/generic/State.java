@@ -12,7 +12,8 @@ public class State implements StateI {
     protected String stateId;
     // Default value
     // FOR MINIMIZATION PROBLEMS ONLY!!
-    protected Double minimalUtility = 0.0;//10000.0;
+    // highly important - fetch zero for final states.
+    protected Double minimalUtility = ((this.isFinal!=null && this.isFinal)? 0.0 : 10000.0);
     protected Action bestAction;
 
     public List<Action> getBestActions() {
@@ -24,11 +25,15 @@ public class State implements StateI {
     }
 
     protected List<Action> bestActions;
-    protected Boolean isFinal = false;
-    protected Boolean isInitial = false;
-    protected Double previousUtility = 0.0;
+    protected Boolean isFinal = null;
+    protected Boolean isInitial = null;
+    protected Double previousUtility = 10000.0;
 
     // Extended properties for graphs only (not generic states)!
+
+    public Vertex getAgentLocation() {
+        return agentLocation;
+    }
 
     protected Vertex agentLocation;
     protected HashMap<String, CTPEdge> statuses;
