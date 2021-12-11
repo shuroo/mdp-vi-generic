@@ -17,7 +17,7 @@ public class Transition extends mdp.generic.Transition {
 
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
-        if(!isValid()){
+        if (!isValid()) {
             return 0.0;
         }
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
@@ -53,46 +53,84 @@ public class Transition extends mdp.generic.Transition {
         mdp.ctp.State source = this.extendedSourceState;
         mdp.ctp.State dest = this.extendedDestState;
 
-        // case 1 - The action doesn't fit
+        // case 3 - The action doesn't fit: The action corresponds to s,s’ agent locations:
+        //t.edge = (u,v)  && s.agentLocation == u  && s’.agentLocation == v   .
+
         if (source.getAgentLocation() != act.getSourceEdge().getSource() ||
                 dest.getAgentLocation() != act.getSourceEdge().getDest()
         ) {
-           // System.out.println("first false in 'isValid'");
             return false;
-        } else if (source.getAgentLocation() == act.getSourceEdge().getSource()) {
 
-            // case 2: th action's edge is blocked
+            // source = u
+        }
 
-            Edge currentEdg = act.getSourceEdge();
-            for (CTPEdge statusEdge : source.getStatuses().values()) {
-                if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.Closed) {
-             //       System.out.println("second false in 'isValid'");
-                    return false;
-                }
+        // case 1: The relevant action’s transition edge must be in status ‘Opened’:
+        //t.action.edge.status = ‘Opened’.
+
+        Edge currentEdg = act.getSourceEdge();
+        for (CTPEdge statusEdge : source.getStatuses().values()) {
+            if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.Closed) {
+                return false;
             }
-            // case 3 - a source state is not in status 'unknown'
+        }
+        //case 2.The transition’s source state s, is not a final vertex ( indicating end of agent’s path ):
+        //t.edge = (u,v)  &&  u.isFinal == false.
 
-            for (CTPEdge status : source.getStatuses().values()) {
-                if (status.getStatus() == BlockingStatus.Unknown) {
-               //     System.out.println("third false in 'isValid'");
-                    return false;
-                }
+        if (this.extendedSourceState.getIsFinal()) {
+            return false;
+        }
+
+        // case 3 - a source state is not in status 'unknown'
+
+        for (CTPEdge status : source.getStatuses().values()) {
+            if (status.getStatus() == BlockingStatus.Unknown) {
+                return false;
             }
+        }
+        // case 4: All the edges in s.statuses having edge[i].source= u   are not in status ‘Unknown’
+        for (CTPEdge sourceStatus : source.getStatuses().values()) {
 
-
-            // case 4 - the dest status is change to 'unknown':
-            for (CTPEdge sourceStatus : source.getStatuses().values()) {
-
-                CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
-                if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && destStatus.getStatus() == BlockingStatus.Unknown) {
-//                    System.out.println("forth false in 'isValid'");
-                    return false;
-                }
+            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+            if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && sourceStatus.getStatus() == BlockingStatus.Unknown) {
+                return false;
             }
         }
 
+        // case 5 - the dest status is changed to 'unknown':
+        for (CTPEdge sourceStatus : source.getStatuses().values()) {
+
+            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+            if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && destStatus.getStatus() == BlockingStatus.Unknown) {
+                return false;
+            }
+        }
+
+        // case 6: Each related edge in s having status ‘Opened’ or ‘Closed’ should have the same corresponding status in s’:
+        //	s.statuses =<edge[i],status[i]>&&
+        //  s'.statuses =<edge'[j],status'[j]>&&  edge[i] == edge'[j] ==>
+        //  if(status[i] == 'Opened') then status'[j] == 'Opened'
+        //  if(status[i] == 'Closed') then status'[j] == 'Closed'
+        for (CTPEdge sourceStatus : source.getStatuses().values()) {
+
+            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+            if (destStatus != null && sourceStatus.getStatus() != BlockingStatus.Unknown &&
+                    destStatus.getStatus() != sourceStatus.getStatus()) {
+                return false;
+            }
+        }
+
+        // case 7: if an edge in s list of statuses has a status ‘Unknown’ and its source is not v,
+        // it should remain with status ‘Unknown’ in s’:
+        for (CTPEdge sourceStatus : source.getStatuses().values()) {
+
+            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
+            if (sourceStatus.getStatus() == BlockingStatus.Unknown &&
+                    destStatus.getStatus() != BlockingStatus.Unknown) {
+                return false;
+            }
+        }
 
         return true;
-    }
+}
 
 }

@@ -44,8 +44,8 @@ public class Action {
     public Action() {
     }
 
-    // TBD: override this and implement by constraints in the future (Blocked edge etc..)
-    public Boolean actionIsAllowed(final State st) {
+    // Make sure the action's edge is in status 'OPEN' (Blocked edge etc..)
+    public Boolean actionEdgeIsTraversive(final State st) {
 
         if (!(st instanceof mdp.ctp.State)) {
             return true;

@@ -71,10 +71,17 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             List<Transition> actTransitions = stateTransitionsPerAction.get(act);
             for(Transition tr : actTransitions){
                 if(!tr.isValid() ){
+                    //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
+                    continue;
+                }
+                else if(!tr.getAction().actionEdgeIsTraversive(stt) ){
+                    //System.out.println("Found and eliminating CLOSED EDGE of transition. removing transition:"+tr.getTransitionId());
                     continue;
                 }
                 if(tr.getProbability() == 1.0){
                     // = reward + 1*(U(s'))
+
+             //       System.out.println("*********utility to add, of u(s')="+tr.getDestState().getUtility());
                     utilityPerAction.put(act,tr.getDestState().getUtility());
                     continue;
                 }
@@ -83,7 +90,8 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                             actTransitions.stream().filter(t-> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
                     if(hasNoProbabilityOneLegalStt){
                         Double currentUtil = utilityPerAction.get(act);
-                        utilityPerAction.put(act,currentUtil + tr.getDestState().getUtility());
+                        System.out.println("*********utility to add, of u(s')="+tr.getProbability()*tr.getDestState().getUtility());
+                        utilityPerAction.put(act,currentUtil + tr.getProbability()*tr.getDestState().getUtility());
                     }
                     else continue;
                 }
@@ -160,7 +168,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
-        while (iterationCounter < 20) {
+        while (iterationCounter < 3) {
             System.out.println("In subMethod - setOptimalPolicy!! going..."+(iterationCounter+1)+"th");
             HashMap<String, State> allStates = updatedMDP.getStates();
             iterationCounter++;
