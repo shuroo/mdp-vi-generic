@@ -1,5 +1,6 @@
 package mdp.generic;
 
+import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.interfaces.StateI;
 import org.jgrapht.graph.Vertex;
@@ -65,7 +66,6 @@ public class State implements StateI {
         return previousUtility;
     }
 
-
     public State(String stateId, Double initialUtility) {
         this.stateId = stateId;
         this.minimalUtility = initialUtility;
@@ -109,5 +109,12 @@ public class State implements StateI {
     public String toString(){
 
         return "<"+this.stateId+">< utility:"+this.getUtility()+" >";
+    }
+
+    public Boolean isValid(){
+       if(this instanceof mdp.ctp.State){
+           return ((mdp.ctp.State)this).isValid();
+       }
+       return true;
     }
 }

@@ -34,16 +34,16 @@ public class GraphReader {
 
         List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
 
-        for(Object s : statesList){
-
-            if(((State)s).getUtility() > 0){
-                State currentS = ((State)s);
-
-                System.out.println("State of agent location:"+currentS.getAgentLocation().toString()+" Has final Utility of:"+currentS.getUtility()+"| state " +
-                        "statuses:"+currentS.getId()+"|");
-            }
-
-        }
+//        for(Object s : statesList){
+//
+//            if(((State)s).getUtility() > 0){
+//                State currentS = ((State)s);
+//
+////                System.out.println("State of agent location:"+currentS.getAgentLocation().toString()+" Has final Utility of:"+currentS.getUtility()+"| state " +
+////                        "statuses:"+currentS.getId()+"|");
+//            }
+//
+//        }
 
 
         ////////////////////////////////////////////////////////////////////////////

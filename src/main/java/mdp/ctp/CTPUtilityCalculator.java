@@ -64,36 +64,39 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction = statesDataMap.get(stt);
         HashMap<mdp.generic.Action,Double> utilityPerAction = new HashMap<mdp.generic.Action,Double>();
         for(Action act : stateTransitionsPerAction.keySet()){
-            // initilize utility per action.
+//
+//            if(!tr.getAction().actionEdgeIsTraversive(stt) ){
+//                //System.out.println("Found and eliminating CLOSED EDGE of transition. removing transition:"+tr.getTransitionId());
+//                continue;
+//            }
+            // Initilize utility per action.
             if(!utilityPerAction.containsKey(act)){
                 utilityPerAction.put(act,0.0);
             }
             List<Transition> actTransitions = stateTransitionsPerAction.get(act);
-            for(Transition tr : actTransitions){
-                if(!tr.isValid() ){
+            for(Transition tr : actTransitions) {
+
+                if (!tr.isValid()) {
                     //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
                     continue;
-                }
-                else if(!tr.getAction().actionEdgeIsTraversive(stt) ){
-                    //System.out.println("Found and eliminating CLOSED EDGE of transition. removing transition:"+tr.getTransitionId());
-                    continue;
-                }
-                if(tr.getProbability() == 1.0){
-                    // = reward + 1*(U(s'))
+                } else {
+                    if (tr.getProbability() == 1.0) {
+                        // = reward + 1*(U(s'))
 
-             //       System.out.println("*********utility to add, of u(s')="+tr.getDestState().getUtility());
-                    utilityPerAction.put(act,tr.getDestState().getUtility());
-                    continue;
-                }
-                else{
-                    boolean hasNoProbabilityOneLegalStt =
-                            actTransitions.stream().filter(t-> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
-                    if(hasNoProbabilityOneLegalStt){
-                        Double currentUtil = utilityPerAction.get(act);
-                        System.out.println("*********utility to add, of u(s')="+tr.getProbability()*tr.getDestState().getUtility());
-                        utilityPerAction.put(act,currentUtil + tr.getProbability()*tr.getDestState().getUtility());
+                        System.out.println("***in probability 1!****");
+                        System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
+                        utilityPerAction.put(act, tr.getDestState().getUtility());
+
+                    } else {
+                        System.out.println("***in probability other then 1 !!! &&&&&&&&&&&&&****");
+                        boolean hasNoProbabilityOneLegalStt =
+                                actTransitions.stream().filter(t -> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
+                        if (hasNoProbabilityOneLegalStt) {
+                            Double currentUtil = utilityPerAction.get(act);
+                            System.out.println("*********utility to add, of u(s')=" + tr.getProbability() * tr.getDestState().getUtility());
+                            utilityPerAction.put(act, currentUtil + tr.getProbability() * tr.getDestState().getUtility());
+                        } else continue;
                     }
-                    else continue;
                 }
             }
 
@@ -123,7 +126,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             HashMap<mdp.generic.Action,Double> utilityPerAction = calcUtilityPerAction(stt,statesDataMap);
 
             // Then , find the minimal action and update the dest \ parent state accordingly.
-            updatedMDP =findMinimalUtilityAmongActionsPerState(stt,utilityPerAction,updatedMDP);
+            findMinimalUtilityAmongActionsPerState(stt,utilityPerAction,updatedMDP);
         }
 
         return updatedMDP;
@@ -141,6 +144,11 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             chosenAction = null;
         }
         else {
+            // flag for invalid state : negative utility
+//            if(!st.isValid()){
+//                minimalUtil = -2.0;
+//                chosenAction = null;
+//            }
             for (Action action : utilityActions.keySet()) {
                 Double currentUtility = utilityActions.get(action);
                 if (minimalUtil == null || currentUtility < minimalUtil) {
@@ -168,7 +176,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
         Integer iterationCounter = 0;
         Double stopCondition = epsilon * (1 - discountFactor) / discountFactor;
-        while (iterationCounter < 3) {
+        while (iterationCounter < 4) {
             System.out.println("In subMethod - setOptimalPolicy!! going..."+(iterationCounter+1)+"th");
             HashMap<String, State> allStates = updatedMDP.getStates();
             iterationCounter++;

@@ -167,5 +167,19 @@ public class State extends mdp.generic.State implements Comparable<State> {
         return  this.getUtility() > state.getUtility()?1:-1;
     }
 
+    @Override
+    public Boolean isValid(){
+        // A state is not valid if there exists one of its statuses in status 'unknown'
+        // and the same agent location as in the state.
+        for (CTPEdge someStatus : this.getStatuses().values()) {
+
+            if (someStatus.getEdge().getSource() == this.getAgentLocation() &&
+                    someStatus.getStatus() == BlockingStatus.Unknown) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 

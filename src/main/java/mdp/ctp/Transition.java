@@ -80,29 +80,14 @@ public class Transition extends mdp.generic.Transition {
             return false;
         }
 
-        // case 3 - a source state is not in status 'unknown'
-
-        for (CTPEdge status : source.getStatuses().values()) {
-            if (status.getStatus() == BlockingStatus.Unknown) {
-                return false;
-            }
-        }
-        // case 4: All the edges in s.statuses having edge[i].source= u   are not in status ‘Unknown’
-        for (CTPEdge sourceStatus : source.getStatuses().values()) {
-
-            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
-            if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && sourceStatus.getStatus() == BlockingStatus.Unknown) {
-                return false;
-            }
+        // case 4: All the edges in s.statuses having edge[i].source= u are not in status ‘Unknown’ [ ON OUR EDGE!!]
+        if(!source.isValid()){
+            return false;
         }
 
-        // case 5 - the dest status is changed to 'unknown':
-        for (CTPEdge sourceStatus : source.getStatuses().values()) {
-
-            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
-            if (destStatus != null && sourceStatus.getStatus() != destStatus.getStatus() && destStatus.getStatus() == BlockingStatus.Unknown) {
-                return false;
-            }
+        // case 5 - the dest status is changed to 'unknown' [ ON ANY EDGE!!]
+        if(!dest.isValid()){
+            return false;
         }
 
         // case 6: Each related edge in s having status ‘Opened’ or ‘Closed’ should have the same corresponding status in s’:
