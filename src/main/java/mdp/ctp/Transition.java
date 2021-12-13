@@ -18,6 +18,7 @@ public class Transition extends mdp.generic.Transition {
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
         if (!isValid()) {
+            System.out.println("^^^ detected invalid transition. setting probability zero. for id:"+this.transitionId);
             return 0.0;
         }
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
@@ -104,12 +105,13 @@ public class Transition extends mdp.generic.Transition {
             }
         }
 
-        // case 7: if an edge in s list of statuses has a status ‘Unknown’ and its source is not v,
+        // case 7: if an edge in s list of statuses has a status ‘Unknown’ and its source is not v as edge = (u,v),
         // it should remain with status ‘Unknown’ in s’:
-        for (CTPEdge sourceStatus : source.getStatuses().values()) {
+        for (CTPEdge someStatus : source.getStatuses().values()) {
 
-            CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
-            if (sourceStatus.getStatus() == BlockingStatus.Unknown &&
+            CTPEdge destStatus = dest.getStatuses().get(someStatus.getEdge().getId());
+            // todo: this is added:
+            if (someStatus.getEdge().getSource() != currentEdg.getDest() && someStatus.getStatus() == BlockingStatus.Unknown &&
                     destStatus.getStatus() != BlockingStatus.Unknown) {
                 return false;
             }

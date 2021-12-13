@@ -6,6 +6,8 @@ import utils.CollectionUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,6 +68,12 @@ public class MDPFromGraph extends MDP {
         CollectionUtils cu = new CollectionUtils<mdp.generic.State>();
         this.states = cu.objToHMap((Collection<State>) extededStates.values());
         this.transitions = cu.objToHMap((Collection<Transition>) extededTransitions.values());
+
+        List<Object> nonZeroProbTrans =
+                this.transitions.values().stream().filter(tran-> tran.getProbability() >0  && tran.getProbability() <1.0 ).collect(Collectors.toList());
+
+        // && tran.isValid() tran.getProbability() >0 &&
+
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
 

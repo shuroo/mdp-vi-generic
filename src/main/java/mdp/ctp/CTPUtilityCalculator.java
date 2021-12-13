@@ -80,6 +80,9 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                     //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
                     continue;
                 } else {
+
+                    System.out.println("tr prob:"+tr.getProbability());
+
                     if (tr.getProbability() == 1.0) {
                         // = reward + 1*(U(s'))
 
