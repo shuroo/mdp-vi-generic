@@ -1,8 +1,8 @@
 package ctp;
 
 public enum BlockingStatus {
-    Opened,
-    Closed,
-    Unknown
+    O,
+    C,
+    U
 
 }

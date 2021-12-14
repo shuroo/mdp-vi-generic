@@ -18,15 +18,15 @@ public class Transition extends mdp.generic.Transition {
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
         if (!isValid()) {
-            System.out.println("^^^ detected invalid transition. setting probability zero. for id:"+this.transitionId);
+           // System.out.println("^^^ detected invalid transition. setting probability zero. for id:"+this.transitionId);
             return 0.0;
         }
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
             CTPEdge destStatus = this.extendedDestState.getStatuses().get(sourceStatus.getEdge().getId());
             if (sourceStatus.getStatus() != destStatus.getStatus()) {
-                if (destStatus.getStatus() == BlockingStatus.Closed) {
+                if (destStatus.getStatus() == BlockingStatus.C) {
                     probability = probability * destStatus.getEdge().getBlockingProbability();
-                } else if (destStatus.getStatus() == BlockingStatus.Opened) {
+                } else if (destStatus.getStatus() == BlockingStatus.O) {
                     probability = probability * (1 - destStatus.getEdge().getBlockingProbability());
                 }
             }
@@ -70,7 +70,7 @@ public class Transition extends mdp.generic.Transition {
 
         Edge currentEdg = act.getSourceEdge();
         for (CTPEdge statusEdge : source.getStatuses().values()) {
-            if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.Closed) {
+            if (statusEdge.getId() == currentEdg.getId() && statusEdge.getStatus() == BlockingStatus.C) {
                 return false;
             }
         }
@@ -99,7 +99,7 @@ public class Transition extends mdp.generic.Transition {
         for (CTPEdge sourceStatus : source.getStatuses().values()) {
 
             CTPEdge destStatus = dest.getStatuses().get(sourceStatus.getEdge().getId());
-            if (destStatus != null && sourceStatus.getStatus() != BlockingStatus.Unknown &&
+            if (destStatus != null && sourceStatus.getStatus() != BlockingStatus.U &&
                     destStatus.getStatus() != sourceStatus.getStatus()) {
                 return false;
             }
@@ -111,8 +111,8 @@ public class Transition extends mdp.generic.Transition {
 
             CTPEdge destStatus = dest.getStatuses().get(someStatus.getEdge().getId());
             // todo: this is added:
-            if (someStatus.getEdge().getSource() != currentEdg.getDest() && someStatus.getStatus() == BlockingStatus.Unknown &&
-                    destStatus.getStatus() != BlockingStatus.Unknown) {
+            if (someStatus.getEdge().getSource() != currentEdg.getDest() && someStatus.getStatus() == BlockingStatus.U &&
+                    destStatus.getStatus() != BlockingStatus.U) {
                 return false;
             }
         }

@@ -54,12 +54,6 @@ public class MDPCreator {
                         rewards.put(rewardObj.getId(),rewardObj);
 
                     }
-//                    else{
-//                        Action statesVirtualAction = new Action(source,dest);
-//                        Double reward = 0.0;
-//                        Reward rewardObj = new Reward(stt, stt2, statesVirtualAction, reward);
-//                        rewards.put(rewardObj.getId(),rewardObj);
-//                    }
                 }));
 
         return rewards;
@@ -184,7 +178,7 @@ public class MDPCreator {
 
         List<Vector<CTPEdge>> results = new LinkedList<Vector<CTPEdge>>();
         Vector<CTPEdge> st2_v = new Vector<CTPEdge>();
-        CTPEdge es2 = new CTPEdge(edge, BlockingStatus.Opened);
+        CTPEdge es2 = new CTPEdge(edge, BlockingStatus.O);
         st2_v.add(es2);
         results.add(st2_v);
 
@@ -193,7 +187,7 @@ public class MDPCreator {
         // - consider unknown and closed possible statuses.
         if(edge.getBlockingProbability() > 0.0) {
 
-            CTPEdge es = new CTPEdge(edge, BlockingStatus.Closed);
+            CTPEdge es = new CTPEdge(edge, BlockingStatus.C);
 
             // (e1,c)p=...,(e1,o),(e1,u)
 
@@ -202,7 +196,7 @@ public class MDPCreator {
             results.add(st1_v);
 
             Vector<CTPEdge> st3_v = new Vector<CTPEdge>();
-            CTPEdge es3 = new CTPEdge(edge, BlockingStatus.Unknown);
+            CTPEdge es3 = new CTPEdge(edge, BlockingStatus.U);
             st3_v.add(es3);
             results.add(st3_v);
         }

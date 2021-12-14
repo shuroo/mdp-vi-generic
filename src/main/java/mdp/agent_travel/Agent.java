@@ -70,8 +70,8 @@ public class Agent implements Runnable {
         statuses.putAll(currentState.getStatuses());
         statuses.entrySet().stream().forEach(statusedEdge -> {
             if (statusedEdge.getValue().getEdge().getSource() == nextV) {
-                if (statusedEdge.getValue().getStatus() == BlockingStatus.Unknown) {
-                    statuses.put(statusedEdge.getKey(), new CTPEdge(statusedEdge.getValue().getEdge(), BlockingStatus.Opened));
+                if (statusedEdge.getValue().getStatus() == BlockingStatus.U) {
+                    statuses.put(statusedEdge.getKey(), new CTPEdge(statusedEdge.getValue().getEdge(), BlockingStatus.O));
                 }
             }
         });
@@ -374,7 +374,7 @@ public class Agent implements Runnable {
         Vertex dest = best.getDest();
         CTPEdge edgeStatus = graphConfiguration.get(Edge.buildId(source, dest));
 
-        if (edgeStatus != null && edgeStatus.getStatus() != BlockingStatus.Opened) {
+        if (edgeStatus != null && edgeStatus.getStatus() != BlockingStatus.O) {
             return false;
         }
         return true;

@@ -174,7 +174,7 @@ public class State extends mdp.generic.State implements Comparable<State> {
         for (CTPEdge someStatus : this.getStatuses().values()) {
 
             if (someStatus.getEdge().getSource() == this.getAgentLocation() &&
-                    someStatus.getStatus() == BlockingStatus.Unknown) {
+                    someStatus.getStatus() == BlockingStatus.U) {
                 return false;
             }
         }

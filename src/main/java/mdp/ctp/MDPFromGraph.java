@@ -72,8 +72,6 @@ public class MDPFromGraph extends MDP {
         List<Object> nonZeroProbTrans =
                 this.transitions.values().stream().filter(tran-> tran.getProbability() >0  && tran.getProbability() <1.0 ).collect(Collectors.toList());
 
-        // && tran.isValid() tran.getProbability() >0 &&
-
         this.actions = cu.objToHMap((Collection<Action>) extededActions.values());
         this.isMinimizationProblem = true;
 

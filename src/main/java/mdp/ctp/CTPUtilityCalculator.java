@@ -81,22 +81,21 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                     continue;
                 } else {
 
-                    System.out.println("tr prob:"+tr.getProbability());
+                   // System.out.println("tr prob:"+tr.getProbability());
 
                     if (tr.getProbability() == 1.0) {
                         // = reward + 1*(U(s'))
 
-                        System.out.println("***in probability 1!****");
-                        System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
+                    //    System.out.println("***in probability 1!****");
+                     //   System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
                         utilityPerAction.put(act, tr.getDestState().getUtility());
 
                     } else {
-                        System.out.println("***in probability other then 1 !!! &&&&&&&&&&&&&****");
                         boolean hasNoProbabilityOneLegalStt =
                                 actTransitions.stream().filter(t -> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
                         if (hasNoProbabilityOneLegalStt) {
                             Double currentUtil = utilityPerAction.get(act);
-                            System.out.println("*********utility to add, of u(s')=" + tr.getProbability() * tr.getDestState().getUtility());
+                       //     System.out.println("*********utility to add, of u(s')=" + tr.getProbability() * tr.getDestState().getUtility());
                             utilityPerAction.put(act, currentUtil + tr.getProbability() * tr.getDestState().getUtility());
                         } else continue;
                     }
@@ -145,13 +144,12 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         if(st.getIsFinal()){
             minimalUtil = 0.0;
             chosenAction = null;
+        } else if(!st.isValid()){
+            minimalUtil = -1.0;
+            chosenAction = null;
         }
         else {
             // flag for invalid state : negative utility
-//            if(!st.isValid()){
-//                minimalUtil = -2.0;
-//                chosenAction = null;
-//            }
             for (Action action : utilityActions.keySet()) {
                 Double currentUtility = utilityActions.get(action);
                 if (minimalUtil == null || currentUtility < minimalUtil) {

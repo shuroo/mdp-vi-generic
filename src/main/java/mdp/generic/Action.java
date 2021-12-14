@@ -51,7 +51,7 @@ public class Action {
             return true;
         }
         HashMap<String, CTPEdge> stateStatuses = ((mdp.ctp.State) st).getStatuses();
-        return ((CTPEdge) stateStatuses.get(this.getActionId())).getStatus() == BlockingStatus.Opened;
+        return ((CTPEdge) stateStatuses.get(this.getActionId())).getStatus() == BlockingStatus.O;
     }
 
 }

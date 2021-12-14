@@ -4,7 +4,6 @@ import ctp.BlockingStatus;
 import ctp.CTPEdge;
 import mdp.ctp.CTPUtilityCalculator;
 import mdp.generic.State;
-import mdp.generic.UtilityCalculator;
 import mdp.agent_travel.Agent;
 import mdp.ctp.MDPFromGraph;
 import mdp.generic.MDP;
@@ -34,23 +33,23 @@ public class GraphReader {
 
         List statesList = Arrays.stream(mdpWithUtility.getStates().values().stream().toArray()).collect(Collectors.toList());
 
-//        for(Object s : statesList){
-//
-//            if(((State)s).getUtility() > 0){
-//                State currentS = ((State)s);
-//
-////                System.out.println("State of agent location:"+currentS.getAgentLocation().toString()+" Has final Utility of:"+currentS.getUtility()+"| state " +
-////                        "statuses:"+currentS.getId()+"|");
-//            }
-//
-//        }
+        for(Object s : statesList){
+
+            if(((State)s).getUtility() > 0){
+                State currentS = ((State)s);
+
+                System.out.println("State of agent location:"+currentS.getAgentLocation().toString()+" Has final Utility of:"+currentS.getUtility()+"| state " +
+                        "statuses:"+currentS.getId()+"|");
+            }
+
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////
 
         HashMap<String, CTPEdge> graphConfiguration = new HashMap<String, CTPEdge>();
         gr.getEdges().values().stream().forEach(edge -> {
-            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.Opened));
+            graphConfiguration.put(((Edge) edge).getId(), new CTPEdge(((Edge) edge), BlockingStatus.O));
         });
 
 
@@ -58,7 +57,7 @@ public class GraphReader {
         for(String key : edgeKeysToBlock) {
             if (graphConfiguration.containsKey(key)) {
                 Edge edge2 = graphConfiguration.get(key).getEdge();
-                graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.Closed));
+                graphConfiguration.put(key, new CTPEdge(edge2, BlockingStatus.C));
             }
         }
 
