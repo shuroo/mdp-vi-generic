@@ -51,7 +51,9 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 statesDataMap.get(transition.getSourceState()).put(transition.getAction(), new LinkedList<Transition>());
             }
 
-            statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
+            if(transition.isValid()) {
+                statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
+            }
 
         }
 
@@ -61,6 +63,9 @@ public class CTPUtilityCalculator extends UtilityCalculator {
     private HashMap<Action,Double> calcUtilityPerAction(State stt,
                                                         HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap){
 
+        if(stt.getAgentLocation().toString().equals("v1")){
+            System.out.println("**** !! detected v1_st1??? !! ****");
+        }
         HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction = statesDataMap.get(stt);
         HashMap<mdp.generic.Action,Double> utilityPerAction = new HashMap<mdp.generic.Action,Double>();
         for(Action act : stateTransitionsPerAction.keySet()){
@@ -183,8 +188,9 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter + " with lambda:" + maxLambda);
             updatedMDP = calcAndSetStatesUtilities(updatedMDP);
-            State firstResultingStt = (State)updatedMDP.getStates().values().toArray()[0];
-            System.out.println(firstResultingStt.getAgentLocation()+","+firstResultingStt.getUtility());
+            State v1_st1 = updatedMDP.getStates().get("<Ag_Location::v1|(v1 : v2)::O|,|(v1 : v3)::O|,|(v2 : t)::O|,|(v2 : v4)::U|,|(v3 : t)::U|,|(v4 : t)" +
+                    "::O|,>< utility:10000.0 >");
+
 
             //*** Stop condition Version 1 - "Normal"  stop condition:*** //
             //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.
