@@ -18,7 +18,7 @@ public class Transition extends mdp.generic.Transition {
     public Double diffStatesToCalcProbability() {
         Double probability = 1.0;
         if (!isValid()) {
-           // System.out.println("^^^ detected invalid transition. setting probability zero. for id:"+this.transitionId);
+            //System.out.println("^^^ detected invalid transition. setting probability zero. for id:"+this.transitionId);
             return 0.0;
         }
         for (CTPEdge sourceStatus : this.extendedSourceState.getStatuses().values()) {
@@ -61,8 +61,6 @@ public class Transition extends mdp.generic.Transition {
                 dest.getAgentLocation() != act.getSourceEdge().getDest()
         ) {
             return false;
-
-            // source = u
         }
 
         // case 1: The relevant action’s transition edge must be in status ‘Opened’:
@@ -77,9 +75,9 @@ public class Transition extends mdp.generic.Transition {
         //case 2.The transition’s source state s, is not a final vertex ( indicating end of agent’s path ):
         //t.edge = (u,v)  &&  u.isFinal == false.
 
-        if (this.extendedSourceState.getIsFinal()) {
-            return false;
-        }
+//        if (source.getIsFinal()) {
+//            return false;
+//        }
 
         // case 4: All the edges in s.statuses having edge[i].source= u are not in status ‘Unknown’ [ ON OUR EDGE!!]
         if(!source.isValid()){

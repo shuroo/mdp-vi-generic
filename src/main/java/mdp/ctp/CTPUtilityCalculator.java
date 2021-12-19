@@ -1,5 +1,6 @@
 package mdp.ctp;
 
+import ctp.BlockingStatus;
 import mdp.generic.*;
 import mdp.generic.Action;
 import mdp.generic.State;
@@ -51,7 +52,15 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 statesDataMap.get(transition.getSourceState()).put(transition.getAction(), new LinkedList<Transition>());
             }
 
+
+
             if(transition.isValid()) {
+                if( transition.getSourceState().getAgentLocation().equals("v1") //&& transition.getDestState().getAgentLocation().equals("v3")
+                    // && transition.getSourceState().getStatuses().get("v3_t").getStatus() == BlockingStatus.U
+                    //&& transition.getSourceState().getStatuses().get("v2_v4").getStatus() == BlockingStatus.U ){
+                ){
+                    System.out.println("**&&& in v1_v3 transition..."+transition.isValid());
+                }
                 statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
             }
 
@@ -61,57 +70,57 @@ public class CTPUtilityCalculator extends UtilityCalculator {
     }
 
     private HashMap<Action,Double> calcUtilityPerAction(State stt,
-                                                        HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap){
+                                                        HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction){
 
-        if(stt.getAgentLocation().toString().equals("v1")){
-            System.out.println("**** !! detected v1_st1??? !! ****");
-        }
-        HashMap<mdp.generic.Action,List<Transition>> stateTransitionsPerAction = statesDataMap.get(stt);
         HashMap<mdp.generic.Action,Double> utilityPerAction = new HashMap<mdp.generic.Action,Double>();
         for(Action act : stateTransitionsPerAction.keySet()){
-//
-//            if(!tr.getAction().actionEdgeIsTraversive(stt) ){
-//                //System.out.println("Found and eliminating CLOSED EDGE of transition. removing transition:"+tr.getTransitionId());
-//                continue;
-//            }
+
+            if(!act.actionEdgeIsTraversive(stt) ){
+                System.out.println("Found and eliminating CLOSED EDGE of transition. removing action:"+act);
+                continue;
+            }
             // Initilize utility per action.
             if(!utilityPerAction.containsKey(act)){
                 utilityPerAction.put(act,0.0);
             }
             List<Transition> actTransitions = stateTransitionsPerAction.get(act);
-            for(Transition tr : actTransitions) {
 
-                if (!tr.isValid()) {
-                    //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
-                    continue;
-                } else {
+            if(actTransitions.isEmpty()){
+                continue;
+            }else {
+                for (Transition tr : actTransitions) {
 
-                   // System.out.println("tr prob:"+tr.getProbability());
-
-                    if (tr.getProbability() == 1.0) {
-                        // = reward + 1*(U(s'))
-
-                    //    System.out.println("***in probability 1!****");
-                     //   System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
-                        utilityPerAction.put(act, tr.getDestState().getUtility());
-
+                    if (!tr.isValid()) {
+                        //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
+                        continue;
                     } else {
-                        boolean hasNoProbabilityOneLegalStt =
-                                actTransitions.stream().filter(t -> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
-                        if (hasNoProbabilityOneLegalStt) {
-                            Double currentUtil = utilityPerAction.get(act);
-                       //     System.out.println("*********utility to add, of u(s')=" + tr.getProbability() * tr.getDestState().getUtility());
-                            utilityPerAction.put(act, currentUtil + tr.getProbability() * tr.getDestState().getUtility());
-                        } else continue;
+
+                        // System.out.println("tr prob:"+tr.getProbability());
+
+                        if (tr.getProbability() == 1.0) {
+                            // = reward + 1*(U(s'))
+
+                            //    System.out.println("***in probability 1!****");
+                            //   System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
+                            utilityPerAction.put(act, tr.getDestState().getUtility());
+
+                        } else {
+                            boolean hasNoProbabilityOneLegalStt =
+                                    actTransitions.stream().filter(t -> t.isValid() && t.getProbability() == 1).collect(Collectors.toList()).isEmpty();
+                            if (hasNoProbabilityOneLegalStt) {
+                                Double currentUtil = utilityPerAction.get(act);
+                                //     System.out.println("*********utility to add, of u(s')=" + tr.getProbability() * tr.getDestState().getUtility());
+                                utilityPerAction.put(act, currentUtil + tr.getProbability() * tr.getDestState().getUtility());
+                            } else continue;
+                        }
                     }
                 }
+
+                Double reward = extendedMDP.getExtededActions().containsKey(act.getActionId()) ?
+                        extendedMDP.getExtededActions().get(act.getActionId()).getSourceEdge().getReward() : 0.0;
+                Double currentUtil = utilityPerAction.get(act);
+                utilityPerAction.put(act, currentUtil + reward);
             }
-
-            Double reward = extendedMDP.getExtededActions().containsKey(act.getActionId()) ?
-                    extendedMDP.getExtededActions().get(act.getActionId()).getSourceEdge().getReward() : 0.0;
-            Double currentUtil = utilityPerAction.get(act);
-            utilityPerAction.put(act,currentUtil + reward);
-
         }
 
         return utilityPerAction;
@@ -130,7 +139,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         HashMap<mdp.generic.State, HashMap<mdp.generic.Action,List<Transition>>> statesDataMap = aggregateTransitionsPerState(updatedMDP);
         for(State stt :  statesDataMap.keySet()){
            // Find utility per state per action:
-            HashMap<mdp.generic.Action,Double> utilityPerAction = calcUtilityPerAction(stt,statesDataMap);
+            HashMap<mdp.generic.Action,Double> utilityPerAction = calcUtilityPerAction(stt,statesDataMap.get(stt));
 
             // Then , find the minimal action and update the dest \ parent state accordingly.
             findMinimalUtilityAmongActionsPerState(stt,utilityPerAction,updatedMDP);
@@ -146,12 +155,15 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
         Double minimalUtil = null;
         Action chosenAction = null;
+        Boolean utilityCalced = false;
         if(st.getIsFinal()){
             minimalUtil = 0.0;
             chosenAction = null;
+            utilityCalced = true;
         } else if(!st.isValid()){
             minimalUtil = -1.0;
             chosenAction = null;
+            utilityCalced = true;
         }
         else {
             // flag for invalid state : negative utility
@@ -160,17 +172,21 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 if (minimalUtil == null || currentUtility < minimalUtil) {
                     minimalUtil = currentUtility;
                     chosenAction = action;
+                    utilityCalced = true;
                 }
             }
         }
 
         try {
-            st.setPreviousUtility(st.getUtility());
-            st.setUtility(minimalUtil);
-            System.out.println("!!!Set utility:"+minimalUtil+" For State:"+st.getId()+"!!!");
-            st.setBestAction(chosenAction);
-            // update state in the mdp:
-            updatedMDP.getStates().put(st.toString(),st);
+            if(utilityCalced) {
+                st.setPreviousUtility(st.getUtility());
+
+                System.out.println("Setting utility:" + minimalUtil + " for State:" + st.getId());
+                st.setUtility(minimalUtil);
+                st.setBestAction(chosenAction);
+                // update state in the mdp:
+                updatedMDP.getStates().put(st.toString(), st);
+            }
         } catch (NullPointerException e) {
             System.out.print("State of id: "+st.toString()+" could not be found via mdp and hence, failed to update!");
         }
@@ -188,9 +204,6 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             iterationCounter++;
             System.out.println("Starting iteration number:" + iterationCounter + " with lambda:" + maxLambda);
             updatedMDP = calcAndSetStatesUtilities(updatedMDP);
-            State v1_st1 = updatedMDP.getStates().get("<Ag_Location::v1|(v1 : v2)::O|,|(v1 : v3)::O|,|(v2 : t)::O|,|(v2 : v4)::U|,|(v3 : t)::U|,|(v4 : t)" +
-                    "::O|,>< utility:10000.0 >");
-
 
             //*** Stop condition Version 1 - "Normal"  stop condition:*** //
             //todo: ** Notice that, stopCond != 0 since, if stopCond == 0 then, it could belong to a previous converge step.

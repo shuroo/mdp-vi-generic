@@ -29,7 +29,7 @@ public class Transition {
         if(this instanceof mdp.ctp.Transition){
             return ((mdp.ctp.Transition)this).isValid();
         }
-        return true;
+        return false;
     }
 
     // Aid for method CollectionUtils.objToHMap  ...

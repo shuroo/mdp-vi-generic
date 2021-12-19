@@ -37,6 +37,11 @@ public class State implements StateI {
     }
 
     protected Vertex agentLocation;
+
+    public HashMap<String, CTPEdge> getStatuses() {
+        return statuses;
+    }
+
     protected HashMap<String, CTPEdge> statuses;
 
     public State(String stateId, Boolean isInitial, Boolean isFinal,Double initialUtility) {
