@@ -1,6 +1,5 @@
 package mdp.ctp;
 
-import ctp.BlockingStatus;
 import mdp.generic.*;
 import mdp.generic.Action;
 import mdp.generic.State;
@@ -48,20 +47,24 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 statesDataMap.put(transition.getSourceState(),new HashMap<Action,List<Transition>>());
             }
 
+            if(!statesDataMap.containsKey(transition.getDestState())){
+                statesDataMap.put(transition.getDestState(),new HashMap<Action,List<Transition>>());
+            }
+
             if( !statesDataMap.get(transition.getSourceState()).containsKey(transition.getAction())) {
                 statesDataMap.get(transition.getSourceState()).put(transition.getAction(), new LinkedList<Transition>());
             }
 
-
+            String reveredActionId = mdp.ctp.Action.generateId(transition.getDestState().getAgentLocation(),transition.getSourceState().getAgentLocation());
+            Action reversedAction = new Action(reveredActionId);
+            reversedAction.setUtility(transition.getAction().getUtility());
+            if( !statesDataMap.get(transition.getDestState()).containsKey(reveredActionId)) {
+                statesDataMap.get(transition.getDestState()).put(reversedAction, new LinkedList<Transition>());
+            }
 
             if(transition.isValid()) {
-                if( transition.getSourceState().getAgentLocation().equals("v1") //&& transition.getDestState().getAgentLocation().equals("v3")
-                    // && transition.getSourceState().getStatuses().get("v3_t").getStatus() == BlockingStatus.U
-                    //&& transition.getSourceState().getStatuses().get("v2_v4").getStatus() == BlockingStatus.U ){
-                ){
-                    System.out.println("**&&& in v1_v3 transition..."+transition.isValid());
-                }
                 statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
+                statesDataMap.get(transition.getDestState()).get(transition.getAction()).add(transition.reverseTransition());
             }
 
         }
@@ -91,11 +94,8 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 for (Transition tr : actTransitions) {
 
                     if (!tr.isValid()) {
-                        //System.out.println("Found and eliminating illegal transition of id:"+tr.getTransitionId());
                         continue;
                     } else {
-
-                        // System.out.println("tr prob:"+tr.getProbability());
 
                         if (tr.getProbability() == 1.0) {
                             // = reward + 1*(U(s'))

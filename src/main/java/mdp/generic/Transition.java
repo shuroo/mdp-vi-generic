@@ -1,5 +1,8 @@
 package mdp.generic;
 
+import ctp.CTPEdge;
+import mdp.ctp.MDPFromGraph;
+
 public class Transition {
 
     protected State destState;
@@ -66,5 +69,10 @@ public class Transition {
     }
 
     protected Transition(){}
+
+    public Transition reverseTransition(){
+        String reversedActionId = mdp.ctp.Action.generateId(this.destState.agentLocation,this.sourceState.agentLocation);;
+        return new Transition(this.getDestState(),this.getSourceState(),new Action(reversedActionId),this.getProbability());
+    }
 
 }
