@@ -64,7 +64,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
             if(transition.isValid()) {
                 statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
-                statesDataMap.get(transition.getDestState()).get(transition.getAction()).add(transition.reverseTransition());
+                statesDataMap.get(transition.getDestState()).get(reversedAction).add(transition.reverseTransition());
             }
 
         }
