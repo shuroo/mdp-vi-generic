@@ -13,8 +13,13 @@ import java.util.HashMap;
 public class Action {
 
     protected String actionId;
+
+    public boolean isReversed() {
+        return isReversed;
+    }
+
     protected boolean isReversed = false;
-    protected String displayId;
+    protected String unreversedID;
 
     public Double getUtility() {
         return utility;
@@ -32,13 +37,18 @@ public class Action {
 
     public Action(String actionId) {
         this.actionId = actionId;
-        this.displayId = actionId;
+        this.unreversedID = actionId;
     }
 
+    public Action(String actionId, Boolean isReversed,String unreversedID) {
+        this.actionId = actionId;
+        this.unreversedID = unreversedID;
+        this.isReversed = isReversed;
+    }
 
     @Override
     public String toString() {
-        return displayId;
+        return unreversedID;
     }
 
     public Action() {
@@ -50,7 +60,10 @@ public class Action {
         if (!(st instanceof mdp.ctp.State)) {
             return true;
         }
-        HashMap<String, CTPEdge> stateStatuses = ((mdp.ctp.State) st).getStatuses();
+        HashMap<String, CTPEdge> stateStatuses = st.getStatuses();
+        if(this.isReversed){
+            return ((CTPEdge) stateStatuses.get(this.unreversedID)).getStatus() == BlockingStatus.O;
+        }
         return ((CTPEdge) stateStatuses.get(this.getActionId())).getStatus() == BlockingStatus.O;
     }
 

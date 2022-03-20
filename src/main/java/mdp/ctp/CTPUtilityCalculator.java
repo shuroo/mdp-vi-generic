@@ -55,16 +55,21 @@ public class CTPUtilityCalculator extends UtilityCalculator {
                 statesDataMap.get(transition.getSourceState()).put(transition.getAction(), new LinkedList<Transition>());
             }
 
-            String reveredActionId = mdp.ctp.Action.generateId(transition.getDestState().getAgentLocation(),transition.getSourceState().getAgentLocation());
-            Action reversedAction = new Action(reveredActionId);
-            reversedAction.setUtility(transition.getAction().getUtility());
-            if( !statesDataMap.get(transition.getDestState()).containsKey(reveredActionId)) {
-                statesDataMap.get(transition.getDestState()).put(reversedAction, new LinkedList<Transition>());
+            if( !statesDataMap.get(transition.getDestState()).containsKey(transition.getAction())) {
+                statesDataMap.get(transition.getDestState()).put(transition.getAction(), new LinkedList<Transition>());
             }
+
+//            String reveredActionId = mdp.ctp.Action.generateId(transition.getDestState().getAgentLocation(),
+//                    transition.getSourceState().getAgentLocation());
+//            Action reversedAction = new Action(reveredActionId,true,transition.getAction().getActionId());
+//            reversedAction.setUtility(transition.getAction().getUtility());
+//            if( !statesDataMap.get(transition.getDestState()).containsKey(reversedAction)) {
+//                statesDataMap.get(transition.getDestState()).put(reversedAction, new LinkedList<Transition>());
+//            }
 
             if(transition.isValid()) {
                 statesDataMap.get(transition.getSourceState()).get(transition.getAction()).add(transition);
-                statesDataMap.get(transition.getDestState()).get(reversedAction).add(transition.reverseTransition());
+                statesDataMap.get(transition.getDestState()).get(transition.getAction()).add(transition);
             }
 
         }
@@ -102,7 +107,14 @@ public class CTPUtilityCalculator extends UtilityCalculator {
 
                             //    System.out.println("***in probability 1!****");
                             //   System.out.println("*********utility to add, of u(s')=" + tr.getDestState().getUtility());
-                            utilityPerAction.put(act, tr.getDestState().getUtility());
+                            State uTag = null;
+                            if(act.isReversed()){
+                                uTag =  tr.getSourceState();
+                            }else{
+                                uTag = tr.getDestState();
+                            }
+
+                            utilityPerAction.put(act,uTag.getUtility());
 
                         } else {
                             boolean hasNoProbabilityOneLegalStt =
@@ -168,6 +180,10 @@ public class CTPUtilityCalculator extends UtilityCalculator {
         else {
             // flag for invalid state : negative utility
             for (Action action : utilityActions.keySet()) {
+//                if(action.isReversed()){
+//                    System.out.println("isReversed!!!");
+//                    //action = updatedMDP.getActions().get()
+//                }
                 Double currentUtility = utilityActions.get(action);
                 if (minimalUtil == null || currentUtility < minimalUtil) {
                     minimalUtil = currentUtility;
@@ -181,7 +197,7 @@ public class CTPUtilityCalculator extends UtilityCalculator {
             if(utilityCalced) {
                 st.setPreviousUtility(st.getUtility());
 
-                System.out.println("Setting utility:" + minimalUtil + " for State:" + st.getId());
+                System.out.println("!!Setting utility:" + minimalUtil + " for State:" + st.getId());
                 st.setUtility(minimalUtil);
                 st.setBestAction(chosenAction);
                 // update state in the mdp:

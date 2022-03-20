@@ -71,8 +71,10 @@ public class Transition {
     protected Transition(){}
 
     public Transition reverseTransition(){
-        String reversedActionId = mdp.ctp.Action.generateId(this.destState.agentLocation,this.sourceState.agentLocation);;
-        return new Transition(this.getDestState(),this.getSourceState(),new Action(reversedActionId),this.getProbability());
+        String reversedActionId = mdp.ctp.Action.generateId(this.destState.agentLocation,this.sourceState.agentLocation);
+        Action act = new Action(reversedActionId,true,this.getAction().actionId);
+        act.setUtility(this.action.getUtility());
+        return new Transition(this.getDestState(),this.getSourceState(),act,this.getProbability());
     }
 
 }

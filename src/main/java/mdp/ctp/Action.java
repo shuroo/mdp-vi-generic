@@ -1,11 +1,7 @@
 package mdp.ctp;
 
-import ctp.BlockingStatus;
-import ctp.CTPEdge;
 import org.jgrapht.graph.Edge;
 import org.jgrapht.graph.Vertex;
-
-import java.util.HashMap;
 
 public class Action extends mdp.generic.Action {
 
@@ -39,7 +35,7 @@ public class Action extends mdp.generic.Action {
 
     public void reverseAction(){
        // Seperate display id from id:
-        this.displayId = generateId(this.dest,this.source);
+        this.unreversedID = generateId(this.dest,this.source);
         this.isReversed = true;
     }
 
@@ -49,7 +45,7 @@ public class Action extends mdp.generic.Action {
         this.dest = edge.getDest();
         this.sourceEdge = edge;
         this.actionId = generateId(this.source, this.dest);
-        this.displayId = actionId;
+        this.unreversedID = actionId;
     }
 
 }
