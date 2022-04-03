@@ -239,7 +239,11 @@ public class UtilityCalculator {
 
             // todo: avoid using the same state twice like in example 17.2
 
-            Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(Reward.buildId(state, state, minimalUtilityAction)).getReward() : null;
+            String currentRewardId = Reward.buildId(
+                    state, state, minimalUtilityAction);
+
+            Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(currentRewardId)
+                    .getReward() : null;
             minimalUtility = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
 
             minimalUtility = minimalUtility * this.discountFactor;
