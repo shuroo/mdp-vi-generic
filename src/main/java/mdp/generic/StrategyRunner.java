@@ -6,16 +6,136 @@ import java.util.HashMap;
 
 public class StrategyRunner {
 
+    public static UtilityCalculator buildMDPForMaman17Q1() {
 
-    /**
-     * Implementation of example from:
-     *
-     * https://people.eecs.berkeley.edu/~pabbeel/cs287-fa12/slides/mdps-exact-methods.pdf
-     *
-     * STATUS: TESTED, WORKING!!!
-     *
-     * @return
-     */
+
+        HashMap<String, State> states = new HashMap<String, State>();
+
+        State kitchen = new State("kitchen", true, false, 0.0);
+        states.put(kitchen.getId(), kitchen);
+        State dining = new State("diningRoom", true, false, 0.0);
+        states.put(dining.getId(), dining);
+        State shower = new State("shower", true, false, 0.0);
+        states.put(shower.getId(), shower);
+        State attacked = new State("underAttack", true, false, 0.0);
+        states.put(attacked.getId(), attacked);
+        State dead = new State("dead", false, true, 0.0);
+        states.put(dead.getId(), dead);
+        State sleeping = new State("sleepingRoom", true, false, 0.0);
+        states.put(sleeping.getId(), sleeping);
+
+        Action stay = new Action("S");
+        Action horizontal = new Action("H");
+        Action vertical = new Action("V");
+        Action die = new Action("D");
+
+        HashMap<String, Transition> transitions = new HashMap<String, Transition>();
+
+        // shower transitions:
+        Transition t1 = new Transition(shower, kitchen, horizontal, 0.6);
+        transitions.put(t1.getTransitionId(), t1);
+        Transition t2 = new Transition(shower, sleeping, horizontal, 0.4);
+        transitions.put(t2.getTransitionId(), t2);
+        Transition t3 = new Transition(shower, sleeping, vertical, 0.6);
+        transitions.put(t3.getTransitionId(), t3);
+        Transition t4 = new Transition(shower, kitchen, vertical, 0.4);
+        transitions.put(t4.getTransitionId(), t4);
+        Transition t5 = new Transition(shower, shower, stay, 0.75);
+        transitions.put(t5.getTransitionId(), t5);
+        Transition t6 = new Transition(shower, attacked, vertical, 0.25);
+        transitions.put(t6.getTransitionId(), t6);
+
+        // dead \ under attack transitions:
+        Transition t7 = new Transition(attacked, dead, die, 1.0);
+        transitions.put(t7.getTransitionId(), t7);
+
+        Transition t8 = new Transition(dead, dead, die, 1.0);
+        transitions.put(t8.getTransitionId(), t8);
+
+        // kitchen transitions:
+        Transition t9 = new Transition(kitchen, shower, horizontal, 0.6);
+        transitions.put(t9.getTransitionId(), t9);
+        Transition t10 = new Transition(kitchen, dining, horizontal, 0.4);
+        transitions.put(t10.getTransitionId(), t10);
+        Transition t11 = new Transition(kitchen , shower, vertical, 0.4);
+        transitions.put(t11.getTransitionId(), t11);
+        Transition t12 = new Transition(kitchen, dining, vertical, 0.6);
+        transitions.put(t12.getTransitionId(), t12);
+        Transition t13 = new Transition(kitchen, kitchen, stay, 0.75);
+        transitions.put(t13.getTransitionId(), t13);
+        Transition t14 = new Transition(kitchen, attacked, vertical, 0.25);
+        transitions.put(t14.getTransitionId(), t14);
+
+        // kitchen transitions:
+        Transition t15 = new Transition(sleeping, shower, horizontal, 0.4);
+        transitions.put(t15.getTransitionId(), t15);
+        Transition t16 = new Transition(sleeping, dining, horizontal, 0.6);
+        transitions.put(t16.getTransitionId(), t16);
+        Transition t17 = new Transition(sleeping , shower, vertical, 0.6);
+        transitions.put(t17.getTransitionId(), t17);
+        Transition t18 = new Transition(sleeping, dining, vertical, 0.4);
+        transitions.put(t18.getTransitionId(), t18);
+        Transition t19 = new Transition(sleeping, sleeping, stay, 0.75);
+        transitions.put(t19.getTransitionId(), t19);
+        Transition t20 = new Transition(sleeping, attacked, vertical, 0.25);
+        transitions.put(t20.getTransitionId(), t20);
+
+
+        // dining transitions:
+        Transition t21 = new Transition(dining, kitchen, horizontal, 0.6);
+        transitions.put(t21.getTransitionId(), t21);
+        Transition t22 = new Transition(dining, sleeping, horizontal, 0.4);
+        transitions.put(t22.getTransitionId(), t22);
+        Transition t23 = new Transition(dining, sleeping, vertical, 0.6);
+        transitions.put(t23.getTransitionId(), t23);
+        Transition t24 = new Transition(dining, kitchen, vertical, 0.4);
+        transitions.put(t24.getTransitionId(), t24);
+        Transition t25 = new Transition(dining, dining, stay, 0.75);
+        transitions.put(t25.getTransitionId(), t25);
+        Transition t26 = new Transition(dining, attacked, vertical, 0.25);
+        transitions.put(t26.getTransitionId(), t26);
+
+
+        HashMap<String, Action> actions = new HashMap<String, Action>();
+
+        actions.put(stay.getActionId(), stay);
+        actions.put(horizontal.getActionId(), horizontal);
+        actions.put(vertical.getActionId(), vertical);
+
+        // todo: which rewards?
+        HashMap<String, Reward> rewards = new HashMap<String, Reward>();
+
+        for (Action action : actions.values()) {
+
+            for (State s1 : states.values()) {
+
+                for (State s2 : states.values()) {
+                    Reward reward = new Reward(s1, s2, action, 0.0);
+                    rewards.put(reward.getId(), reward);
+                }
+            }
+        }
+
+
+        MDP mdp = new MDP(transitions, actions, states, rewards, false);
+
+        Double epsilon = 0.006;
+        Double discountFactor = 0.5;
+        UtilityCalculator uc = new UtilityCalculator(mdp,epsilon,discountFactor);
+
+        return uc;
+
+    }
+
+        /**
+         * Implementation of example from:
+         *
+         * https://people.eecs.berkeley.edu/~pabbeel/cs287-fa12/slides/mdps-exact-methods.pdf
+         *
+         * STATUS: TESTED, WORKING!!!
+         *
+         * @return
+         */
     public static UtilityCalculator buildMDPAndExactSolutionMethodsExample(){
 
 
@@ -549,9 +669,9 @@ public class StrategyRunner {
         states.put(s10.getId(), s10);
         State s12 = new State("pos_1_2", false, false, 0.0);
         states.put(s12.getId(), s12);
-        State s13 = new State("pos_1_3", false, false, 0.0);
+        State s13 = new State("pos_1_3", false, false, -1.0);
         states.put(s13.getId(), s13);
-        State s20 = new State("pos_2_0", false, false, -1.0);
+        State s20 = new State("pos_2_0", false, false, 0.0);
         states.put(s20.getId(), s20);
         State s21 = new State("pos_2_1", false, false, 0.0);
         states.put(s21.getId(), s21);
@@ -573,19 +693,28 @@ public class StrategyRunner {
         //      (2, 0): 'R', (2, 1): 'R', (2, 2): 'U', (2, 3): 'U'}
         //
 
+        // (2, 0): 'R'
         Transition t000 = new Transition(s20, s21, right, 0.8);
         transitions.put(t000.getTransitionId(), t000);
 
-        Transition t001 = new Transition(s20, s10, up, 0.2);
+        Transition t001 = new Transition(s20, s10, up, 0.1);
         transitions.put(t001.getTransitionId(), t001);
 
+        Transition t002 = new Transition(s20, s20, down, 0.1);
+        transitions.put(t002.getTransitionId(), t002);
+
+        // (2, 1): 'R'
         Transition t010 = new Transition(s21, s22, right, 0.8);
         transitions.put(t010.getTransitionId(), t010);
 
         // staying in place - can't go up.
-        Transition t011 = new Transition(s21, s21, up, 0.2);
+        Transition t011 = new Transition(s21, s21, up, 0.1);
         transitions.put(t011.getTransitionId(), t011);
 
+        Transition t012 = new Transition(s21, s21, down, 0.1);
+        transitions.put(t012.getTransitionId(), t012);
+
+        // (2, 2): 'U'
         Transition t020 = new Transition(s22, s12, up, 0.8);
         transitions.put(t020.getTransitionId(), t020);
 
@@ -597,25 +726,34 @@ public class StrategyRunner {
         Transition t029 = new Transition(s22, s21, left, 0.1);
         transitions.put(t029.getTransitionId(), t029);
 
-//        Transition t230 = new Transition(s23, s13, up, 0.8);
-//        transitions.put(t230.getTransitionId(), t230);
-//
-//        // staying in place - can't go up.
-//        Transition t231 = new Transition(s23, s23, right, 0.1);
-//        transitions.put(t231.getTransitionId(), t231);
-//
-//        // staying in place - can't go up.
-//        Transition t232 = new Transition(s23, s22, left, 0.1);
-//        transitions.put(t232.getTransitionId(), t232);
+        // (2, 3): 'U'
+        Transition t230 = new Transition(s23, s13, up, 0.8);
+        transitions.put(t230.getTransitionId(), t230);
+
+        // staying in place - can't go up.
+        Transition t231 = new Transition(s23, s23, right, 0.1);
+        transitions.put(t231.getTransitionId(), t231);
+
+        // staying in place - can't go up.
+        Transition t232 = new Transition(s23, s22, left, 0.1);
+        transitions.put(t232.getTransitionId(), t232);
 
         /////////////////
+
+        // (1, 0): 'D',
+//        Transition t100 = new Transition(s10, s00, up, 0.8);
+//        transitions.put(t100.getTransitionId(), t100);
 
         Transition t100 = new Transition(s10, s20, down, 0.8);
         transitions.put(t100.getTransitionId(), t100);
 
-        Transition t101 = new Transition(s10, s10, right, 0.2);
+        Transition t101 = new Transition(s10, s10, right, 0.1);
         transitions.put(t101.getTransitionId(), t101);
 
+        Transition t102 = new Transition(s10, s10, left, 0.1);
+        transitions.put(t102.getTransitionId(), t102);
+
+        // (1, 2): 'R'
         Transition t120 = new Transition(s12, s13, right, 0.8);
         transitions.put(t120.getTransitionId(), t120);
 
@@ -626,13 +764,16 @@ public class StrategyRunner {
         Transition t122 = new Transition(s12, s02, up, 0.1);
         transitions.put(t122.getTransitionId(), t122);
 
-//        Transition t130 = new Transition(s13, s13, up, 0.9);
+       // (1, 3): '#',
+//        Transition t130 = new Transition(s13, s03, up, 0.8);
 //        transitions.put(t130.getTransitionId(), t130);
 //
 //        Transition t131 = new Transition(s13, s13, right, 0.1);
 //        transitions.put(t131.getTransitionId(), t131);
 
         /////////////////
+
+        // (0, 0): 'R'
 
         Transition t200 = new Transition(s00, s01, right, 0.8);
         transitions.put(t200.getTransitionId(), t200);
@@ -643,25 +784,31 @@ public class StrategyRunner {
         Transition t202 = new Transition(s00, s00, up, 0.1);
         transitions.put(t202.getTransitionId(), t202);
 
+        // (0, 1): 'R'
         Transition t210 = new Transition(s01, s02, right, 0.8);
         transitions.put(t210.getTransitionId(), t210);
 
         // todo: split this to up and down as well?
 
-        Transition t211 = new Transition(s01, s01, up, 0.2);
+        Transition t211 = new Transition(s01, s01, up, 0.1);
         transitions.put(t211.getTransitionId(), t211);
 
+        Transition t212 = new Transition(s01, s01, down, 0.1);
+        transitions.put(t212.getTransitionId(), t212);
+
+        // (0, 2): 'R',
         Transition t220 = new Transition(s02, s03, right, 0.8);
         transitions.put(t220.getTransitionId(), t220);
 
-        Transition t221 = new Transition(s02, s12, down, 0.2);
+        Transition t221 = new Transition(s02, s12, down, 0.1);
         transitions.put(t221.getTransitionId(), t221);
 
-//        Transition t222 = new Transition(s02, s02, up, 0.1);
-//        transitions.put(t222.getTransitionId(), t222);
+        Transition t222 = new Transition(s02, s02, up, 0.1);
+        transitions.put(t222.getTransitionId(), t222);
 
-        // alsoi, right...
-//        Transition t233 = new Transition(s03, s03, up, 0.9);
+     //   (0, 3): '#',
+//        // alsoi, right...
+//        Transition t233 = new Transition(s03, s03, up, 0.8);
 //        transitions.put(t233.getTransitionId(), t233);
 //
 //        Transition t234 = new Transition(s03, s02, left, 0.1);

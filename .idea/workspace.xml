@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05124bf8-e956-4e88-a7b8-9632fdd43f0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/UtilityCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/mdp/generic/StrategyRunner.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mdp/generic/StrategyRunner.class" afterDir="false" />
     </list>
@@ -15,6 +15,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -121,6 +124,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="132" />
@@ -379,58 +385,6 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SbtLocalSettings">
-    <option name="modificationStamps">
-      <map>
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/Identity" value="1453282009000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/authenticator" value="1480268534000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/cap-manager" value="1484039888000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/couchbase-scala" value="1470641706000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/etl" value="1485372384000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/flic" value="1454323096000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/googlepep" value="1473237627000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/identity2_deploy_14022016" value="1455438017000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/jessica-jones" value="1471951610000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/morpheus" value="1455009728000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/policy" value="1443620850000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/policy_play_25" value="1473083625000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/reactor" value="1466497608000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/salesforcepep" value="1466321252000" />
-        <entry key="$USER_HOME$/Dev/Backend/Readonly/verman" value="1443683757000" />
-        <entry key="$USER_HOME$/Dev/Backend/SAML-Test" value="1482053425000" />
-        <entry key="$USER_HOME$/Dev/Backend/ScalaExercises2018" value="1540387186000" />
-        <entry key="$USER_HOME$/Dev/Backend/Third_Party_Apps_Analyzer" value="1461514618000" />
-        <entry key="$USER_HOME$/Dev/Backend/analyze_backend" value="1469530554000" />
-        <entry key="$USER_HOME$/Dev/Backend/canary" value="1469656845000" />
-        <entry key="$USER_HOME$/Dev/Backend/cap_etl" value="1502981665000" />
-        <entry key="$USER_HOME$/Dev/Backend/daredevil" value="1466413034000" />
-        <entry key="$USER_HOME$/Dev/Backend/dexter" value="1446366342000" />
-        <entry key="$USER_HOME$/Dev/Backend/flapi" value="1473867741000" />
-        <entry key="$USER_HOME$/Dev/Backend/hello_world" value="1441284673000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity" value="1460878053000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity1FixStale" value="1470565522000" />
-        <entry key="$USER_HOME$/Dev/Backend/identity_play25" value="1480590076000" />
-        <entry key="$USER_HOME$/Dev/Backend/informant_service" value="1441617962000" />
-        <entry key="$USER_HOME$/Dev/Backend/informer" value="1480268341000" />
-        <entry key="$USER_HOME$/Dev/Backend/nforce" value="1480841359000" />
-        <entry key="$USER_HOME$/Dev/Backend/nforce2" value="1448383550000" />
-        <entry key="$USER_HOME$/Dev/Backend/office-peps" value="1464624361000" />
-        <entry key="$USER_HOME$/Dev/Backend/policy" value="1463990812000" />
-        <entry key="$USER_HOME$/Dev/Backend/projects2018/scalaExercises2018" value="1540418740000" />
-        <entry key="$USER_HOME$/Dev/Backend/reporter" value="1480268650000" />
-        <entry key="$USER_HOME$/Dev/Backend/reports-scheduler" value="1461701982000" />
-        <entry key="$USER_HOME$/Dev/Backend/rest_ws" value="1441526016000" />
-        <entry key="$USER_HOME$/Dev/Backend/rules_engine" value="1481622500000" />
-        <entry key="$USER_HOME$/Dev/Backend/salesforce_pep2" value="1467798406000" />
-        <entry key="$USER_HOME$/Dev/Backend/salesforcenew" value="1471272382000" />
-        <entry key="$USER_HOME$/Dev/Backend/skynet" value="1451306273000" />
-        <entry key="$USER_HOME$/Dev/Backend/third-party-apps" value="1462711247000" />
-        <entry key="$USER_HOME$/Dev/Backend/third_party_apps" value="1461700986000" />
-        <entry key="$USER_HOME$/Dev/Backend/verman" value="1443683757000" />
-        <entry key="$USER_HOME$/Dev/Backend/verman_branch" value="1473680146000" />
-      </map>
-    </option>
-  </component>
   <component name="ScalaProjectSettings">
     <option name="outputLimit" value="2000" />
   </component>
@@ -538,7 +492,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/mdp/generic/StrategyRunner.java</url>
-          <line>658</line>
+          <line>804</line>
           <option name="timeStamp" value="133" />
         </line-breakpoint>
       </breakpoints>
