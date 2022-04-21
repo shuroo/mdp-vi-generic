@@ -53,7 +53,7 @@ public class UtilityCalculator {
                     maxLambda = diffUtility;
                 }
 
-                if (maxLambda <= stopCondition && maxLambda != 0.0) {
+                if (maxLambda <= stopCondition){//  && maxLambda != 0.0) {
 
                     System.out.println("***** Stopping at lambda:" + maxLambda + " on iteration:" + iterationCounter + " *****");
                     return currentMDP;
@@ -242,8 +242,8 @@ public class UtilityCalculator {
             String currentRewardId = Reward.buildId(
                     state, state, minimalUtilityAction);
 
-            Double reward = minimalUtilityAction != null ? currentMDP.getRewards().get(currentRewardId)
-                    .getReward() : null;
+            Double reward = minimalUtilityAction != null ? ( currentMDP.getRewards().get(currentRewardId) != null ?
+                    currentMDP.getRewards().get(currentRewardId).getReward() : 0.0) : 0.0;
             minimalUtility = minimalUtilityAction != null ? (reward + minimalUtilityAction.getUtility()) : 0.0;
 
             minimalUtility = minimalUtility * this.discountFactor;

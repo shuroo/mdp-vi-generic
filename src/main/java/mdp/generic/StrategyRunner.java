@@ -95,27 +95,91 @@ public class StrategyRunner {
         Transition t26 = new Transition(dining, attacked, vertical, 0.25);
         transitions.put(t26.getTransitionId(), t26);
 
-
         HashMap<String, Action> actions = new HashMap<String, Action>();
 
         actions.put(stay.getActionId(), stay);
         actions.put(horizontal.getActionId(), horizontal);
         actions.put(vertical.getActionId(), vertical);
 
-        // todo: which rewards?
         HashMap<String, Reward> rewards = new HashMap<String, Reward>();
 
-        for (Action action : actions.values()) {
+        Reward reward2 = new Reward(shower, shower, stay, 0.0);
+        rewards.put(reward2.getId(), reward2);
 
-            for (State s1 : states.values()) {
+        Reward reward3 = new Reward(dining, dining, stay, 0.0);
+        rewards.put(reward3.getId(), reward3);
 
-                for (State s2 : states.values()) {
-                    Reward reward = new Reward(s1, s2, action, 0.0);
-                    rewards.put(reward.getId(), reward);
-                }
-            }
-        }
+        Reward reward4 = new Reward(dead, dead, die, 0.0);
+        rewards.put(reward4.getId(), reward4);
 
+        Reward reward5 = new Reward(shower, attacked, die, -50.0);
+        rewards.put(reward5.getId(), reward5);
+
+        Reward reward6 = new Reward(dining, attacked, die, -50.0);
+        rewards.put(reward6.getId(), reward6);
+
+        Reward reward7 = new Reward(kitchen, attacked, die, -50.0);
+        rewards.put(reward7.getId(), reward7);
+
+        Reward reward8 = new Reward(sleeping, attacked, die, -50.0);
+        rewards.put(reward8.getId(), reward8);
+
+        Reward reward1 = new Reward(shower, kitchen, horizontal, 10.0);
+        Reward reward30 = new Reward(shower, kitchen, vertical, 10.0);
+        Reward reward11 = new Reward(sleeping, kitchen, horizontal, 10.0);
+        Reward reward31 = new Reward(sleeping, kitchen, vertical, 10.0);
+        Reward reward12 = new Reward(dining, kitchen, horizontal, 10.0);
+        Reward reward32 = new Reward(dining, kitchen, vertical, 10.0);
+
+        rewards.put(reward12.getId(), reward12);
+        rewards.put(reward32.getId(), reward32);
+        rewards.put(reward1.getId(), reward1);
+        rewards.put(reward3.getId(), reward3);
+        rewards.put(reward30.getId(), reward30);
+        rewards.put(reward11.getId(), reward11);
+        rewards.put(reward31.getId(), reward31);
+
+        Reward reward = new Reward(kitchen ,shower, horizontal, 4.0);
+        Reward reward40 = new Reward(kitchen ,shower, vertical, 4.0);
+        Reward reward21 = new Reward(sleeping, shower, horizontal, 4.0);
+        Reward reward41 = new Reward(sleeping, shower, vertical, 4.0);
+        Reward reward22 = new Reward(dining, shower, horizontal, 4.0);
+        Reward reward42 = new Reward(dining, shower, vertical, 4.0);
+
+        rewards.put(reward.getId(), reward);
+        rewards.put(reward40.getId(), reward40);
+        rewards.put(reward21.getId(), reward21);
+        rewards.put(reward41.getId(), reward41);
+        rewards.put(reward22.getId(), reward22);
+        rewards.put(reward42.getId(), reward42);
+
+        Reward rewardy = new Reward(kitchen ,dining, horizontal, 2.0);
+        Reward rewardy40 = new Reward(kitchen ,dining, vertical, 2.0);
+        Reward rewardy21 = new Reward(sleeping, dining, horizontal, 2.0);
+        Reward rewardy41 = new Reward(sleeping, dining, vertical, 2.0);
+        Reward rewardy22 = new Reward(shower, dining, horizontal, 2.0);
+        Reward rewardy42 = new Reward(shower, dining, vertical, 2.0);
+
+        rewards.put(rewardy.getId(), rewardy);
+        rewards.put(rewardy40.getId(), rewardy40);
+        rewards.put(rewardy21.getId(), rewardy21);
+        rewards.put(rewardy41.getId(), rewardy41);
+        rewards.put(rewardy22.getId(), rewardy22);
+        rewards.put(rewardy42.getId(), rewardy42);
+
+        Reward rewardz = new Reward(kitchen ,sleeping, horizontal, 0.0);
+        Reward rewardz40 = new Reward(kitchen ,sleeping, vertical, 0.0);
+        Reward rewardz21 = new Reward(dining, sleeping, horizontal, 0.0);
+        Reward rewardz41 = new Reward(dining, sleeping, vertical, 0.0);
+        Reward rewardz22 = new Reward(shower, sleeping, horizontal, 0.0);
+        Reward rewardz42 = new Reward(shower, sleeping, vertical, 0.0);
+
+        rewards.put(rewardz.getId(), rewardz);
+        rewards.put(rewardz40.getId(), rewardz40);
+        rewards.put(rewardz21.getId(), rewardz21);
+        rewards.put(rewardz41.getId(), rewardz41);
+        rewards.put(rewardz22.getId(), rewardz22);
+        rewards.put(rewardz42.getId(), rewardz42);
 
         MDP mdp = new MDP(transitions, actions, states, rewards, false);
 
@@ -869,8 +933,9 @@ public class StrategyRunner {
 
         //UtilityCalculator uc = buildMDPAndExactSolutionMethodsExample();
 
-        UtilityCalculator uc = buildAnotherExample();
+       // UtilityCalculator uc = buildAnotherExample();
 
+        UtilityCalculator uc = buildMDPForMaman17Q1();
         uc.setOptimalPolicy();
     }
 }
